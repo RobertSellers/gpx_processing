@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?><gpx creator="BaseCamp 3.0.2" version="1.1" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <metadata>
+    <link href="http://www.garmin.com">
+      <text>Garmin International</text>
+    </link>
+    <time>2010-06-14T20:06:06Z</time>
+    <bounds maxlat="48.858271082863212" maxlon="2.294550100341439" minlat="48.858271082863212" minlon="2.294550100341439" />
+  </metadata>
+
+  <wpt lat="48.858271082863212" lon="2.294550100341439">
+    <time>2010-06-14T20:02:27Z</time>
+    <name>BirdsEye Demo</name>
+    <cmt>BirdsEye Satellite Imagery is a subscription service to download high-resolution imagery to your Garmin handheld.  For more information, visit www.garmin.com/BirdsEye.</cmt>
+    <desc>BirdsEye Satellite Imagery is a subscription service to download high-resolution imageryto your Garmin handheld.  For more information, visit www.garmin.com/BirdsEye.</desc>
+    <sym>Waypoint</sym>
+    <extensions>
+      <gpxx:WaypointExtension xmlns:gpxx="http://www.garmin.com/xmlschemas/GpxExtensions/v3">
+        <gpxx:DisplayMode>SymbolAndName</gpxx:DisplayMode>
+      </gpxx:WaypointExtension>
+    </extensions>
+  </wpt>
+
+</gpx>

@@ -1,0 +1,36 @@
+---
+title: "Capstone"
+author: 'Author: Robert Sellers'
+date: "August 8, 2017"
+output:
+  html_document:
+    highlight: monochrome
+    theme: flatly
+    code_folding: hide
+    toc: yes
+    toc_depth: 2
+    toc_float:
+      collapsed: yes
+      number_sections: yes
+      smooth_scroll: no
+
+---
+
+# Initilization
+
+## Environments
+
++ [Custom Code (Github Repository)](https://github.com/RobertSellers/R_mm10AA)
++ [methylKit](https://bioconductor.org/packages/release/bioc/html/methylKit.html)
++ [complexHeatmap](https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)
++ [genomation](https://bioconductor.org/packages/release/bioc/html/ComplexHeatmap.html)
++ [ggbio](https://bioconductor.org/packages/release/bioc/html/ggbio.html)
++ [BSgenome.Mmusculus.UCSC.mm10.masked](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Mmusculus.UCSC.mm10.masked.html)
++ [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html)
+
+```{r message=FALSE, warning=FALSE, results='hide'}
+#setwd("~/Desktop/R_mm10AA copy")
+source('scripts/environments.R'); loadWorkspace()
+source('scripts/visualizations.R')
+source('scripts/custom_functions.R')
+```
