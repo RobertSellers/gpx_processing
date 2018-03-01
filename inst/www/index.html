@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>MIHPT Log QA and Analysis</title>
+<title>GPX QA and Analysis</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,9 +9,6 @@
 <!-- libraries -->
 <script src="scripts/jquery-1.10.2.min.js"> </script>
 <script src="scripts/opencpu-0.4.js"> </script>
-<script src="scripts/jszip-2.6.1.min.js"> </script>
-<script src="scripts/FileSaver.js"> </script>
-<script src="scripts/jszip-utils.min.js"> </script>
 
 <link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="scripts/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
@@ -83,10 +80,6 @@ function errormsg(text){
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 }
 
-function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
 $("#convert_button").on("click", function(){
 
     //////////////////////////////
@@ -113,7 +106,6 @@ $("#convert_button").on("click", function(){
       $("#preview_button").removeAttr("disabled");
       $("#convert_button").removeAttr("disabled");
   });
-
 
 $("#preview_button").on("click", function(){
 
@@ -225,7 +217,7 @@ $(document).ajaxStop(function() {
               <button id="convert_button" type="button" class="btn btn-primary" disabled="disabled">Download</button>
             </fieldset>
         </form>
-              <!-- R Relayed Message and Progress Information -->
+      <!-- R Relayed Message and Progress Information -->
       <div id="tips"><b>Pro tip:</b> You can go straight to the download without previewing if you choose.</div>
       <div id="azimuth_warning">
         <div id="successdiv"></div>

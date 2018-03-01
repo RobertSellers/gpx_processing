@@ -1,4 +1,4 @@
-mip_data_plot <- function(mipfile, water_level, plotting){
+gpx_data_plot <- function(mipfile, water_level, plotting){
 
   if(substring(tolower(mipfile), nchar(mipfile)-3) != ".zip"){
     stop('Uploaded data needs to be a .zip file. ');

@@ -1,5 +1,2 @@
-export(zip_validation)
-export(mip_data_plot)
-import(ggplot2)
-import(gridExtra)
-import(cowplot)
+export(gpx_validation)
+export(gpx_data_plot)
