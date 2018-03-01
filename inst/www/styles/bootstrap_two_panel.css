@@ -107,4 +107,10 @@ body{
 	font-weight: bold;
 	color: salmon;
 }
+
+#env_wrapper{
+	top: 25px;
+    position: absolute;
+}
+
 /* ////////// */
