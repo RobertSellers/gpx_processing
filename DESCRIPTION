@@ -13,4 +13,10 @@ Imports:
     plotKML,
     XML,
     OpenStreetMap,
-    lubridate
+    lubridate,
+    ggplot2,
+    dplyr,
+    maps,
+    ggmap,
+    mongolite,
+    gridExtra
