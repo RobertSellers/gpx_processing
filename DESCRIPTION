@@ -14,9 +14,5 @@ Imports:
     XML,
     OpenStreetMap,
     lubridate,
-    ggplot2,
     dplyr,
-    maps,
-    ggmap,
-    mongolite,
-    gridExtra
+    mongolite
