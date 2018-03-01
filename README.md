@@ -1,4 +1,4 @@
-# GPX Processing and Analysis Application: MIHPT Log QA v0.1
+# GPX Processing and Analysis Application v0.1
 A GPX Data Viewer and Converter Utility.
 
 **To see this application live in action go to:**
