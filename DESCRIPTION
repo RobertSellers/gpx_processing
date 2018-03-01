@@ -1,4 +1,4 @@
-Package: gpx_processing
+Package: gpxanalysis
 Type: Package
 Title: OpenCPU GPX Plotting and Conversion Application
 Version: 0.1.0
