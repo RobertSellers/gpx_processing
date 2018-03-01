@@ -46,7 +46,7 @@ $(document).ready(function() {
       //////////////////////////////
 
       var req = ocpu.call("gpx_validation", {
-          mipfile : $("#gpxfile")[0].files[0]
+          gpxfile : $("#gpxfile")[0].files[0]
       }, function(session){
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
