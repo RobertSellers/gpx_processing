@@ -33,10 +33,10 @@ $(document).ready(function() {
   $("#water_level").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
   //automatically upload CSV file on change.
-  $("#mipfile").on("change", function(){
+  $("#gpxfile").on("change", function(){
 
   //verify that a file is selected
-  if($("#mipfile")[0].files[0]){
+  if($("#gpxfile")[0].files[0]){
 
       $("#successdiv").empty();
       $("#errordiv").empty()
@@ -45,8 +45,8 @@ $(document).ready(function() {
       //Upload and validate the data
       //////////////////////////////
 
-      var req = ocpu.call("zip_validation", {
-          mipfile : $("#mipfile")[0].files[0]
+      var req = ocpu.call("gpx_validation", {
+          mipfile : $("#gpxfile")[0].files[0]
       }, function(session){
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
@@ -86,7 +86,7 @@ $("#convert_button").on("click", function(){
     //Water level calculations
     //////////////////////////////
     var req = ocpu.call("mip_data_plot", {
-      mipfile : $("#mipfile")[0].files[0],
+      mipfile : $("#gpxfile")[0].files[0],
       water_level : $('#water_level').val(),
       plotting : 'FALSE'
     }, function(session){
@@ -115,7 +115,7 @@ $("#preview_button").on("click", function(){
 
     //create the plot area on the plotdiv element
     var req = $("#plotdiv").rplot("mip_data_plot", {
-      mipfile : $("#mipfile")[0].files[0],
+      mipfile : $("#gpxfile")[0].files[0],
       water_level : $('#water_level').val(),
       plotting: 'TRUE'
     }, function(session){
@@ -143,7 +143,7 @@ function update_zipfile_input(session){
     //////////////////////////////
 
     csv_file = session.getLoc()+'R/.val/csv'
-    data_file = $("#mipfile")[0].files[0];
+    data_file = $("#gpxfile")[0].files[0];
     file_names = session.getLoc()+'files'
 
     $.get(file_names, function(f){
