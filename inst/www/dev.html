@@ -56,7 +56,7 @@ $(document).ready(function() {
           $("#preview_button").removeAttr("disabled");
           $("#step_2").css("opacity", 1);
           $("#step_3").css("opacity", 1);
-          successmsg("Zip file successfully loaded!");
+          successmsg("GPX file successfully loaded!");
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           $("#step_3").css("opacity", 0.2);
@@ -194,7 +194,7 @@ $(document).ajaxStop(function() {
   <div class="project_wrapper">
     <div class="flex-container">
       <div id="user_input_panel" class="flex-item well">
-        <div id="project_title">GPX Log QA v1.27</div>
+        <div id="project_title">GPX QA v1.01</div>
         <div id="credits">by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a></div>
         <form role="form" id="uploadform" enctype="multipart/form-data">
           <fieldset id="step_1">
