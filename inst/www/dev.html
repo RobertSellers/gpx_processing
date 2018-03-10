@@ -182,7 +182,7 @@ $("#plot_map").on("click", function(){
   })
 
   var map = new ol.Map({
-    layers: [vector, basemap],
+    layers: [basemap, vector],
     target: 'plotdiv',
     view: new ol.View({
       center: [-7916041.528716288, 5228379.045749711],
