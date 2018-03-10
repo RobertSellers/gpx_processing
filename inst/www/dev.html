@@ -163,7 +163,7 @@ $(function(){
     //perform the request
     var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
-        ajax: 'https://api.myjson.com/bins/qgcu',
+        ajax: viewModel.session_tmp()+'/R/.val/json',
         buttons: [
           {
              extend: 'collection',
