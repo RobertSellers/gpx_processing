@@ -210,46 +210,46 @@ $(document).ajaxStop(function() {
 </head>
 
 <body>
-  <div class="project_wrapper">
-    <div class="flex-container">
-      <div id="user_input_panel" class="flex-item well">
-        <div id="project_title">GPX QA v1.03</div>
-        <div id="credits">by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a></div>
-        <form role="form" id="uploadform" enctype="multipart/form-data">
-          <fieldset id="step_1">
-            <legend class="custom_legend">(1) Load GPX data</legend>
+    <div class="project_wrapper">
+      <div class="flex-container">
+        <div class="flex-item well" id="user_input_panel">
+          <div id="project_title">
+            GPX QA v1.03
+          </div>
+          <div id="credits">
+            by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
+          </div>
+          <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <fieldset id="step_1">
+              <legend class="custom_legend">(1) Load GPX data</legend>
               <div class="form-group">
-                 <input type="file" id="gpxfile">
+                <input id="gpxfile" type="file">
               </div>
-          </fieldset>
-          <fieldset id="step_2">
-            <legend class="custom_legend">(2a) Preview Data</legend>
-            <div class="form-group">
-              <label>Plot coordinates</label>
-              <button id="process_data" type="button" disabled="disabled">Click</button><br/>
             </fieldset>
-              <legend class="custom_legend">(2b) Download data</legend>
-              <fieldset id="step_3">
-              <label>Download as csv</label>
-              <button id="convert_button" type="button" disabled="disabled">Click</button>
-            </div>
-          </fieldset>
-        </form>
-      <div id='env_wrapper'>
-        <a id="session_url">Session URL</a>
-        <div id="dev_check"></div>
-    </div>
-    </div>
-    <div id="plotdiv" class="flex-item well"></div>
-  </div>
-  <!-- R Relayed Message and Progress Information -->
-  <div id="azimuth_warning">
+            <fieldset id="step_2">
+              <legend class="custom_legend">(2a) Preview Data</legend>
+              <div class="form-group">
+                <label>Plot coordinates</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
+              </div>
+            </fieldset>
+            <fieldset id="step_3">
+              <legend class="custom_legend">(2b) Download data</legend> <label>Download as csv</label> <button disabled="disabled" id="convert_button" type="button">Click</button>
+            </fieldset>
+          </form>
+        </div>
+        <div id='env_wrapper'>
+          <a id="session_url">Session URL</a>
+          <div id="dev_check"></div>
+        </div>
+      </div>
+      <div class="flex-item well" id="plotdiv"></div>
+    </div><!-- R Relayed Message and Progress Information -->
+    <div id="azimuth_warning">
       <div id="successdiv"></div>
       <div id="errordiv"></div>
       <div class="progress progress-striped active">
-        <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%"></div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
