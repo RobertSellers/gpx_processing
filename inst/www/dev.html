@@ -103,12 +103,6 @@ $("#convert_button").on("click", function(){
       })
 });
 
-  //Check if user changes water level input
-  document.getElementById("water_level").addEventListener('change', function(){
-      $("#preview_button").removeAttr("disabled");
-      $("#convert_button").removeAttr("disabled");
-  });
-
 $("#preview_button").on("click", function(){
 
     //////////////////////////////
@@ -206,19 +200,19 @@ $(document).ajaxStop(function() {
               </div>
           </fieldset>
           <fieldset id="step_2">
-            <legend class="custom_legend">Choose an action</legend>
+            <legend class="custom_legend">(2) Next action</legend>
             <div class="form-group">
               <label>Plot coordinates</label>
-              <button id="plot_map" type="button" disabled="disabled">Click</button>
+              <button id="plot_map" type="button" disabled="disabled">Click</button><br/>
               <label>Plot metrics</label>
-              <button id="plot_velocity" type="button" disabled="disabled">Click</button>
+              <button id="plot_velocity" type="button" disabled="disabled">Click</button><br/>
               <label>Download as csv</label>
               <button id="convert_button" type="button" disabled="disabled">Click</button>
             </div>
           </fieldset>
         </form>
       <!-- R Relayed Message and Progress Information -->
-      <div id="tips"><b>Information:</b>...2018</div>
+      <div id="stats"><b>Stats:</b></div>
       <div id="azimuth_warning">
         <div id="successdiv"></div>
         <div id="errordiv"></div>
