@@ -41,7 +41,7 @@ $(document).ready(function() {
   }
 
   $("#return_metadata").attr("disabled", "disabled");
-  $("#plot_map").attr("disabled", "disabled");
+  $("#process_data").attr("disabled", "disabled");
   $("#plot_velocity").attr("disabled", "disabled");
   $("#convert_button").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
@@ -72,7 +72,7 @@ $(document).ready(function() {
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#convert_button").attr("href", session.getLoc())
           $("#convert_button").removeAttr("disabled");
-          $("#plot_map").removeAttr("disabled");
+          $("#process_data").removeAttr("disabled");
           $("#return_metadata").removeAttr("disabled");
           $("#plot_velocity").removeAttr("disabled");
           $("#step_2").css("opacity", 1);
@@ -149,7 +149,7 @@ $("#plot_velocity").on("click", function(){
 });
 
 $(function(){
-  $("#plot_map").on("click", function(){
+  $("#process_data").on("click", function(){
 
   //////////////////////////////
   //Plot Preview Map
@@ -167,6 +167,8 @@ $(function(){
     new L.GPX(gpx, {async: true}).on('loaded', function(e) {
       map.fitBounds(e.target.getBounds());
     }).addTo(map);
+
+    $("#process_data").attr("disabled", "disabled");
 
   });
 });
@@ -190,18 +192,6 @@ var req = ocpu.call("gpx_plot_velocity", {
   })
 });
 
-
-function update_input(session){
-
-    //////////////////////////////
-    //Update .zipfile
-    //////////////////////////////
-
-    csv_file = session.getLoc()+'R/.val/csv'
-    data_file = $("#gpxfile")[0].files[0];
-    file_names = session.getLoc()+'files'
-
-}
 
 $(document).ajaxStart(function() {
   $(".progress").show();
@@ -233,14 +223,13 @@ $(document).ajaxStop(function() {
               </div>
           </fieldset>
           <fieldset id="step_2">
-            <legend class="custom_legend">(2) Next action</legend>
+            <legend class="custom_legend">(2a) Preview Data</legend>
             <div class="form-group">
-              <label>View Metadata</label>
-              <button id="return_metadata" type="button" disabled="disabled">Click</button><br/>  
               <label>Plot coordinates</label>
-              <button id="plot_map" type="button" disabled="disabled">Click</button><br/>
-              <label>Plot metrics</label>
-              <button id="plot_velocity" type="button" disabled="disabled">Click</button><br/>
+              <button id="process_data" type="button" disabled="disabled">Click</button><br/>
+            </fieldset>
+              <legend class="custom_legend">(2b) Download data</legend>
+              <fieldset id="step_3">
               <label>Download as csv</label>
               <button id="convert_button" type="button" disabled="disabled">Click</button>
             </div>
