@@ -28,9 +28,10 @@ $(document).ready(function() {
     $("#dev_check").html(cur_url);
   }
 
-  $("#convert_button").attr("disabled", "disabled");
+  $("#return_metadata").attr("disabled", "disabled");
   $("#plot_map").attr("disabled", "disabled");
   $("#plot_velocity").attr("disabled", "disabled");
+  $("#convert_button").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
   //automatically upload CSV file on change.
@@ -54,6 +55,7 @@ $(document).ready(function() {
           $("#convert_button").attr("href", session.getLoc())
           $("#convert_button").removeAttr("disabled");
           $("#plot_map").removeAttr("disabled");
+          $("#return_metadata").removeAttr("disabled");
           $("#plot_velocity").removeAttr("disabled");
           $("#step_2").css("opacity", 1);
           $("#step_3").css("opacity", 1);
@@ -80,23 +82,27 @@ function errormsg(text){
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 }
 
-$("#convert_button").on("click", function(){
+$("#return_metadata").on("click", function(){
 
-    //////////////////////////////
-    //Water level calculations
-    //////////////////////////////
-    var req = ocpu.call("gpx_plot_velocity", {
+//////////////////////////////
+//Return metadata
+//////////////////////////////
+
+
+    var req = $("#plotdiv").rplot("gpx_extract_metadata", {
       gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
+      //configure inputs on/off
       //success
       $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-      update_input(session)
-      $("#convert_button").attr("disabled", "disabled");
+      $("#return_metadata").attr("disabled", "disabled");
+      $("#convert_button").removeAttr("disabled");
     }).fail(function(jqXHR){
-       //failure
-       $("#convert_button").attr("disabled", "disabled");
-       errormsg(jqXHR.responseText);
-      })
+      //failure
+      $("#return_metadata").removeAttr("disabled");
+      $("#convert_button").attr("disabled", "disabled");
+      errormsg(jqXHR.responseText);
+     })
 });
 
 $("#plot_velocity").on("click", function(){
@@ -117,7 +123,6 @@ $("#plot_velocity").on("click", function(){
     }).fail(function(jqXHR){
       //failure
       $("#plot_velocity").removeAttr("disabled");
-      $(".input-medium").removeAttr("disabled");
       $("#convert_button").attr("disabled", "disabled");
       errormsg(jqXHR.responseText);
      })
@@ -131,6 +136,26 @@ $("#plot_map").on("click", function(){
 //////////////////////////////
 
 });
+
+$("#convert_button").on("click", function(){
+
+//////////////////////////////
+//Water level calculations
+//////////////////////////////
+var req = ocpu.call("gpx_plot_velocity", {
+  gpxfile : $("#gpxfile")[0].files[0]
+}, function(session){
+  //success
+  $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+  update_input(session)
+  $("#convert_button").attr("disabled", "disabled");
+}).fail(function(jqXHR){
+   //failure
+   $("#convert_button").attr("disabled", "disabled");
+   errormsg(jqXHR.responseText);
+  })
+});
+
 
 function update_input(session){
 
@@ -176,6 +201,8 @@ $(document).ajaxStop(function() {
           <fieldset id="step_2">
             <legend class="custom_legend">(2) Next action</legend>
             <div class="form-group">
+              <label>View Metadata</label>
+              <button id="return_metadata" type="button" disabled="disabled">Click</button><br/>  
               <label>Plot coordinates</label>
               <button id="plot_map" type="button" disabled="disabled">Click</button><br/>
               <label>Plot metrics</label>

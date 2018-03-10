@@ -1,9 +1,5 @@
 gpx_plot_velocity <- function(gpxfile){
 
-  if(substring(tolower(gpxfile), nchar(gpxfile)-3) != ".zip"){
-    stop('Uploaded data needs to be a .zip file. ');
-  }
-
   tryCatch({
 
     plot_title = substr(basename(gpxfile),0,nchar(basename(gpxfile))-8)
