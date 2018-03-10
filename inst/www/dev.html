@@ -144,7 +144,7 @@ $("#plot_map").on("click", function(){
 
   var gpx = $("#gpxfile")[0].files[0]; // URL to your GPX file or the GPX itself
 
-  new L.GPX(gpx, {async: true}).on('loaded', function(e) {
+  new L.GPX(gpx, {async: true, max_point_interval: 15}).on('loaded', function(e) {
     map.fitBounds(e.target.getBounds());
   }).addTo(map);
 
