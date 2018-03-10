@@ -163,7 +163,7 @@ $(function(){
     //perform the request
     var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
-        ajax: {url: viewModel.session_tmp()+'/R/.val/json',"dataSrc":""},
+        ajax: viewModel.session_tmp()+'/R/.val/json',
         buttons: [
           {
              extend: 'collection',
@@ -247,36 +247,34 @@ $("#convert_button").on("click", function(){
         <div class="flex-item well" id="plotdiv"></div>
       </div>
     </div>
-    <div class="flex-item well">
-      <table id="gpx_processed" class="display" cellspacing="0" width="100%">
-          <thead>
-              <tr>
-                  <th>Elevation</th>
-                  <th>DateTime</th>
-                  <th>Longitude</th>
-                  <th>Latitude</th>
-                  <th>Seconds</th>
-                  <th>Dist</th>
-                  <th>Speed</th>
-                  <th>Gradient</th>
-                  <th>Pace</th>
-              </tr>
-          </thead>
-          <tfoot>
-              <tr>
-                  <th>Elevation</th>
-                  <th>DateTime</th>
-                  <th>Longitude</th>
-                  <th>Latitude</th>
-                  <th>Seconds</th>
-                  <th>Dist</th>
-                  <th>Speed</th>
-                  <th>Gradient</th>
-                  <th>Pace</th>
-              </tr>
-          </tfoot>
-      </table>
-  </div>
+    <table id="gpx_processed" class="display flex-item well" cellspacing="0">
+        <thead>
+            <tr>
+                <th>Elevation</th>
+                <th>DateTime</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Seconds</th>
+                <th>Dist</th>
+                <th>Speed</th>
+                <th>Gradient</th>
+                <th>Pace</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Elevation</th>
+                <th>DateTime</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Seconds</th>
+                <th>Dist</th>
+                <th>Speed</th>
+                <th>Gradient</th>
+                <th>Pace</th>
+            </tr>
+        </tfoot>
+    </table>
     <!-- R Relayed Message and Progress Information -->
     <div id="azimuth_warning">
       <div id="successdiv"></div>
