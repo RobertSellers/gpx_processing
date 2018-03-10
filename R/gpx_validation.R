@@ -20,7 +20,7 @@ gpx_validation <- function(gpxfile, ...){
 # http://lwlss.net/GarminReports/GarminFunctions.R
 gpx_df_construct <- function(gpxfile){
   library(XML)
-  doc <- xmlParse(test_gpx,useInternalNodes=TRUE)
+  doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
   top <- xmlRoot(doc)
   title <- toString.XMLNode(top[[2]][[1]][[1]])
   description <- toString.XMLNode(top[[2]][[2]][[1]])
