@@ -19,6 +19,7 @@ gpx_validation <- function(gpxfile, ...){
 # Construct dataframe from gpx file
 # http://lwlss.net/GarminReports/GarminFunctions.R
 gpx_df_construct <- function(gpxfile){
+  
   library(XML)
   doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
   top <- xmlRoot(doc)

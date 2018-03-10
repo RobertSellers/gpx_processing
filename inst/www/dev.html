@@ -12,6 +12,9 @@
 <link href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
 
 <!-- libraries -->
 <script src="scripts/jquery-1.10.2.min.js"> </script>
@@ -21,6 +24,14 @@
 <script src="scripts/knockout-min.js"></script>
 <script src="scripts/leaflet.js"></script>
 <script src="scripts/gpx.js"></script>
+<script src="scripts/jquery.dataTables.min.js"></script>
+<script src="scripts/dataTables.buttons.min.js"></script>
+<script src="scripts/buttons.flash.min.js"></script>
+<script src="scripts/jszip.min.js"></script>
+<script src="scripts/pdfmake.min.js"></script>
+<script src="scripts/vfs_fonts.js"></script>
+<script src="scripts/buttons.html5.min.js"></script>
+<script src="scripts/buttons.print.min.js"></script>
 
 <script type="text/javascript">
 
@@ -29,8 +40,7 @@ $(document).ready(function() {
   var viewModel = {
       session_tmp: ko.observable(),
       gpx_file: ko.observable(),
-      gpx_file_name: ko.observable(),
-      map_center: ko.observable()
+      gpx_file_name: ko.observable()
   };
 
   //Display if dev.html or not
@@ -100,28 +110,6 @@ function errormsg(text){
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 }
 
-$("#return_metadata").on("click", function(){
-
-//////////////////////////////
-//Return metadata
-//////////////////////////////
-
-    var req = $("#plotdiv").rplot("gpx_extract_metadata", {
-      gpxfile : $("#gpxfile")[0].files[0]
-    }, function(session){
-      //configure inputs on/off
-      //success
-      $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-      $("#return_metadata").attr("disabled", "disabled");
-      $("#convert_button").removeAttr("disabled");
-    }).fail(function(jqXHR){
-      //failure
-      $("#return_metadata").removeAttr("disabled");
-      $("#convert_button").attr("disabled", "disabled");
-      errormsg(jqXHR.responseText);
-     })
-});
-
 $("#plot_velocity").on("click", function(){
 
     //////////////////////////////
@@ -150,10 +138,10 @@ $("#plot_velocity").on("click", function(){
 
 $(function(){
   $("#process_data").on("click", function(){
-
-  //////////////////////////////
-  //Plot Preview Map
-  //////////////////////////////
+    $("#process_data").attr("disabled", "disabled");
+    //////////////////////////////
+    //Plot Preview Map
+    //////////////////////////////
 
     //Retrieve saved GPX
     var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); 
@@ -168,38 +156,53 @@ $(function(){
       map.fitBounds(e.target.getBounds());
     }).addTo(map);
 
-    $("#process_data").attr("disabled", "disabled");
+    //////////////////////////////
+    //Data Table
+    //////////////////////////////
+
+    //perform the request
+    var table = $('#gpx_processed').DataTable({
+        dom: 'frtip',
+        ajax: 'https://api.myjson.com/bins/qgcu',
+        buttons: [
+          {
+             extend: 'collection',
+             text: 'Export',
+             buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+          }
+       ]
+    });
 
   });
 });
 
 $("#convert_button").on("click", function(){
 
-//////////////////////////////
-//Water level calculations
-//////////////////////////////
-var req = ocpu.call("gpx_plot_velocity", {
-  gpxfile : $("#gpxfile")[0].files[0]
-}, function(session){
-  //success
-  $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-  update_input(session)
-  $("#convert_button").attr("disabled", "disabled");
-}).fail(function(jqXHR){
-   //failure
-   $("#convert_button").attr("disabled", "disabled");
-   errormsg(jqXHR.responseText);
-  })
-});
+  //////////////////////////////
+  //Water level calculations
+  //////////////////////////////
+  var req = ocpu.call("gpx_plot_velocity", {
+    gpxfile : $("#gpxfile")[0].files[0]
+  }, function(session){
+    //success
+    $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+    update_input(session)
+    $("#convert_button").attr("disabled", "disabled");
+  }).fail(function(jqXHR){
+    //failure
+    $("#convert_button").attr("disabled", "disabled");
+    errormsg(jqXHR.responseText);
+    })
+  });
 
 
-$(document).ajaxStart(function() {
-  $(".progress").show();
-});
+  $(document).ajaxStart(function() {
+    $(".progress").show();
+  });
 
-$(document).ajaxStop(function() {
-  $(".progress").hide();
-});
+  $(document).ajaxStop(function() {
+    $(".progress").hide();
+  });
 
 });
 
@@ -243,7 +246,36 @@ $(document).ajaxStop(function() {
         </div>
         <div class="flex-item well" id="plotdiv"></div>
       </div>
-    </div><!-- R Relayed Message and Progress Information -->
+    </div>
+    <table id="gpx_processed" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Elevation</th>
+                <th>DateTime</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Seconds</th>
+                <th>Dist</th>
+                <th>Speed</th>
+                <th>Gradient</th>
+                <th>Pace</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Elevation</th>
+                <th>DateTime</th>
+                <th>Longitude</th>
+                <th>Latitude</th>
+                <th>Seconds</th>
+                <th>Dist</th>
+                <th>Speed</th>
+                <th>Gradient</th>
+                <th>Pace</th>
+            </tr>
+        </tfoot>
+    </table>
+    <!-- R Relayed Message and Progress Information -->
     <div id="azimuth_warning">
       <div id="successdiv"></div>
       <div id="errordiv"></div>

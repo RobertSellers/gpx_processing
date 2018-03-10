@@ -12,6 +12,5 @@ Imports:
     rgdal,
     plotKML,
     XML,
-    OpenStreetMap,
     lubridate,
     dplyr
