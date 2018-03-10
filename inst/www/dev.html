@@ -53,7 +53,6 @@ $(document).ready(function() {
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#convert_button").attr("href", session.getLoc())
-          $("#water_level").removeAttr("disabled");
           $("#convert_button").removeAttr("disabled");
           $("#preview_button").removeAttr("disabled");
           $("#step_2").css("opacity", 1);
@@ -78,7 +77,6 @@ function successmsg(text){
 //R output to popup
 function errormsg(text){
     $("#convert_button").attr("disabled", "disabled");
-    $("#water_level").attr("disabled", "disabled");
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 }
 
@@ -87,10 +85,8 @@ $("#convert_button").on("click", function(){
     //////////////////////////////
     //Water level calculations
     //////////////////////////////
-    var req = ocpu.call("mip_data_plot", {
-      mipfile : $("#gpxfile")[0].files[0],
-      water_level : $('#water_level').val(),
-      plotting : 'FALSE'
+    var req = ocpu.call("gpx_data_plot", {
+      gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
       //success
       $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
@@ -110,10 +106,8 @@ $("#preview_button").on("click", function(){
     //////////////////////////////
 
     //create the plot area on the plotdiv element
-    var req = $("#plotdiv").rplot("mip_data_plot", {
-      mipfile : $("#gpxfile")[0].files[0],
-      water_level : $('#water_level').val(),
-      plotting: 'TRUE'
+    var req = $("#plotdiv").rplot("gpx_data_plot", {
+      gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
       //configure inputs on/off
       //success
