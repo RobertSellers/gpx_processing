@@ -45,7 +45,7 @@ $(document).ready(function() {
   $("#convert_button").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
-  //automatically upload CSV file on change.
+  //automatically upload GPX file on change.
   $("#gpxfile").on("change", function(){
 
   //verify that a file is selected
@@ -58,9 +58,8 @@ $(document).ready(function() {
       //Upload and validate the data
       //////////////////////////////
 
-    //Fix filenames
-    viewModel.gpx_file_name($("#gpxfile")[0].files[0].name.replace(/ /g,"_"))
-    $("#gpxfile")[0].files[0].name = viewModel.gpx_file_name()
+    //Save filename
+    viewModel.gpx_file_name($("#gpxfile")[0].files[0].name)
 
       var req = ocpu.call("gpx_validation", {
           gpxfile : $("#gpxfile")[0].files[0]
@@ -159,7 +158,7 @@ $(function(){
       attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
     }).addTo(map);
 
-    var gpx = viewModel.session_tmp(); // URL to your GPX file or the GPX itself
+    var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); // URL to your GPX file or the GPX itself
 
     new L.GPX(gpx, {async: true}).on('loaded', function(e) {
       map.fitBounds(e.target.getBounds());
