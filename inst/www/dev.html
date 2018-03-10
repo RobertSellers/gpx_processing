@@ -153,12 +153,15 @@ $(function(){
   //////////////////////////////
   //Plot Preview Map
   //////////////////////////////
-    var map = L.map('plotdiv');
-    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
-    }).addTo(map);
 
-    var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); // URL to your GPX file or the GPX itself
+    //Retrieve saved GPX
+    var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); 
+
+    var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
 
     new L.GPX(gpx, {async: true}).on('loaded', function(e) {
       map.fitBounds(e.target.getBounds());
