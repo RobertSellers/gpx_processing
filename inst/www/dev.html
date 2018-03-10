@@ -163,7 +163,7 @@ $(function(){
     //perform the request
     var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
-        ajax: viewModel.session_tmp()+'/R/.val/json',
+        ajax: {url: viewModel.session_tmp()+'/R/.val/json',"dataSrc":""},
         buttons: [
           {
              extend: 'collection',
