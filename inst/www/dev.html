@@ -11,16 +11,15 @@
 <script src="scripts/opencpu-0.4.js"> </script>
 <script src="scripts/bootstrap/js/bootstrap.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
-<script src="https://openlayers.org/en/v4.6.4/build/ol.js" type="text/javascript"></script>
-<!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
-<script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.3.1/gpx.min.js"></script>
 
 <!-- styles -->
 <link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
 <link href="scripts/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
 <link href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-<link rel="stylesheet" href="https://openlayers.org/en/v4.6.4/css/ol.css" type="text/css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" />
 
 <script type="text/javascript">
 
@@ -138,88 +137,16 @@ $("#plot_map").on("click", function(){
 //////////////////////////////
 //Plot Preview Map
 //////////////////////////////
+  var map = L.map('plotdiv');
+  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; <a href="http://www.osm.org">OpenStreetMap</a>'
+  }).addTo(map);
 
-  var style = {
-    'Point': new ol.style.Style({
-      image: new ol.style.Circle({
-        fill: new ol.style.Fill({
-          color: 'rgba(255,255,0,0.4)'
-        }),
-        radius: 5,
-        stroke: new ol.style.Stroke({
-          color: '#ff0',
-          width: 1
-        })
-      })
-    }),
-    'LineString': new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: '#f00',
-        width: 3
-      })
-    }),
-    'MultiLineString': new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: '#0f0',
-        width: 3
-      })
-    })
-  };
+  var gpx = $("#gpxfile")[0].files[0]; // URL to your GPX file or the GPX itself
 
-
-  var vector = new ol.layer.Vector({
-    source: new ol.source.Vector({
-      url: 'https://openlayers.org/en/v4.6.4/examples/data/gpx/fells_loop.gpx',
-      format: new ol.format.GPX()
-    }),
-    style: function(feature) {
-      return style[feature.getGeometry().getType()];
-    }
-  });
-
-  var basemap = new ol.layer.Tile({
-    source: new ol.source.OSM()
-  })
-
-  var map = new ol.Map({
-    layers: [basemap, vector],
-    target: 'plotdiv',
-    view: new ol.View({
-      center: [-7916041.528716288, 5228379.045749711],
-      zoom: 12
-    })
-  });
-
-  var displayFeatureInfo = function(pixel) {
-    var features = [];
-    map.forEachFeatureAtPixel(pixel, function(feature) {
-      features.push(feature);
-    });
-    if (features.length > 0) {
-      var info = [];
-      var i, ii;
-      for (i = 0, ii = features.length; i < ii; ++i) {
-        info.push(features[i].get('desc'));
-      }
-      document.getElementById('info').innerHTML = info.join(', ') || '(unknown)';
-      map.getTarget().style.cursor = 'pointer';
-    } else {
-      document.getElementById('info').innerHTML = '&nbsp;';
-      map.getTarget().style.cursor = '';
-    }
-  };
-
-  map.on('pointermove', function(evt) {
-    if (evt.dragging) {
-      return;
-    }
-    var pixel = map.getEventPixel(evt.originalEvent);
-    displayFeatureInfo(pixel);
-  });
-
-  map.on('click', function(evt) {
-    displayFeatureInfo(evt.pixel);
-  });
+  new L.GPX(gpx, {async: true}).on('loaded', function(e) {
+    map.fitBounds(e.target.getBounds());
+  }).addTo(map);
 
 });
 
@@ -303,7 +230,6 @@ $(document).ajaxStop(function() {
         <div id="dev_check"></div>
     </div>
     </div>
-    <div id="info">&nbsp;</div>
     <div id="plotdiv" class="flex-item well"></div>
   </div>
   <!-- R Relayed Message and Progress Information -->
