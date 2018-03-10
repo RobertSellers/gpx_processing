@@ -30,12 +30,12 @@ body{
 #user_input_panel {
 	font-family: 'Source Sans Pro', sans-serif;
 	margin-left: 20px;
-	height: 540px;
+	height: 400px;
 	margin-bottom: 0px !important;
 }
 #plotdiv {
-	width: 400px;
-	height: 540px;
+	width: 600px;
+	height: 400px;
 	margin-left: 20px;
 	margin-bottom: 0px !important;
 }
