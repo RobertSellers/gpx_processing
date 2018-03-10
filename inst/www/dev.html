@@ -28,7 +28,8 @@ $(document).ready(function() {
 
   var viewModel = {
       session_tmp: ko.observable(),
-      gpx_file: ko.observable()
+      gpx_file: ko.observable(),
+      gpx_file_name: ko.observable()
   };
 
   //Display if dev.html or not
@@ -57,10 +58,16 @@ $(document).ready(function() {
       //Upload and validate the data
       //////////////////////////////
 
+    //Fix filenames
+    viewModel.gpx_file_name($("#gpxfile")[0].files[0].name.replace(/ /g,"_"))
+    $("#gpxfile")[0].files[0].name = viewModel.gpx_file_name()
+
       var req = ocpu.call("gpx_validation", {
           gpxfile : $("#gpxfile")[0].files[0]
       }, function(session){
+
           viewModel.session_tmp(session.getLoc())
+
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#convert_button").attr("href", session.getLoc())
