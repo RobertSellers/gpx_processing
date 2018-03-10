@@ -14,5 +14,4 @@ Imports:
     XML,
     OpenStreetMap,
     lubridate,
-    dplyr,
-    mongolite
+    dplyr

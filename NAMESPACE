@@ -1,1 +1,2 @@
-export(gpx_processing)
+export(gpx_validation)
+export(gpx_plot_velocity)
