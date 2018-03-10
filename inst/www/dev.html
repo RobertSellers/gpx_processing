@@ -166,6 +166,7 @@ $("#plot_map").on("click", function(){
     })
   };
 
+
   var vector = new ol.layer.Vector({
     source: new ol.source.Vector({
       url: 'https://openlayers.org/en/v4.6.4/examples/data/gpx/fells_loop.gpx',
@@ -176,45 +177,49 @@ $("#plot_map").on("click", function(){
     }
   });
 
-      var map = new ol.Map({
-        layers: [vector],
-        target: 'plotdiv',
-        view: new ol.View({
-          center: [-7916041.528716288, 5228379.045749711],
-          zoom: 12
-        })
-      });
+  var basemap = new ol.layer.Tile({
+    source: new ol.source.OSM()
+  })
 
-      var displayFeatureInfo = function(pixel) {
-        var features = [];
-        map.forEachFeatureAtPixel(pixel, function(feature) {
-          features.push(feature);
-        });
-        if (features.length > 0) {
-          var info = [];
-          var i, ii;
-          for (i = 0, ii = features.length; i < ii; ++i) {
-            info.push(features[i].get('desc'));
-          }
-          document.getElementById('info').innerHTML = info.join(', ') || '(unknown)';
-          map.getTarget().style.cursor = 'pointer';
-        } else {
-          document.getElementById('info').innerHTML = '&nbsp;';
-          map.getTarget().style.cursor = '';
-        }
-      };
+  var map = new ol.Map({
+    layers: [vector, basemap],
+    target: 'plotdiv',
+    view: new ol.View({
+      center: [-7916041.528716288, 5228379.045749711],
+      zoom: 12
+    })
+  });
 
-      map.on('pointermove', function(evt) {
-        if (evt.dragging) {
-          return;
-        }
-        var pixel = map.getEventPixel(evt.originalEvent);
-        displayFeatureInfo(pixel);
-      });
+  var displayFeatureInfo = function(pixel) {
+    var features = [];
+    map.forEachFeatureAtPixel(pixel, function(feature) {
+      features.push(feature);
+    });
+    if (features.length > 0) {
+      var info = [];
+      var i, ii;
+      for (i = 0, ii = features.length; i < ii; ++i) {
+        info.push(features[i].get('desc'));
+      }
+      document.getElementById('info').innerHTML = info.join(', ') || '(unknown)';
+      map.getTarget().style.cursor = 'pointer';
+    } else {
+      document.getElementById('info').innerHTML = '&nbsp;';
+      map.getTarget().style.cursor = '';
+    }
+  };
 
-      map.on('click', function(evt) {
-        displayFeatureInfo(evt.pixel);
-      });
+  map.on('pointermove', function(evt) {
+    if (evt.dragging) {
+      return;
+    }
+    var pixel = map.getEventPixel(evt.originalEvent);
+    displayFeatureInfo(pixel);
+  });
+
+  map.on('click', function(evt) {
+    displayFeatureInfo(evt.pixel);
+  });
 
 });
 
