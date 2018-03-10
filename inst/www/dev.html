@@ -229,19 +229,19 @@ $(document).ajaxStop(function() {
             <fieldset id="step_2">
               <legend class="custom_legend">(2a) Preview Data</legend>
               <div class="form-group">
-                <label>Plot coordinates</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
+                <label>Show map/table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
               </div>
             </fieldset>
             <fieldset id="step_3">
               <legend class="custom_legend">(2b) Download data</legend> <label>Download as csv</label> <button disabled="disabled" id="convert_button" type="button">Click</button>
             </fieldset>
           </form>
+          <div id='env_wrapper'>
+              <a id="session_url">Session URL</a>
+              <div id="dev_check"></div>
+            </div>
         </div>
         <div class="flex-item well" id="plotdiv"></div>
-        <div id='env_wrapper'>
-          <a id="session_url">Session URL</a>
-          <div id="dev_check"></div>
-        </div>
       </div>
     </div><!-- R Relayed Message and Progress Information -->
     <div id="azimuth_warning">
