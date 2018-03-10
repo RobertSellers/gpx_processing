@@ -30,8 +30,10 @@ $(document).ready(function() {
 
   $("#convert_button").attr("disabled", "disabled");
   $("#preview_button").attr("disabled", "disabled");
-  $("#water_level").attr("disabled", "disabled");
+  $("#plot_map").attr("disabled", "disabled");
+  $("#plot_velocity").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
+
   //automatically upload CSV file on change.
   $("#gpxfile").on("change", function(){
 
@@ -194,7 +196,7 @@ $(document).ajaxStop(function() {
   <div class="project_wrapper">
     <div class="flex-container">
       <div id="user_input_panel" class="flex-item well">
-        <div id="project_title">GPX QA v1.01</div>
+        <div id="project_title">GPX QA v1.02</div>
         <div id="credits">by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a></div>
         <form role="form" id="uploadform" enctype="multipart/form-data">
           <fieldset id="step_1">
@@ -204,21 +206,19 @@ $(document).ajaxStop(function() {
               </div>
           </fieldset>
           <fieldset id="step_2">
-            <legend class="custom_legend">(2) Adjust Water Depth to add Corrected Pressure and Est K.</legend>
+            <legend class="custom_legend">Choose an action</legend>
             <div class="form-group">
-              <label>Depth to Water (ft)</label>
-              <input class="input-medium" id="water_level" type="number" id="max" step="0.05" min="0" max="100" value="10" />
-              <button id="preview_button" type="button" disabled="disabled">Plot Preview</button>
+              <label>Plot coordinates</label>
+              <button id="plot_map" type="button" disabled="disabled">Click</button>
+              <label>Plot metrics</label>
+              <button id="plot_velocity" type="button" disabled="disabled">Click</button>
+              <label>Download as csv</label>
+              <button id="convert_button" type="button" disabled="disabled">Click</button>
             </div>
           </fieldset>
-            <fieldset id="step_3">
-              <legend class="custom_legend">(3) Download Updated .zip</legend>
-            <br>
-              <button id="convert_button" type="button" class="btn btn-primary" disabled="disabled">Download</button>
-            </fieldset>
         </form>
       <!-- R Relayed Message and Progress Information -->
-      <div id="tips"><b>Pro tip:</b> You can go straight to the download without previewing if you choose.</div>
+      <div id="tips"><b>Information:</b>...2018</div>
       <div id="azimuth_warning">
         <div id="successdiv"></div>
         <div id="errordiv"></div>
