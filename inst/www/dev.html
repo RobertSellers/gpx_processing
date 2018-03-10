@@ -27,7 +27,8 @@
 $(document).ready(function() {
 
   var viewModel = {
-      session_tmp: ko.observable()
+      session_tmp: ko.observable(),
+      gpx_file: ko.observable()
   };
 
   //Display if dev.html or not
@@ -75,8 +76,8 @@ $(document).ready(function() {
           $("#step_3").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
       }).always(function(){
-        var session_url = document.getElementById("session_url");
-        session_url.style.cursor = "pointer";
+          var session_url = document.getElementById("session_url");
+          session_url.style.cursor = "pointer";
     });
     }
 });
@@ -97,7 +98,6 @@ $("#return_metadata").on("click", function(){
 //////////////////////////////
 //Return metadata
 //////////////////////////////
-
 
     var req = $("#plotdiv").rplot("gpx_extract_metadata", {
       gpxfile : $("#gpxfile")[0].files[0]
@@ -121,9 +121,11 @@ $("#plot_velocity").on("click", function(){
     //Plot Preview Velocity
     //////////////////////////////
 
+    viewModel.gpx_file($("#gpxfile")[0].files[0])
+
     //create the plot area on the plotdiv element
     var req = $("#plotdiv").rplot("gpx_plot_velocity", {
-      gpxfile : $("#gpxfile")[0].files[0]
+      gpxfile : viewModel.gpx_file()
     }, function(session){
       //configure inputs on/off
       //success
@@ -158,6 +160,7 @@ $(function(){
 
   });
 });
+
 $("#convert_button").on("click", function(){
 
 //////////////////////////////
