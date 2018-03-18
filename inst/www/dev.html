@@ -101,7 +101,7 @@ $(document).ready(function() {
           session_url.style.cursor = "pointer";
           try{
             var table = $('#gpxDataTable').DataTable();
-            if ( ! table.data().any() ) {
+            if (table.data().any() ) {
               table.clear().draw();
             }
           }catch(ex){
