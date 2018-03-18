@@ -87,7 +87,7 @@ $(document).ready(function() {
   }
 
   $("#process_data").attr("disabled", "disabled");
-  $('.dt-buttons').attr("disabled", "disabled");
+  $('.dt-button buttons-collection').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
   //initialize leaflet map
@@ -256,7 +256,7 @@ function initDT(data , update){
   //////////////////////////////
   $(function(){
     $("#process_data").on("click", function(){
-      $(".dt-buttons").removeAttr("disabled");
+      $(".dt-button buttons-collection").removeAttr("disabled");
       $("#process_data").attr("disabled", "disabled");
         initDT(viewModel.rDataOutput(), true)
     });
