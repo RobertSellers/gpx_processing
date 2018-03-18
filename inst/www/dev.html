@@ -158,14 +158,14 @@ function errormsg(text){
 
 function initDT(data , update){
 
-if(update){
-  var datatable = $('#gpxDataTable').DataTable();
-    datatable.clear();
-    datatable.rows.add(data);
-    datatable.draw();
+  if(update){
+    var datatable = $('#gpxDataTable').DataTable();
+      datatable.clear();
+      datatable.rows.add(data);
+      datatable.draw();
 
-}else{
-  $('#gpxDataTable').dataTable({
+  }else{
+    $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
       data: data,
       searching: false,
@@ -197,7 +197,7 @@ if(update){
           }
         ]
       });
-  }
+    }
 }
 
 // Process data table
