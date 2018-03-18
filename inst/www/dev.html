@@ -171,6 +171,10 @@ $(function(){
     //Data Table
     //////////////////////////////
 
+    $.get(viewModel.session_tmp() + 'R/.val/csv', function(d) {
+          debugger
+    });
+
     //perform the request
     var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
