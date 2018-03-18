@@ -49,7 +49,7 @@ $(document).ready(function() {
       return this[property] !== undefined;
   };
 
-  initDT({})
+  initDT({}, false)
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
@@ -155,7 +155,15 @@ function errormsg(text){
   }, 5000 );
 }
 
-function initDT(data){
+function initDT(data , update){
+
+if(update){
+  var datatable = $('#gpxDataTable').DataTable();
+    datatable.clear();
+    datatable.rows.add(data);
+    datatable.draw();
+
+}else{
   $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
       data: data,
@@ -188,6 +196,7 @@ function initDT(data){
           }
         ]
       });
+  }
 }
 
 // Process data table
@@ -199,7 +208,7 @@ $(function(){
     //Data Table
     //////////////////////////////
 
-    initDT(viewModel.rDataOutput())
+    initDT(viewModel.rDataOutput(), true)
   });
 });
 
