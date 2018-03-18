@@ -57,11 +57,9 @@ $(document).ready(function() {
     get_elevation_max_imp: ko.observable(),// returns the highest elevation, in feet
     get_elevation_gain_imp: ko.observable(),// returns the cumulative elevation gain, in feet
     get_elevation_loss_imp: ko.observable(),//returns the cumulative elevation loss, in feet
-    //full elevation, heartrate, cadence and temperature data
+    //full elevation, cadence  data
     get_elevation_data_imp: ko.observable(),
-    get_heartrate_data_imp: ko.observable(),
-    get_cadence_data_imp: ko.observable(),
-    get_temp_data_imp: ko.observable()
+    get_cadence_data_imp: ko.observable()
   };
 
   Object.prototype.hasOwnProperty = function(property) {
@@ -143,24 +141,22 @@ $(document).ready(function() {
           gpxLayer.on('loaded', function(e) {
             map.fitBounds(e.target.getBounds());
             viewModel.get_name(e.target.get_name())//returns the name of the GPX track
-            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + 'mi')//returns the total track distance in miles
-            viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
+            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
+            // viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
             viewModel.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
             viewModel.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
             viewModel.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
             viewModel.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
             // viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
-            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+'mph')//returns the average moving speed in miles per hour
-            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + 'mph')//returns the average total speed in miles per hour
-            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + 'ft')// returns the lowest elevation, in feet
-            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + 'ft')// returns the highest elevation, in feet
-            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + 'ft')// returns the cumulative elevation gain, in feet
-            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + 'ft')//returns the cumulative elevation loss, in feet
+            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
+            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
+            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
+            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
+            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
+            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
             //full elevation, heartrate, cadence and temperature data
             viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
-            viewModel.get_heartrate_data_imp(e.target.get_heartrate_data_imp())
             viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
-            viewModel.get_temp_data_imp(e.target.get_temp_data_imp())
           }).addTo(viewModel.leafletMap());
 
         });
@@ -307,6 +303,23 @@ function initDT(data , update){
               <input id="gpxfile" type="file">
             </div>
           </fieldset>
+          <div class='gpx_metadata'>
+          <b>File name:</b> <span data-bind="text: get_name"></span><br>
+          <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+          <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+          <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+          <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+          <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+          <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+          <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+          <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+          <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+          <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+          <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+          <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+          <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+          <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
+        </div>
           <!-- Step 2: Display Data -->
           <fieldset id="step_2">
             <legend class="custom_legend">(2a) Preview Data</legend>
@@ -315,22 +328,6 @@ function initDT(data , update){
             </div>
           </fieldset>
         </form>
-
-        <b>File name:</b> <span data-bind="text: get_name"></span><br>
-        <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
-        <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br>
-        <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
-        <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
-        <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
-        <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
-        <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
-        <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
-        <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
-        <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
-        <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
-        <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
-        <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
-        <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
         <!-- R Relayed Message and Progress Information -->
         <div id="warning">
           <div id="successdiv"></div>

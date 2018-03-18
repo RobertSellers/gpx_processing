@@ -146,3 +146,11 @@ html, body {
     color: green;
     position: relative;
 }
+
+.gpx_metadata{
+	color: tomato;
+}
+
+.dt-button-background{
+	z-index:999;
+}
