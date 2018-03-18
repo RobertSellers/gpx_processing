@@ -133,7 +133,7 @@ $(document).ready(function() {
 
             gpxLayer.on('loaded', function(e) {
               map.fitBounds(e.target.getBounds());
-              viewModel.get_name(get_name(e.target.get_name()))//returns the name of the GPX track
+              viewModel.get_name(e.target.get_name())//returns the name of the GPX track
               viewModel.get_distance_imp(e.target.get_distance_imp())//returns the total track distance in miles
               viewModel.get_start_time(e.target.get_start_time())//returns a Javascript Date object representing the starting time
               viewModel.get_end_time(e.target.get_end_time())//returns a Javascript Date object representing when the last point was recorded
@@ -243,20 +243,19 @@ function initDT(data , update){
     }
 }
 
-// Process data table
-$(function(){
-  $("#process_data").on("click", function(){
-    $("#process_data").attr("disabled", "disabled");
-
-    //////////////////////////////
-    //Data Table
-    //////////////////////////////
-
-    initDT(viewModel.rDataOutput(), true)
+  //////////////////////////////
+  //Process Data Table
+  //////////////////////////////
+  $(function(){
+    $("#process_data").on("click", function(){
+      $("#process_data").attr("disabled", "disabled");
+        initDT(viewModel.rDataOutput(), true)
+    });
   });
-});
 
-
+  //////////////////////////////
+  //Ajax Progress Bar
+  //////////////////////////////
 
   $(document).ajaxStart(function() {
     $(".progress").show();
@@ -270,7 +269,7 @@ $(function(){
 
 </script>
 
-<link href="styles/bootstrap_two_panel.css" rel="stylesheet" type="text/css">
+<link href="styles/bootstrap_three_panel.css" rel="stylesheet" type="text/css">
 
 </head>
 

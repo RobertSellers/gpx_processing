@@ -27,12 +27,12 @@ html, body {
     font-family: 'Source Sans Pro', sans-serif;
     margin-left: 20px;
     margin-top: 20px;
-    height: 400px;
+    height: 600px;
     margin-bottom: 0px !important;
 }
 #plotdiv {
     width: 600px;
-    height: 400px;
+    height: 600px;
     margin-left: 20px;
     margin-top: 20px;
     margin-bottom: 0px !important;
