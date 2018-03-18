@@ -42,16 +42,11 @@ $(document).ready(function() {
       gpx_file: ko.observable(),
       gpx_file_name: ko.observable(),
       leafletMap: ko.observable(),
-      rDataOutput: ko.observable(),
-      isSpinning: ko.observable(false),
-      showLoader: ko.observable(false)
+      rDataOutput: ko.observable()
   };
 
-  ko.applyBindings(viewModel)
-
   //Display if dev.html or not
-  var url = window.location.href.split(/[\\\/]/);
-  var cur_url = url[url.length-1]
+  var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
     $("#dev_check").html(cur_url);
   }
@@ -64,9 +59,6 @@ $(document).ready(function() {
 
   //verify that a file is selected
   if($("#gpxfile")[0].files[0]){
-
-      viewModel.showLoader(true)
-      viewModel.isSpinning(true)
 
       $("#successdiv").empty();
       $("#errordiv").empty()
@@ -81,36 +73,31 @@ $(document).ready(function() {
       var req = ocpu.call("gpx_validation", {
           gpxfile : $("#gpxfile")[0].files[0]
       }, function(session){
+          viewModel.session_tmp(session.getLoc())
 
-        viewModel.session_tmp(session.getLoc())
          //retrieve javascript object as json
-        session.getObject(function(data)  {
-          viewModel.rDataOutput(data)
-          $("#session_url").removeAttr("disabled");
-          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#process_data").removeAttr("disabled");
-          successmsg("GPX file successfully loaded!");
-          viewModel.showLoader(false)
-          viewModel.isSpinning(false)
-          //refresh the map
-          try{
-            viewModel.leafletMap().off()
-            viewModel.leafletMap().remove()
-          }catch(err){
-            // errormsg('Leaflet error');
-          }
-        });
+         session.getObject(function(data)  {
+            viewModel.rDataOutput(data)
+            $("#session_url").removeAttr("disabled");
+            $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+            $("#process_data").removeAttr("disabled");
+            $("#step_2").css("opacity", 1);
+            successmsg("GPX file successfully loaded!");
+            //refresh the map
+            try{
+              viewModel.leafletMap().off()
+              viewModel.leafletMap().remove()
+            }catch(err){
+              //do nothing for the moment
+            }
+          });
 
       }).fail(function(jqXHR){
-
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
-
       }).always(function(){
-
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
-
     });
     }
 });
@@ -178,13 +165,13 @@ $(function(){
         {"data":  "dUp", title: "dUp"}
         ],
       buttons: [
-        {
-          extend: 'collection',
-          text: 'Export',
-          buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
-        }
-      ]
-    });
+          {
+            extend: 'collection',
+            text: 'Export',
+            buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+          }
+        ]
+      });
   });
 });
 
@@ -234,12 +221,7 @@ $(function(){
             <div id="dev_check"></div>
           </div>
       </div>
-      <!-- ko if: showLoader -->
-      <div id="loading-overlay" data-bind="visible: isSpinning"></div>
-      <!-- /ko -->
-      <!-- ko if: !showLoader -->
       <div class="flex-item well" id="plotdiv"></div>
-      <!-- /ko -->
       <div class="flex-item well" id="gpxTable">
           <table id="gpx_processed" class="display" cellspacing="0">
           </table>
