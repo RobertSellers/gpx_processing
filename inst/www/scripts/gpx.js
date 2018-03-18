@@ -45,11 +45,11 @@ var _HOUR_IN_MILLIS = 60 * _MINUTE_IN_MILLIS;
 var _DAY_IN_MILLIS = 24 * _HOUR_IN_MILLIS;
 
 var _DEFAULT_MARKER_OPTS = {
-  startIconUrl: 'pin-icon-start.png',
-  endIconUrl: 'pin-icon-end.png',
-  shadowUrl: 'pin-shadow.png',
+  startIconUrl: 'leaflet/pin-icon-start.png',
+  endIconUrl: 'leaflet/pin-icon-end.png',
+  shadowUrl: 'leaflet/pin-shadow.png',
   wptIconUrls : {
-    '': 'pin-icon-wpt.png',
+    '': 'leaflet/pin-icon-wpt.png',
   },
   iconSize: [33, 50],
   shadowSize: [50, 50],
