@@ -104,11 +104,10 @@ $(document).ready(function() {
 
 //R output to popup
 function successmsg(text){
+  $("#successdiv").empty()
+  .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
   setTimeout(function(){ 
-    $("#successdiv")
-    .empty()
-    .append('<div class="alert alert-success alert-dismissable">' + text + '</div>')
-    .fadeOut( "slow", function() {
+  $("#successdiv").fadeOut( "slow", function() {
     // Animation complete.
     });
   }, 5000 );
@@ -116,12 +115,11 @@ function successmsg(text){
 
 //R output to popup
 function errormsg(text){
-  setTimeout(function(){ 
     $("#convert_button").attr("disabled", "disabled");
-    $("#errordiv")
-    .empty()
-    .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>')
-    .fadeOut( "slow", function() {
+    $("#errordiv").empty()
+    .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+    setTimeout(function(){ 
+    $("#convert_button").fadeOut( "slow", function() {
     // Animation complete.
     });
   }, 5000 );
