@@ -56,9 +56,12 @@ html, body {
 } */
 
 
+gpx_processed_wrapper{
+	width: 900px;
+}
 
 #gpx_processed{
-	/* width:100%; */
+	width:100%;
 	table-layout: fixed;
 }
 
