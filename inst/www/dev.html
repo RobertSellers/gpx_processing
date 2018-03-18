@@ -39,7 +39,6 @@ $(document).ready(function() {
 
   var viewModel = {
       session_tmp: ko.observable(),
-      gpx_file: ko.observable(),
       gpx_file_name: ko.observable(),
       leafletMap: ko.observable(),
       rDataOutput: ko.observable()
@@ -106,9 +105,10 @@ $(document).ready(function() {
                 viewModel.leafletMap().removeLayer(layer);
               }
             });
-            var gpx = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+            var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+            var gpxLayer = new L.GPX(gpx, {async: true})
 
-            new L.GPX(gpx, {async: true}).on('loaded', function(e) {
+            gpxLayer.on('loaded', function(e) {
               map.fitBounds(e.target.getBounds());
             }).addTo(viewModel.leafletMap());
 
