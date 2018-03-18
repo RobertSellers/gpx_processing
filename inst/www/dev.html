@@ -41,7 +41,29 @@ $(document).ready(function() {
       session_tmp: ko.observable(),
       gpx_file_name: ko.observable(),
       leafletMap: ko.observable(),
-      rDataOutput: ko.observable()
+      rDataOutput: ko.observable(),
+      //gpx.js output data
+      get_name: ko.observable(),//returns the name of the GPX track
+      get_distance_imp: ko.observable(),//returns the total track distance in miles
+      get_start_time: ko.observable(),//returns a Javascript Date object representing the starting time
+      get_end_time: ko.observable(),//returns a Javascript Date object representing when the last point was recorded
+      get_moving_time: ko.observable(),//returns the moving time, in milliseconds
+      get_total_time: ko.observable(),//returns the total track time, in milliseconds
+      get_moving_pace_imp: ko.observable(),//returns the average moving pace in milliseconds per hour
+      get_moving_speed_imp: ko.observable(),//returns the average moving speed in miles per hour
+      get_total_speed_imp: ko.observable(),//returns the average total speed in miles per hour
+      get_elevation_min_imp: ko.observable(),// returns the lowest elevation, in feet
+      get_elevation_max_imp: ko.observable(),// returns the highest elevation, in feet
+      get_elevation_gain_imp: ko.observable(),// returns the cumulative elevation gain, in feet
+      get_elevation_loss_imp: ko.observable(),//returns the cumulative elevation loss, in feet
+      get_average_hr: ko.observable(),//returns the average heart rate (if available)
+      get_average_cadence: ko.observable(),// returns the average cadence (if available)
+      get_average_temp: ko.observable(),//returns the average of the temperature (if available)
+      //full elevation, heartrate, cadence and temperature data
+      get_elevation_data_imp: ko.observable(),
+      get_heartrate_data_imp: ko.observable(),
+      get_cadence_data_imp: ko.observable(),
+      get_temp_data_imp: ko.observable()
   };
 
   Object.prototype.hasOwnProperty = function(property) {
@@ -111,6 +133,27 @@ $(document).ready(function() {
 
             gpxLayer.on('loaded', function(e) {
               map.fitBounds(e.target.getBounds());
+              viewModel.get_name(get_name(e.target.get_name()))//returns the name of the GPX track
+              viewModel.get_distance_imp(e.target.get_distance_imp())//returns the total track distance in miles
+              viewModel.get_start_time(e.target.get_start_time())//returns a Javascript Date object representing the starting time
+              viewModel.get_end_time(e.target.get_end_time())//returns a Javascript Date object representing when the last point was recorded
+              viewModel.get_moving_time(e.target.get_moving_time())//returns the moving time, in milliseconds
+              viewModel.get_total_time(e.target.get_total_time())//returns the total track time, in milliseconds
+              viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
+              viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp())//returns the average moving speed in miles per hour
+              viewModel.get_total_speed_imp(e.target.get_total_speed_imp())//returns the average total speed in miles per hour
+              viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp())// returns the lowest elevation, in feet
+              viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp())// returns the highest elevation, in feet
+              viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp())// returns the cumulative elevation gain, in feet
+              viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp())//returns the cumulative elevation loss, in feet
+              viewModel.get_average_hr(e.target.get_average_hr())//returns the average heart rate (if available)
+              viewModel.get_average_cadence(e.target.get_average_cadence())// returns the average cadence (if available)
+              viewModel.get_average_temp(e.target.get_average_temp())//returns the average of the temperature (if available)
+              //full elevation, heartrate, cadence and temperature data
+              viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
+              viewModel.get_heartrate_data_imp(e.target.get_heartrate_data_imp())
+              viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
+              viewModel.get_temp_data_imp(e.target.get_temp_data_imp())
             }).addTo(viewModel.leafletMap());
 
           });
