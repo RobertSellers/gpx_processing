@@ -234,10 +234,10 @@ $(function(){
             <div id="dev_check"></div>
           </div>
       </div>
-      <!-- ko if: showLoader() -->
+      <!-- ko if: showLoader -->
       <div id="loading-overlay" data-bind="visible: isSpinning"></div>
       <!-- /ko -->
-      <!-- ko if: !showLoader() -->
+      <!-- ko if: !showLoader -->
       <div class="flex-item well" id="plotdiv"></div>
       <!-- /ko -->
       <div class="flex-item well" id="gpxTable">
