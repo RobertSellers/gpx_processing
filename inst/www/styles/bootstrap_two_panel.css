@@ -28,27 +28,30 @@ body{
 }
 
 #user_input_panel {
-	font-family: 'Source Sans Pro', sans-serif;
-	margin-left: 20px;
-	height: 400px;
-	margin-bottom: 0px !important;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-left: 20px;
+    margin-top: 20px;
+    height: 400px;
+    margin-bottom: 0px !important;
 }
 #plotdiv {
-	width: 600px;
-	height: 400px;
-	margin-left: 20px;
-	margin-bottom: 0px !important;
+    width: 600px;
+    height: 400px;
+    margin-left: 20px;
+    margin-top: 20px;
+    margin-bottom: 0px !important;
 }
 
 #gpxTable {
-	width: 900px;
-	height: 400px;
-	margin-left: 20px;
-	margin-top: 20px;
+    /* width: 80%; */
+    /* height: 400px; */
+    max-width: 900px;
+    margin-left: 20px;
+    margin-top: 20px;
 }
 
 #gpx_processed{
-	width:100%;
+	/* width:100%; */
 }
 
 .plot_btn {
