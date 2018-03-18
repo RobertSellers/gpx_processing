@@ -107,7 +107,7 @@ $(document).ready(function() {
             });
             //load gpx
             var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
-            var gpxLayer = new L.GPX(gpx, {async: true})
+            var gpxLayer = new L.GPX(gpx_file, {async: true})
 
             gpxLayer.on('loaded', function(e) {
               map.fitBounds(e.target.getBounds());
