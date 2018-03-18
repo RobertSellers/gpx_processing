@@ -7,15 +7,15 @@ var L = L || require("leaflet"),
 	_DEFAULT_MARKER_OPTS = {
 		startIconUrl: "leaflet/pin-icon-start.png",
 		endIconUrl: "leaflet/pin-icon-end.png",
-		// shadowUrl: "leaflet/pin-shadow.png",
+		shadowUrl: "leaflet/pin-shadow.png",
 		wptIconUrls: {
 			"": "leaflet/pin-icon-wpt.png"
 		},
 		iconSize: [17, 25],
-		// shadowSize: [25, 25],
-		// iconAnchor: [16, 45],
-		// shadowAnchor: [16, 47],
-		clickable: !1
+		shadowSize: [25, 25],
+		iconAnchor: [8, 22],
+		shadowAnchor: [8, 23],
+		clickable: 1
 	},
 	_DEFAULT_POLYLINE_OPTS = {
 		color: "blue"

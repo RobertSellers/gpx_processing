@@ -116,6 +116,13 @@ $(document).ready(function() {
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
+          viewModel.leafletMap().eachLayer(function (layer) {
+              // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+              if (layer.hasOwnProperty('_gpx')){
+                viewModel.leafletMap().removeLayer(layer);
+              }
+            });
+            viewModel.leafletMap().setView([37.8, -96], 4);
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
