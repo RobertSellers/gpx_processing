@@ -39,6 +39,14 @@ body{
 	margin-left: 20px;
 	margin-bottom: 0px !important;
 }
+
+#gpxTable {
+	width: 900px;
+	height: 400px;
+	margin-left: 20px;
+	margin-top: 20px;
+}
+
 .plot_btn {
 	font-size: 10px !important;
 	margin-left: 6px !important;

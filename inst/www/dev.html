@@ -88,7 +88,6 @@ $(document).ready(function() {
           $("#plot_velocity").removeAttr("disabled");
           $("#step_2").css("opacity", 1);
           $("#step_3").css("opacity", 1);
-          successmsg("GPX file successfully loaded!");
 
          //retrieve javascript object as json
          session.getObject(function(data)  {
@@ -102,6 +101,7 @@ $(document).ready(function() {
           }catch(err){
             //do nothing for the moment
           }
+          successmsg("GPX file successfully loaded!");
 
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
@@ -281,7 +281,7 @@ $("#convert_button").on("click", function(){
             </div>
         </div>
         <div class="flex-item well" id="plotdiv"></div>
-        <div class="flex-item well">
+        <div class="flex-item well" id="gpxTable">
             <table id="gpx_processed" class="display" cellspacing="0">
             </table>
           </div>
