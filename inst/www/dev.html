@@ -87,7 +87,7 @@ $(document).ready(function() {
   }
 
   $("#process_data").attr("disabled", "disabled");
-  $('.dt-button buttons-collection').attr("disabled", "disabled");
+  $('.dt-button').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
   $('.step2').each(function(){
@@ -260,7 +260,7 @@ function initDT(data , update){
   //////////////////////////////
   $(function(){
     $("#process_data").on("click", function(){
-      $(".dt-button buttons-collection").removeAttr("disabled");
+      $(".dt-button").removeAttr("disabled");
       $("#process_data").attr("disabled", "disabled");
         initDT(viewModel.rDataOutput(), true)
     });
