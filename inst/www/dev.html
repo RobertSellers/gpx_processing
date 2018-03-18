@@ -41,7 +41,8 @@ $(document).ready(function() {
       session_tmp: ko.observable(),
       gpx_file: ko.observable(),
       gpx_file_name: ko.observable(),
-      leafletMap: ko.observable()
+      leafletMap: ko.observable(),
+      rDataOutput: ko.observable()
   };
 
   //Display if dev.html or not
@@ -88,6 +89,11 @@ $(document).ready(function() {
           $("#step_2").css("opacity", 1);
           $("#step_3").css("opacity", 1);
           successmsg("GPX file successfully loaded!");
+
+         //retrieve javascript object as json
+         session.getObject(function(data)  {
+            viewModel.rDataOutput(JSON.stringify(data))
+          });
 
           //refresh the map
           try{
@@ -174,16 +180,16 @@ $(function(){
     $.get(viewModel.session_tmp() + 'R/.val/csv', function(arr) {
       //data table request
 
-      var jsonObj = [];
-      var headers = arr[0].split(',');
-      for(var i = 1; i < arr.length; i++) {
-        var data = arr[i].split(',');
-        var obj = {};
-        for(var j = 0; j < data.length; j++) {
-          obj[headers[j].trim()] = data[j].trim();
-        }
-        jsonObj.push(obj);
-      }
+      // var jsonObj = [];
+      // var headers = arr[0].split(',');
+      // for(var i = 1; i < arr.length; i++) {
+      //   var data = arr[i].split(',');
+      //   var obj = {};
+      //   for(var j = 0; j < data.length; j++) {
+      //     obj[headers[j].trim()] = data[j].trim();
+      //   }
+      //   jsonObj.push(obj);
+      // }
 
       JSON.stringify(jsonObj);
 
