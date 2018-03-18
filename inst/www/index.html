@@ -45,6 +45,11 @@ $(document).ready(function() {
       rDataOutput: ko.observable()
   };
 
+  Object.prototype.hasOwnProperty = function(property) {
+      return this[property] !== undefined;
+  };
+
+  initDT({}, false)
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
@@ -53,6 +58,16 @@ $(document).ready(function() {
 
   $("#process_data").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
+
+  //initialize leaflet map
+  var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+    map.setView([37.8, -96], 4);
+
+    viewModel.leafletMap(map)
 
   //automatically upload GPX file on change.
   $("#gpxfile").on("change", function(){
@@ -84,20 +99,35 @@ $(document).ready(function() {
             $("#step_2").css("opacity", 1);
             successmsg("GPX file successfully loaded!");
             //refresh the map
-            try{
-              viewModel.leafletMap().off()
-              viewModel.leafletMap().remove()
-            }catch(err){
-              //do nothing for the moment
-            }
+
+            viewModel.leafletMap().eachLayer(function (layer) {
+              // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+              if (layer.hasOwnProperty('_gpx')){
+                viewModel.leafletMap().removeLayer(layer);
+              }
+            });
+            var gpx = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+
+            new L.GPX(gpx, {async: true}).on('loaded', function(e) {
+              map.fitBounds(e.target.getBounds());
+            }).addTo(viewModel.leafletMap());
+
           });
 
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
+          viewModel.leafletMap().eachLayer(function (layer) {
+              // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+              if (layer.hasOwnProperty('_gpx')){
+                viewModel.leafletMap().removeLayer(layer);
+                viewModel.leafletMap().setView([37.8, -96], 4);
+              }
+            });
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
+          initDT({}, true) //clear datatable
     });
     }
 });
@@ -125,56 +155,38 @@ function errormsg(text){
   }, 5000 );
 }
 
+function initDT(data , update){
 
-$(function(){
-  $("#process_data").on("click", function(){
-    $("#process_data").attr("disabled", "disabled");
-    //////////////////////////////
-    //Plot Preview Map
-    //////////////////////////////
+  if(update){
+    var datatable = $('#gpxDataTable').DataTable();
+      datatable.clear();
+      datatable.rows.add(data);
+      datatable.draw();
 
-    //Retrieve saved GPX
-    var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); 
-
-    var map = L.map('plotdiv');
-    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
-        subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map);
-
-    new L.GPX(gpx, {async: true}).on('loaded', function(e) {
-      map.fitBounds(e.target.getBounds());
-    }).addTo(map);
-
-    viewModel.leafletMap(map)
-
-    //////////////////////////////
-    //Data Table
-    //////////////////////////////
-
-
-    $('#gpx_processed').dataTable({
+  }else{
+    $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
-      data: viewModel.rDataOutput(),
+      data: data,
       searching: false,
+      pageLength: 5,
       columns: [
         {"data": "DateTime", title: "DateTime"},
         {"data":  "Dist", title: "Dist"},
-        {"data":  "Dist2D", title: "Dist2D"},
-        {"data":  "East", title: "East"},
+        // {"data":  "Dist2D", title: "Dist2D"},
+        // {"data":  "East", title: "East"},
         {"data":  "Elevation", title: "Elevation"},
         {"data":  "Gradient", title: "Gradient"},
         {"data":  "Latitude", title: "Latitude"},
         {"data":  "Longitude", title: "Longitude"},
-        {"data":  "North", title: "North"},
+        // {"data":  "North", title: "North"},
         {"data":  "Pace", title: "Pace"},
         {"data":  "Seconds", title: "Seconds"},
         {"data":  "Speed", title: "Speed"},
         {"data":  "dDist", title: "dDist"},
-        {"data":  "dDist2D", title: "dDist2D"},
-        {"data":  "dEast", title: "dEast"},
-        {"data":  "dNorth", title: "dNorth"},
-        {"data":  "dUp", title: "dUp"}
+        // {"data":  "dDist2D", title: "dDist2D"},
+        // {"data":  "dEast", title: "dEast"},
+        // {"data":  "dNorth", title: "dNorth"},
+        // {"data":  "dUp", title: "dUp"}
         ],
       buttons: [
           {
@@ -184,6 +196,19 @@ $(function(){
           }
         ]
       });
+    }
+}
+
+// Process data table
+$(function(){
+  $("#process_data").on("click", function(){
+    $("#process_data").attr("disabled", "disabled");
+
+    //////////////////////////////
+    //Data Table
+    //////////////////////////////
+
+    initDT(viewModel.rDataOutput(), true)
   });
 });
 
@@ -216,7 +241,7 @@ $(function(){
         </div>
         <!-- Title Div -->
         <div id="project_title">
-          GPX QA v1.11
+          GPX QA v1.2
         </div>
          <!-- Credits Div -->
         <div id="credits">
@@ -234,7 +259,7 @@ $(function(){
           <fieldset id="step_2">
             <legend class="custom_legend">(2a) Preview Data</legend>
             <div class="form-group">
-              <label>Show map/table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
+              <label>Load table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
             </div>
           </fieldset>
         </form>
@@ -249,9 +274,9 @@ $(function(){
       </div>
       <div class="flex-item well" id="plotdiv"></div>
       <div class="flex-item well" id="gpxTable">
-          <table id="gpx_processed" class="display" cellspacing="0">
+          <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
-        </div>
+      </div>
     </div>
   </body>
 </html>
