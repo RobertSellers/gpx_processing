@@ -92,7 +92,7 @@ $(document).ready(function() {
 
          //retrieve javascript object as json
          session.getObject(function(data)  {
-            viewModel.rDataOutput(JSON.stringify(data))
+            viewModel.rDataOutput(data)
           });
 
           //refresh the map
@@ -177,36 +177,17 @@ $(function(){
     //Data Table
     //////////////////////////////
 
-    $.get(viewModel.session_tmp() + 'R/.val/csv', function(arr) {
-      //data table request
 
-      // var jsonObj = [];
-      // var headers = arr[0].split(',');
-      // for(var i = 1; i < arr.length; i++) {
-      //   var data = arr[i].split(',');
-      //   var obj = {};
-      //   for(var j = 0; j < data.length; j++) {
-      //     obj[headers[j].trim()] = data[j].trim();
-      //   }
-      //   jsonObj.push(obj);
-      // }
-
-      JSON.stringify(jsonObj);
-
-      testdata = '{{ jobsJSON | raw }}';
-
-      console.log(testdata);
-      $('#gpx_processed').dataTable({
-        dom: 'frtip',
-        data: testdata,
-        buttons: [
-            {
-              extend: 'collection',
-              text: 'Export',
-              buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
-            }
-          ]
-        });
+    $('#gpx_processed').dataTable({
+      dom: 'frtip',
+      data: viewModel.rDataOutput(),
+      buttons: [
+          {
+            extend: 'collection',
+            text: 'Export',
+            buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+          }
+        ]
       });
   });
 });
