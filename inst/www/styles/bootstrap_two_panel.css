@@ -7,7 +7,8 @@ html, body {
 
 #warning {
 	padding: 20px;
-	max-width: 380px;
+	font-size: 10px;
+	max-width: 240px;
 }
 #step_2 {
 	opacity: 0.2;
