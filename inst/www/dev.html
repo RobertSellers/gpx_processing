@@ -105,6 +105,7 @@ $(document).ready(function() {
                 viewModel.leafletMap().removeLayer(layer);
               }
             });
+            //load gpx
             var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
             var gpxLayer = new L.GPX(gpx, {async: true})
 
