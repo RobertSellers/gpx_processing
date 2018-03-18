@@ -96,8 +96,8 @@ $(document).ready(function() {
   //verify that a file is selected
   if($("#gpxfile")[0].files[0]){
 
-      $("#successdiv").empty().show();
-      $("#errordiv").empty().show();
+    $("#successdiv").empty().show();
+    $("#errordiv").empty().show();
 
     //////////////////////////////
     //Upload and validate the data
@@ -171,7 +171,7 @@ $(document).ready(function() {
           session_url.style.cursor = "pointer";
           initDT({}, true) //clear datatable
     });
-    }
+  }
 });
 
 //R output to popup
@@ -262,6 +262,8 @@ function initDT(data , update){
   $(document).ajaxStop(function() {
     $(".progress").hide();
   });
+
+  ko.applyBindings(viewModel)
 
 });
 
