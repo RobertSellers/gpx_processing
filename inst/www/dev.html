@@ -93,8 +93,8 @@ $(document).ready(function() {
           try{
             viewModel.leafletMap().off()
             viewModel.leafletMap().remove()
-          }catch{
-
+          }catch(err){
+            //do nothing for the moment
           }
 
       }).fail(function(jqXHR){
