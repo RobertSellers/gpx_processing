@@ -99,14 +99,14 @@ $(document).ready(function() {
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
-          try{
-            var table = $('#gpxDataTable').DataTable();
-            if (table.data().any() ) {
-              table.clear().draw();
-            }
-          }catch(ex){
-            //nothing right now
-          }
+          // try{
+          //   var table = $('#gpxDataTable').DataTable();
+          //   if (table.data().any() ) {
+          //     table.clear().draw();
+          //   }
+          // }catch(ex){
+          //   //nothing right now
+          // }
     });
     }
 });
