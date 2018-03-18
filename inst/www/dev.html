@@ -195,13 +195,22 @@ $(function(){
 
   <body>
     <div class="flex-container">
+      <!-- First Panel -->
       <div class="flex-item well" id="user_input_panel">
+        <!-- Display session info -->
+        <div id='env_wrapper'>
+          <a id="session_url">Session URL</a>
+          <div id="dev_check"></div>
+        </div>
+        <!-- Title Div -->
         <div id="project_title">
           GPX QA v1.10
         </div>
+         <!-- Credits Div -->
         <div id="credits">
           by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
         </div>
+        <!-- Step 1: Load File -->
         <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
           <fieldset id="step_1">
             <legend class="custom_legend">(1) Load GPX data</legend>
@@ -209,6 +218,7 @@ $(function(){
               <input id="gpxfile" type="file">
             </div>
           </fieldset>
+          <!-- Step 2: Display Data -->
           <fieldset id="step_2">
             <legend class="custom_legend">(2a) Preview Data</legend>
             <div class="form-group">
@@ -216,24 +226,20 @@ $(function(){
             </div>
           </fieldset>
         </form>
-        <div id='env_wrapper'>
-            <a id="session_url">Session URL</a>
-            <div id="dev_check"></div>
+          <!-- R Relayed Message and Progress Information -->
+        <div id="warning">
+          <div id="successdiv"></div>
+          <div id="errordiv"></div>
+          <div class="progress progress-striped active">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%"></div>
           </div>
+        </div>
       </div>
       <div class="flex-item well" id="plotdiv"></div>
       <div class="flex-item well" id="gpxTable">
           <table id="gpx_processed" class="display" cellspacing="0">
           </table>
         </div>
-    </div>
-      <!-- R Relayed Message and Progress Information -->
-    <div id="azimuth_warning">
-      <div id="successdiv"></div>
-      <div id="errordiv"></div>
-      <div class="progress progress-striped active">
-        <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%"></div>
-      </div>
     </div>
   </body>
 </html>

@@ -5,11 +5,7 @@ html, body {
 	margin: 0;
 }
 
-/* body{
-    height: 0% !important;
-} */
-
-#azimuth_warning {
+#warning {
 	padding: 20px;
 	max-width: 380px;
 }
