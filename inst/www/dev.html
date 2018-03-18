@@ -22,6 +22,7 @@
 <script src="scripts/bootstrap/js/bootstrap.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
 <script src="scripts/knockout-min.js"></script>
+<script src="scripts/ko.plus.js"></script>
 <script src="scripts/leaflet.js"></script>
 <script src="scripts/gpx.js"></script>
 <script src="scripts/jquery.dataTables.min.js"></script>
@@ -37,25 +38,37 @@
 
 $(document).ready(function() {
 
-  var viewModel = {
-      session_tmp: ko.observable(),
-      gpx_file: ko.observable(),
-      gpx_file_name: ko.observable(),
-      leafletMap: ko.observable(),
-      rDataOutput: ko.observable()
-  };
+  // var viewModel = {
+  //     session_tmp: ko.observable(),
+  //     gpx_file: ko.observable(),
+  //     gpx_file_name: ko.observable(),
+  //     leafletMap: ko.observable(),
+  //     rDataOutput: ko.observable()
+  // };
+
+  function viewModel() {
+      this.session_tmp = ko.observable(),
+      this.gpx_file= ko.observable(),
+      this.gpx_file_name= ko.observable(),
+      this.leafletMap= ko.observable(),
+      this.rDataOutput= ko.observable(),
+      this.doSomething = ko.command(function() {
+          // return $.get("...");
+      })
+      .done(function(data) {
+          //do something with the response
+      })
+      .fail(function(error) {
+          //handle the error
+      });
+  }
 
   //Display if dev.html or not
-  var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1];
-
-  if(cur_url=="dev.html"){
+  if(window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1] == "dev.html"){
     $("#dev_check").html(cur_url);
   }
 
-  $("#return_metadata").attr("disabled", "disabled");
   $("#process_data").attr("disabled", "disabled");
-  $("#plot_velocity").attr("disabled", "disabled");
-  $("#convert_button").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
   //automatically upload GPX file on change.
@@ -79,16 +92,6 @@ $(document).ready(function() {
       }, function(session){
           viewModel.session_tmp(session.getLoc())
 
-          $("#session_url").removeAttr("disabled");
-          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#convert_button").attr("href", session.getLoc())
-          $("#convert_button").removeAttr("disabled");
-          $("#process_data").removeAttr("disabled");
-          $("#return_metadata").removeAttr("disabled");
-          $("#plot_velocity").removeAttr("disabled");
-          $("#step_2").css("opacity", 1);
-          $("#step_3").css("opacity", 1);
-
          //retrieve javascript object as json
          session.getObject(function(data)  {
             viewModel.rDataOutput(data)
@@ -101,11 +104,16 @@ $(document).ready(function() {
           }catch(err){
             //do nothing for the moment
           }
+          
+          $("#session_url").removeAttr("disabled");
+          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+          $("#process_data").removeAttr("disabled");
+          $("#step_2").css("opacity", 1);
+
           successmsg("GPX file successfully loaded!");
 
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
-          $("#step_3").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
       }).always(function(){
           var session_url = document.getElementById("session_url");
@@ -125,31 +133,6 @@ function errormsg(text){
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 }
 
-$("#plot_velocity").on("click", function(){
-
-    //////////////////////////////
-    //Plot Preview Velocity
-    //////////////////////////////
-
-    viewModel.gpx_file($("#gpxfile")[0].files[0])
-
-    //create the plot area on the plotdiv element
-    var req = $("#plotdiv").rplot("gpx_plot_velocity", {
-      gpxfile : viewModel.gpx_file()
-    }, function(session){
-      //configure inputs on/off
-      //success
-      $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-      $("#plot_velocity").attr("disabled", "disabled");
-      $("#convert_button").removeAttr("disabled");
-    }).fail(function(jqXHR){
-      //failure
-      $("#plot_velocity").removeAttr("disabled");
-      $("#convert_button").attr("disabled", "disabled");
-      errormsg(jqXHR.responseText);
-     })
-
-});
 
 $(function(){
   $("#process_data").on("click", function(){
@@ -212,24 +195,6 @@ $(function(){
   });
 });
 
-$("#convert_button").on("click", function(){
-
-  //////////////////////////////
-  //Water level calculations
-  //////////////////////////////
-  var req = ocpu.call("gpx_plot_velocity", {
-    gpxfile : $("#gpxfile")[0].files[0]
-  }, function(session){
-    //success
-    $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-    update_input(session)
-    $("#convert_button").attr("disabled", "disabled");
-  }).fail(function(jqXHR){
-    //failure
-    $("#convert_button").attr("disabled", "disabled");
-    errormsg(jqXHR.responseText);
-    })
-  });
 
 
   $(document).ajaxStart(function() {
@@ -252,7 +217,7 @@ $("#convert_button").on("click", function(){
     <div class="flex-container">
       <div class="flex-item well" id="user_input_panel">
         <div id="project_title">
-          GPX QA v1.03
+          GPX QA v1.10
         </div>
         <div id="credits">
           by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
@@ -269,9 +234,6 @@ $("#convert_button").on("click", function(){
             <div class="form-group">
               <label>Show map/table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
             </div>
-          </fieldset>
-          <fieldset id="step_3">
-            <legend class="custom_legend">(2b) Download data</legend> <button disabled="disabled" id="convert_button" class='dt-buttons' type="button">Click</button>
           </fieldset>
         </form>
         <div id='env_wrapper'>
