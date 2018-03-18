@@ -22,7 +22,6 @@
 <script src="scripts/bootstrap/js/bootstrap.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
 <script src="scripts/knockout-min.js"></script>
-<script src="scripts/ko.plus.js"></script>
 <script src="scripts/leaflet.js"></script>
 <script src="scripts/gpx.js"></script>
 <script src="scripts/jquery.dataTables.min.js"></script>
@@ -38,32 +37,13 @@
 
 $(document).ready(function() {
 
-  // var viewModel = {
-  //     session_tmp: ko.observable(),
-  //     gpx_file: ko.observable(),
-  //     gpx_file_name: ko.observable(),
-  //     leafletMap: ko.observable(),
-  //     rDataOutput: ko.observable()
-  // };
-
-  function viewModel() {
-      this.session_tmp = ko.observable(),
-      this.gpx_file= ko.observable(),
-      this.gpx_file_name= ko.observable(),
-      this.leafletMap= ko.observable(),
-      this.rDataOutput= ko.observable(),
-      this.doSomething = ko.command(function() {
-          // return $.get("...");
-      })
-      .done(function(data) {
-          //do something with the response
-      })
-      .fail(function(error) {
-          //handle the error
-      });
-  }
-
-  var instance = new viewModel();
+  var viewModel = {
+      session_tmp: ko.observable(),
+      gpx_file: ko.observable(),
+      gpx_file_name: ko.observable(),
+      leafletMap: ko.observable(),
+      rDataOutput: ko.observable()
+  };
 
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
