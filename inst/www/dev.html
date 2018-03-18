@@ -180,7 +180,7 @@ $(function(){
 
     $('#gpx_processed').dataTable({
       dom: 'frtip',
-      data: viewModel.rDataOutput(),
+      data: {data:viewModel.rDataOutput()},
       buttons: [
           {
             extend: 'collection',
