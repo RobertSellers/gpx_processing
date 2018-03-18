@@ -126,7 +126,7 @@ $(document).ready(function() {
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#process_data").removeAttr("disabled");
-          $('#step2').each(function(){
+          $('.step2').each(function(){
             $( this ).css("opacity", 1);
           })
           successmsg("GPX file successfully loaded!");
@@ -165,7 +165,7 @@ $(document).ready(function() {
         });
 
       }).fail(function(jqXHR){
-          $('#step2').each(function(){
+          $('.step2').each(function(){
             $( this ).css("opacity", 0.2);
           })
           errormsg(jqXHR.responseText);
@@ -309,7 +309,7 @@ function initDT(data , update){
               <input id="gpxfile" type="file">
             </div>
           </fieldset>
-          <div class='gpx_metadata' id='step_2'>
+          <div class='gpx_metadata step_2'>
             <legend>Preview Metadata</legend>
             <b>File name:</b> <span data-bind="text: get_name"></span><br>
             <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
@@ -328,7 +328,7 @@ function initDT(data , update){
             <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
           </div>
           <!-- Step 2: Display Data -->
-          <fieldset id="step_2">
+          <fieldset class="step_2">
             <legend>Load DataTable</legend>
             <div class="form-group">
               <label>Load table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
