@@ -59,7 +59,8 @@ $(document).ready(function() {
     L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map);
+    }).addTo(map)
+    .setView([37.8, -96], 4);
 
     viewModel.leafletMap(map)
 
@@ -93,13 +94,16 @@ $(document).ready(function() {
             $("#step_2").css("opacity", 1);
             successmsg("GPX file successfully loaded!");
             //refresh the map
-            try{
-              viewModel.leafletMap().off()
-              viewModel.leafletMap().remove()
-            }catch(err){
-              //do nothing for the moment
-              // errormsg(err);
-            }
+            // map.eachLayer(function (layer) {
+            //     map.removeLayer(layer);
+            // });
+            // try{
+            //   viewModel.leafletMap().off()
+            //   viewModel.leafletMap().remove()
+            // }catch(err){
+            //   //do nothing for the moment
+            //   // errormsg(err);
+            // }
           });
 
       }).fail(function(jqXHR){
@@ -108,6 +112,9 @@ $(document).ready(function() {
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
+          viewModel.leafletMap().eachLayer(function (layer) {
+              viewModel.leafletMap().removeLayer(layer);
+          });
           // try{
           //   var table = $('#gpxDataTable').DataTable();
           //   if (table.data().any() ) {
