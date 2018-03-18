@@ -9,9 +9,7 @@ html, body {
 	padding: 20px;
 	max-width: 220px;
 }
-.step_2 {
-	opacity: 0.2;
-}
+
 
 #preview_button {
     font-size: 12px;
