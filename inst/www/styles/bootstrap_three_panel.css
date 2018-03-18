@@ -12,9 +12,6 @@ html, body {
 #step_2 {
 	opacity: 0.2;
 }
-#step_3 {
-	opacity: 0.2;
-}
 
 #preview_button {
     font-size: 12px;
@@ -117,6 +114,10 @@ html, body {
     position: absolute;
 }
 
+#step_1{
+	border-bottom: 1px solid #000000;
+}
+
 /* ////////// */
 
 /* Mapping styles */
@@ -152,8 +153,4 @@ html, body {
 
 .gpx_metadata span{
 	color: tomato;
-}
-
-.dt-button-background{
-	z-index:999;
 }

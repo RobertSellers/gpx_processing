@@ -87,6 +87,7 @@ $(document).ready(function() {
   }
 
   $("#process_data").attr("disabled", "disabled");
+  $('.dt-buttons').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
   //initialize leaflet map
@@ -125,7 +126,9 @@ $(document).ready(function() {
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#process_data").removeAttr("disabled");
-          $("#step_2").css("opacity", 1);
+          $('#step2').each(function(){
+            $( this ).css("opacity", 1);
+          })
           successmsg("GPX file successfully loaded!");
           //refresh the map
 
@@ -162,7 +165,9 @@ $(document).ready(function() {
         });
 
       }).fail(function(jqXHR){
-          $("#step_2").css("opacity", 0.2);
+          $('#step2').each(function(){
+            $( this ).css("opacity", 0.2);
+          })
           errormsg(jqXHR.responseText);
           viewModel.leafletMap().eachLayer(function (layer) {
               // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
@@ -251,6 +256,7 @@ function initDT(data , update){
   //////////////////////////////
   $(function(){
     $("#process_data").on("click", function(){
+      $(".dt-buttons").removeAttr("disabled");
       $("#process_data").attr("disabled", "disabled");
         initDT(viewModel.rDataOutput(), true)
     });
@@ -303,24 +309,24 @@ function initDT(data , update){
               <input id="gpxfile" type="file">
             </div>
           </fieldset>
-          <legend>Preview Metadata</legend>
           <div class='gpx_metadata'>
-          <b>File name:</b> <span data-bind="text: get_name"></span><br>
-          <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
-          <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
-          <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
-          <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
-          <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
-          <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
-          <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
-          <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
-          <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
-          <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
-          <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
-          <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
-          <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
-          <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
-        </div>
+            <legend>Preview Metadata</legend>
+            <b>File name:</b> <span data-bind="text: get_name"></span><br>
+            <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+            <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+            <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+            <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+            <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+            <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+            <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+            <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+            <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+            <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+            <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+            <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+            <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+            <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
+          </div>
           <!-- Step 2: Display Data -->
           <fieldset id="step_2">
             <legend>Load DataTable</legend>
