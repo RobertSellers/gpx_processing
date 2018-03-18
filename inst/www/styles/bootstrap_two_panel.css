@@ -5,9 +5,9 @@ html, body {
 	margin: 0;
 }
 
-body{
+/* body{
     height: 0% !important;
-}
+} */
 
 #azimuth_warning {
 	padding: 20px;
