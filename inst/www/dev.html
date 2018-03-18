@@ -89,6 +89,14 @@ $(document).ready(function() {
               viewModel.leafletMap().remove()
             }catch(err){
               //do nothing for the moment
+              // errormsg(err);
+            }
+            try{
+              var table = $('#gpxDataTable').DataTable();
+              table.clear().draw();
+            }catch(err){
+              //do nothing for the moment
+              // errormsg(err);
             }
           });
 
@@ -153,7 +161,7 @@ $(function(){
     //////////////////////////////
 
 
-    $('#gpx_processed').dataTable({
+    $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
       data: viewModel.rDataOutput(),
       searching: false,
@@ -250,7 +258,7 @@ $(function(){
       </div>
       <div class="flex-item well" id="plotdiv"></div>
       <div class="flex-item well" id="gpxTable">
-          <table id="gpx_processed" class="display" cellspacing="0">
+          <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
         </div>
     </div>

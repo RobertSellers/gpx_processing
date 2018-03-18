@@ -47,25 +47,12 @@ html, body {
     margin-top: 20px;
 }
 
-/* #gpxTable th {
-	font-size: 10px; 
-}
-
-#gpxTable td {
-	font-size: 8px; 
-} */
-
-
-gpx_processed_wrapper{
-	width: 900px;
-}
-
-#gpx_processed{
+#gpxDataTable{
 	width:100%;
 	table-layout: fixed;
 }
 
-#gpx_processed td {
+#gpxDataTable td {
 	text-overflow: ellipsis;
 }
 
