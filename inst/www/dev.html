@@ -90,6 +90,10 @@ $(document).ready(function() {
   $('.dt-button buttons-collection').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
+  $('.step2').each(function(){
+    $( this ).css("opacity", 0.2);
+  })
+
   //initialize leaflet map
   var map = L.map('plotdiv');
     L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
