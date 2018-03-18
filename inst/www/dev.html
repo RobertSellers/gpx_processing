@@ -94,16 +94,18 @@ $(document).ready(function() {
             $("#step_2").css("opacity", 1);
             successmsg("GPX file successfully loaded!");
             //refresh the map
-            // map.eachLayer(function (layer) {
-            //     map.removeLayer(layer);
-            // });
-            // try{
-            //   viewModel.leafletMap().off()
-            //   viewModel.leafletMap().remove()
-            // }catch(err){
-            //   //do nothing for the moment
-            //   // errormsg(err);
-            // }
+
+            viewModel.leafletMap().eachLayer(function (layer) {
+              if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+                viewModel.leafletMap().removeLayer(layer);
+              }
+            });
+            var gpx = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+
+            new L.GPX(gpx, {async: true}).on('loaded', function(e) {
+              map.fitBounds(e.target.getBounds());
+            }).addTo(viewModel.leafletMap());
+
           });
 
       }).fail(function(jqXHR){
@@ -112,17 +114,6 @@ $(document).ready(function() {
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
-          viewModel.leafletMap().eachLayer(function (layer) {
-              viewModel.leafletMap().removeLayer(layer);
-          });
-          // try{
-          //   var table = $('#gpxDataTable').DataTable();
-          //   if (table.data().any() ) {
-          //     table.clear().draw();
-          //   }
-          // }catch(ex){
-          //   //nothing right now
-          // }
     });
     }
 });
@@ -150,28 +141,10 @@ function errormsg(text){
   }, 5000 );
 }
 
-
+// Process data table
 $(function(){
   $("#process_data").on("click", function(){
     $("#process_data").attr("disabled", "disabled");
-    //////////////////////////////
-    //Plot Preview Map
-    //////////////////////////////
-
-    //Retrieve saved GPX
-    var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); 
-
-    // var map = L.map('plotdiv');
-    // L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-    //     maxZoom: 20,
-    //     subdomains:['mt0','mt1','mt2','mt3']
-    // }).addTo(map);
-
-    new L.GPX(gpx, {async: true}).on('loaded', function(e) {
-      map.fitBounds(e.target.getBounds());
-    }).addTo(viewModel.leafletMap());
-
-    // viewModel.leafletMap(map)
 
     //////////////////////////////
     //Data Table
@@ -261,7 +234,7 @@ $(function(){
           <fieldset id="step_2">
             <legend class="custom_legend">(2a) Preview Data</legend>
             <div class="form-group">
-              <label>Show map/table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
+              <label>Load table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
             </div>
           </fieldset>
         </form>
