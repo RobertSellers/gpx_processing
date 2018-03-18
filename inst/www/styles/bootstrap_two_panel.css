@@ -148,7 +148,7 @@ html, body {
   /* LOADER CSS */
 
   #loading-overlay {
-    background: url(../img/loading51.gif) #fff no-repeat center;
+    background: url(../img/spinning-gif-3.gif) #fff no-repeat center;
     opacity: .85;
 	/* z-index: 9999; */
 	height: 100%;
