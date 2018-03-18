@@ -181,6 +181,25 @@ $(function(){
     $('#gpx_processed').dataTable({
       dom: 'frtip',
       data: viewModel.rDataOutput(),
+      columns: [
+        {"data": "DateTime"},
+        {"data":  "Dist"},
+        {"data":  "Dist2D"},
+        {"data":  "East"},
+        {"data":  "Elevation"},
+        {"data":  "Gradient"},
+        {"data":  "Latitude"},
+        {"data":  "Longitude"},
+        {"data":  "North"},
+        {"data":  "Pace"},
+        {"data":  "Seconds"},
+        {"data":  "Speed"},
+        {"data":  "dDist"},
+        {"data":  "dDist2D"},
+        {"data":  "dEast"},
+        {"data":  "dNorth"},
+        {"data":  "dUp"}
+        ],
       buttons: [
           {
             extend: 'collection',
@@ -264,7 +283,7 @@ $("#convert_button").on("click", function(){
       </div>
     </div>
     <table id="gpx_processed" class="display flex-item well" cellspacing="0">
-        <thead>
+        <!-- <thead>
             <tr>
                 <th>DateTime</th>
                 <th>Dist</th>
@@ -284,7 +303,7 @@ $("#convert_button").on("click", function(){
                 <th>dNorth</th>
                 <th>dUp</th>
             </tr>
-        </thead>
+        </thead> -->
     </table>
     <!-- R Relayed Message and Progress Information -->
     <div id="azimuth_warning">
