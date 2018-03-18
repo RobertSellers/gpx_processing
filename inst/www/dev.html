@@ -45,6 +45,10 @@ $(document).ready(function() {
       rDataOutput: ko.observable()
   };
 
+  Object.prototype.hasOwnProperty = function(property) {
+      return this[property] !== undefined;
+  };
+
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
@@ -96,7 +100,8 @@ $(document).ready(function() {
             //refresh the map
 
             viewModel.leafletMap().eachLayer(function (layer) {
-              if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+              // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+              if (layer.hasOwnProperty('_gpx')){
                 viewModel.leafletMap().removeLayer(layer);
               }
             });
