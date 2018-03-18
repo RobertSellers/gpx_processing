@@ -40,7 +40,8 @@ $(document).ready(function() {
   var viewModel = {
       session_tmp: ko.observable(),
       gpx_file: ko.observable(),
-      gpx_file_name: ko.observable()
+      gpx_file_name: ko.observable(),
+      leafletMap: ko.observable()
   };
 
   //Display if dev.html or not
@@ -75,7 +76,6 @@ $(document).ready(function() {
       var req = ocpu.call("gpx_validation", {
           gpxfile : $("#gpxfile")[0].files[0]
       }, function(session){
-
           viewModel.session_tmp(session.getLoc())
 
           $("#session_url").removeAttr("disabled");
@@ -88,6 +88,15 @@ $(document).ready(function() {
           $("#step_2").css("opacity", 1);
           $("#step_3").css("opacity", 1);
           successmsg("GPX file successfully loaded!");
+
+          //refresh the map
+          try{
+            viewModel.leafletMap().off()
+            viewModel.leafletMap().remove()
+          }catch{
+
+          }
+
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           $("#step_3").css("opacity", 0.2);
@@ -156,6 +165,8 @@ $(function(){
       map.fitBounds(e.target.getBounds());
     }).addTo(map);
 
+    viewModel.leafletMap(map)
+
     //////////////////////////////
     //Data Table
     //////////////////////////////
@@ -163,7 +174,7 @@ $(function(){
     //perform the request
     var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
-        ajax: viewModel.session_tmp()+'/R/.val/json',
+        ajax: viewModel.session_tmp()+'R/.val/json',
         buttons: [
           {
              extend: 'collection',
