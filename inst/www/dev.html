@@ -298,11 +298,12 @@ function initDT(data , update){
         <!-- Step 1: Load File -->
         <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
           <fieldset id="step_1">
-            <legend class="custom_legend">(1) Load GPX data</legend>
-            <div class="form-group">
+            <legend>Load GPX data</legend>
+            <div class="form-group azimuth1_section">
               <input id="gpxfile" type="file">
             </div>
           </fieldset>
+          <legend>Preview Metadata</legend>
           <div class='gpx_metadata'>
           <b>File name:</b> <span data-bind="text: get_name"></span><br>
           <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
@@ -322,7 +323,7 @@ function initDT(data , update){
         </div>
           <!-- Step 2: Display Data -->
           <fieldset id="step_2">
-            <legend class="custom_legend">(2a) Preview Data</legend>
+            <legend>Load DataTable</legend>
             <div class="form-group">
               <label>Load table</label> <button disabled="disabled" id="process_data" type="button">Click</button><br>
             </div>

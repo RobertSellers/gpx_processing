@@ -94,12 +94,6 @@ html, body {
 	flex: 0 1 auto;
 	align-self: center;
 }
-.custom_legend {
-	font-size: 14px;
-}
-.project_wrapper {
-	margin-top: 20px;
-}
 
 /* BANNER CSS */
 #header_tools{
@@ -150,6 +144,10 @@ html, body {
 .gpx_metadata{
 	padding-bottom: 15px;
     border-bottom: 1px solid #000000;
+}
+
+.azimuth1_section{
+	border-bottom: 1px solid #000000;
 }
 
 .gpx_metadata span{
