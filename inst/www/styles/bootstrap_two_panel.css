@@ -148,14 +148,8 @@ html, body {
   /* LOADER CSS */
 
   #loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     background: url(../img/loading51.gif) #fff no-repeat center;
     opacity: .85;
     z-index: 9999;
     overflow: hidden;
-    height: 100%;
 }
