@@ -56,9 +56,6 @@ $(document).ready(function() {
     get_elevation_max_imp: ko.observable(),// returns the highest elevation, in feet
     get_elevation_gain_imp: ko.observable(),// returns the cumulative elevation gain, in feet
     get_elevation_loss_imp: ko.observable(),//returns the cumulative elevation loss, in feet
-    get_average_hr: ko.observable(),//returns the average heart rate (if available)
-    get_average_cadence: ko.observable(),// returns the average cadence (if available)
-    get_average_temp: ko.observable(),//returns the average of the temperature (if available)
     //full elevation, heartrate, cadence and temperature data
     get_elevation_data_imp: ko.observable(),
     get_heartrate_data_imp: ko.observable(),
@@ -144,9 +141,6 @@ $(document).ready(function() {
             viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp())// returns the highest elevation, in feet
             viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp())// returns the cumulative elevation gain, in feet
             viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp())//returns the cumulative elevation loss, in feet
-            viewModel.get_average_hr(e.target.get_average_hr())//returns the average heart rate (if available)
-            viewModel.get_average_cadence(e.target.get_average_cadence())// returns the average cadence (if available)
-            viewModel.get_average_temp(e.target.get_average_temp())//returns the average of the temperature (if available)
             //full elevation, heartrate, cadence and temperature data
             viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
             viewModel.get_heartrate_data_imp(e.target.get_heartrate_data_imp())
@@ -306,23 +300,20 @@ function initDT(data , update){
             </div>
           </fieldset>
         </form>
-        File name: <span data-bind="text: get_name"></span><br>
-        Distance: <span data-bind="text: get_distance_imp"></span><br>
-        Start time: <span data-bind="text: get_start_time"></span><br>
-        End Time: <span data-bind="text: get_end_time"></span><br>
-        Moving Time: <span data-bind="text: get_moving_time"></span><br>
-        Total Time: <span data-bind="text: get_total_time"></span><br>
-        Moving Pace: <span data-bind="text: get_moving_pace_imp"></span><br>
-        Moving Speed: <span data-bind="text: get_moving_speed_imp"></span><br>
-        Total Speed: <span data-bind="text: get_total_speed_imp"></span><br>
-        Elevation (min): <span data-bind="text: get_elevation_min_imp"></span><br>
-        Elevation (max): <span data-bind="text: get_elevation_max_imp"></span><br>
-        Elevation gain: <span data-bind="text: get_elevation_gain_imp"></span><br>
-        Elevation loss: <span data-bind="text: get_elevation_loss_imp"></span><br>
-        Average Hour: <span data-bind="text: get_average_hr"></span><br>
-        Average Cadence: <span data-bind="text: get_average_cadence"></span><br>
-        Average Temp: <span data-bind="text: get_average_temp"></span><br>
-          <!-- R Relayed Message and Progress Information -->
+        <bold>File name:</bold> <span data-bind="text: get_name"></span><br>
+        <bold>Distance:</bold> <span data-bind="text: get_distance_imp"></span><br>
+        <bold>Start time:</bold> <span data-bind="text: get_start_time"></span><br>
+        <bold>End Time:</bold> <span data-bind="text: get_end_time"></span><br>
+        <bold>Moving Time:</bold> <span data-bind="text: get_moving_time"></span><br>
+        <bold>Total Time:</bold> <span data-bind="text: get_total_time"></span><br>
+        <bold>Moving Pace:</bold> <span data-bind="text: get_moving_pace_imp"></span><br>
+        <bold>Moving Speed:</bold> <span data-bind="text: get_moving_speed_imp"></span><br>
+        <bold>Total Speed:</bold> <span data-bind="text: get_total_speed_imp"></span><br>
+        <bold>Elevation (min):</bold> <span data-bind="text: get_elevation_min_imp"></span><br>
+        <bold>Elevation (max):</bold> <span data-bind="text: get_elevation_max_imp"></span><br>
+        <bold>Elevation gain:</bold> <span data-bind="text: get_elevation_gain_imp"></span><br>
+        <bold>Elevation loss:</bold> <span data-bind="text: get_elevation_loss_imp"></span><br>
+        <!-- R Relayed Message and Progress Information -->
         <div id="warning">
           <div id="successdiv"></div>
           <div id="errordiv"></div>

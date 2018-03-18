@@ -24,6 +24,7 @@ html, body {
 }
 
 #user_input_panel {
+	max-width: 280px;
     font-family: 'Source Sans Pro', sans-serif;
     margin-left: 20px;
     margin-top: 20px;
