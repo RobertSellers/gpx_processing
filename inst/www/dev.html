@@ -91,28 +91,18 @@ $(document).ready(function() {
               //do nothing for the moment
               // errormsg(err);
             }
-            try{
-              // var table = $('#gpxDataTable').DataTable();
-              // table.clear().draw();
-            }catch(err){
-              //do nothing for the moment
-              // errormsg(err);
-            }
           });
 
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
-          try{
-              var table = $('#gpxDataTable').DataTable();
-              table.clear().draw();
-            }catch(err){
-              //do nothing for the moment
-              // errormsg(err);
-            }
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
+          if ( ! table.data().any() ) {
+            var table = $('#gpxDataTable').DataTable();
+              table.clear().draw();
+            }
     });
     }
 });
