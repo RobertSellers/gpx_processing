@@ -42,20 +42,9 @@ $(document).ready(function() {
       gpx_file: ko.observable(),
       gpx_file_name: ko.observable(),
       leafletMap: ko.observable(),
-      rDataOutput: ko.observable()
+      rDataOutput: ko.observable(),
+      isSpinning: ko.observable(false)
   };
-
- ko.bindingHandlers.Loading = {
-        update: function (element, valueAccessor, allBindingsAccessor) {
-            var value = valueAccessor(), allBindings = allBindingsAccessor();
-            var valueUnwrapped = ko.utils.unwrapObservable(value);
-
-            if (valueUnwrapped == true)
-                $(element).showLoading(); // Make the element visible
-            else
-                $(element).hideLoading();   // Make the element invisible
-        }
-    };
 
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
@@ -87,7 +76,7 @@ $(document).ready(function() {
       }, function(session){
 
         viewModel.session_tmp(session.getLoc())
-
+        
          //retrieve javascript object as json
         session.getObject(function(data)  {
           viewModel.rDataOutput(data)
@@ -238,8 +227,13 @@ $(function(){
             <div id="dev_check"></div>
           </div>
       </div>
-      <div class="flex-item well" id="plotdiv" data-bind="Loading: isLoading"></div>
-      <div class="flex-item well" id="gpxTable" data-bind="Loading: isLoading">
+      <!-- ko if: showLoader -->
+      <div id="loading-overlay" data-bind="visible: isSpinning"></div>
+      <!-- /ko -->
+      <!-- ko if: !showLoader -->
+      <div class="flex-item well" id="plotdiv"></div>
+      <!-- /ko -->
+      <div class="flex-item well" id="gpxTable">
           <table id="gpx_processed" class="display" cellspacing="0">
           </table>
         </div>
