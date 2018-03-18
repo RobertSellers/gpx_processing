@@ -45,6 +45,18 @@ $(document).ready(function() {
       rDataOutput: ko.observable()
   };
 
+ ko.bindingHandlers.Loading = {
+        update: function (element, valueAccessor, allBindingsAccessor) {
+            var value = valueAccessor(), allBindings = allBindingsAccessor();
+            var valueUnwrapped = ko.utils.unwrapObservable(value);
+
+            if (valueUnwrapped == true)
+                $(element).showLoading(); // Make the element visible
+            else
+                $(element).hideLoading();   // Make the element invisible
+        }
+    };
+
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
@@ -73,34 +85,36 @@ $(document).ready(function() {
       var req = ocpu.call("gpx_validation", {
           gpxfile : $("#gpxfile")[0].files[0]
       }, function(session){
-          viewModel.session_tmp(session.getLoc())
+
+        viewModel.session_tmp(session.getLoc())
 
          //retrieve javascript object as json
-         session.getObject(function(data)  {
-            viewModel.rDataOutput(data)
-          });
-
+        session.getObject(function(data)  {
+          viewModel.rDataOutput(data)
+          $("#session_url").removeAttr("disabled");
+          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+          $("#process_data").removeAttr("disabled");
+          $("#step_2").css("opacity", 1);
+          successmsg("GPX file successfully loaded!");
           //refresh the map
           try{
             viewModel.leafletMap().off()
             viewModel.leafletMap().remove()
           }catch(err){
-            //do nothing for the moment
+            errormsg('Leaflet error');
           }
-          
-          $("#session_url").removeAttr("disabled");
-          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#process_data").removeAttr("disabled");
-          $("#step_2").css("opacity", 1);
-
-          successmsg("GPX file successfully loaded!");
+        });
 
       }).fail(function(jqXHR){
+
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
+
       }).always(function(){
+
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
+
     });
     }
 });
@@ -224,8 +238,8 @@ $(function(){
             <div id="dev_check"></div>
           </div>
       </div>
-      <div class="flex-item well" id="plotdiv"></div>
-      <div class="flex-item well" id="gpxTable">
+      <div class="flex-item well" id="plotdiv" data-bind="Loading: isLoading"></div>
+      <div class="flex-item well" id="gpxTable" data-bind="Loading: isLoading">
           <table id="gpx_processed" class="display" cellspacing="0">
           </table>
         </div>

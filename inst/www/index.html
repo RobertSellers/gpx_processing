@@ -78,22 +78,19 @@ $(document).ready(function() {
          //retrieve javascript object as json
          session.getObject(function(data)  {
             viewModel.rDataOutput(data)
+            $("#session_url").removeAttr("disabled");
+            $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+            $("#process_data").removeAttr("disabled");
+            $("#step_2").css("opacity", 1);
+            successmsg("GPX file successfully loaded!");
+            //refresh the map
+            try{
+              viewModel.leafletMap().off()
+              viewModel.leafletMap().remove()
+            }catch(err){
+              //do nothing for the moment
+            }
           });
-
-          //refresh the map
-          try{
-            viewModel.leafletMap().off()
-            viewModel.leafletMap().remove()
-          }catch(err){
-            //do nothing for the moment
-          }
-          
-          $("#session_url").removeAttr("disabled");
-          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#process_data").removeAttr("disabled");
-          $("#step_2").css("opacity", 1);
-
-          successmsg("GPX file successfully loaded!");
 
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
