@@ -150,8 +150,12 @@ html, body {
   #loading-overlay {
     background: url(../img/loading51.gif) #fff no-repeat center;
     opacity: .85;
-	z-index: 9999;
-	height: 10px;
-	width: 10px;
-    overflow: hidden;
+	/* z-index: 9999; */
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	background-color: lightyellow;
+    text-align: middle;
+    color: green;
+    position: relative;
 }
