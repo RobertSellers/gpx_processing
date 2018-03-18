@@ -188,11 +188,11 @@ $(document).ready(function() {
 function successmsg(text){
   $("#successdiv").empty()
   .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
-  // setTimeout(function(){ 
-  //   $("#successdiv").fadeOut( "slow", function() {
-  //       // Animation complete.
-  //     });
-  // }, 5000 );
+  setTimeout(function(){ 
+    $("#successdiv").fadeOut( "slow", function() {
+        // Animation complete.
+      });
+  }, 5000 );
 }
 
 //R output to popup
