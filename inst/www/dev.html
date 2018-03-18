@@ -49,6 +49,7 @@ $(document).ready(function() {
       return this[property] !== undefined;
   };
 
+  initDT({})
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
@@ -120,12 +121,13 @@ $(document).ready(function() {
               // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
               if (layer.hasOwnProperty('_gpx')){
                 viewModel.leafletMap().removeLayer(layer);
+                viewModel.leafletMap().setView([37.8, -96], 4);
               }
             });
-            viewModel.leafletMap().setView([37.8, -96], 4);
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
+          $('#gpxDataTable').dataTable();
     });
     }
 });
@@ -153,20 +155,10 @@ function errormsg(text){
   }, 5000 );
 }
 
-// Process data table
-$(function(){
-  $("#process_data").on("click", function(){
-    $("#process_data").attr("disabled", "disabled");
-
-    //////////////////////////////
-    //Data Table
-    //////////////////////////////
-
-    $('#gpxDataTable').empty();
-
-    $('#gpxDataTable').dataTable({
+function initDT(data){
+  $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
-      data: viewModel.rDataOutput(),
+      data: data,
       searching: false,
       pageLength: 5,
       columns: [
@@ -196,6 +188,18 @@ $(function(){
           }
         ]
       });
+}
+
+// Process data table
+$(function(){
+  $("#process_data").on("click", function(){
+    $("#process_data").attr("disabled", "disabled");
+
+    //////////////////////////////
+    //Data Table
+    //////////////////////////////
+
+    initDT(viewModel.rDataOutput())
   });
 });
 
