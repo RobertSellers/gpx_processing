@@ -104,23 +104,27 @@ $(document).ready(function() {
 
 //R output to popup
 function successmsg(text){
+  setTimeout(function(){ 
     $("#successdiv")
     .empty()
-    .append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>')
+    .append('<div class="alert alert-success alert-dismissable">' + text + '</div>')
     .fadeOut( "slow", function() {
     // Animation complete.
     });
+  }, 500 );
 }
 
 //R output to popup
 function errormsg(text){
+  setTimeout(function(){ 
     $("#convert_button").attr("disabled", "disabled");
     $("#errordiv")
     .empty()
-    .append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>')
+    .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>')
     .fadeOut( "slow", function() {
     // Animation complete.
     });
+  }, 500 );
 }
 
 
