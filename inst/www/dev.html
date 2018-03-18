@@ -92,8 +92,8 @@ $(document).ready(function() {
               // errormsg(err);
             }
             try{
-              var table = $('#gpxDataTable').DataTable();
-              table.clear().draw();
+              // var table = $('#gpxDataTable').DataTable();
+              // table.clear().draw();
             }catch(err){
               //do nothing for the moment
               // errormsg(err);
@@ -103,6 +103,13 @@ $(document).ready(function() {
       }).fail(function(jqXHR){
           $("#step_2").css("opacity", 0.2);
           errormsg(jqXHR.responseText);
+          try{
+              var table = $('#gpxDataTable').DataTable();
+              table.clear().draw();
+            }catch(err){
+              //do nothing for the moment
+              // errormsg(err);
+            }
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
@@ -260,7 +267,7 @@ $(function(){
       <div class="flex-item well" id="gpxTable">
           <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
-        </div>
+      </div>
     </div>
   </body>
 </html>

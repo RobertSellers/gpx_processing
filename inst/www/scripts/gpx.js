@@ -12,8 +12,8 @@ var L = L || require("leaflet"),
 			"": "leaflet/pin-icon-wpt.png"
 		},
 		iconSize: [17, 25],
-		shadowSize: [25, 25],
-		iconAnchor: [16, 45],
+		// shadowSize: [25, 25],
+		// iconAnchor: [16, 45],
 		// shadowAnchor: [16, 47],
 		clickable: !1
 	},
