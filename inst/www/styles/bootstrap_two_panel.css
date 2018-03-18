@@ -43,11 +43,20 @@ body{
 }
 
 #gpxTable {
+	font-family: 'Source Sans Pro', sans-serif;
 	width: 900px;
     height: 500px;
     max-width: 900px;
     margin-left: 20px;
     margin-top: 20px;
+}
+
+#gpxTable th {
+	font-size: 10px; 
+}
+
+#gpxTable td {
+	font-size: 8px; 
 }
 
 #gpx_processed{
