@@ -124,6 +124,7 @@ $(document).ready(function() {
                 viewModel.leafletMap().setView([37.8, -96], 4);
               }
             });
+            initDT({}, true) //clear datatable
       }).always(function(){
           var session_url = document.getElementById("session_url");
           session_url.style.cursor = "pointer";
