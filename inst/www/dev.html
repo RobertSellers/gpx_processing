@@ -60,8 +60,8 @@ $(document).ready(function() {
   //verify that a file is selected
   if($("#gpxfile")[0].files[0]){
 
-      $("#successdiv").empty();
-      $("#errordiv").empty()
+      $("#successdiv").empty().show();
+      $("#errordiv").empty().show();
 
       //////////////////////////////
       //Upload and validate the data
@@ -107,9 +107,9 @@ function successmsg(text){
   $("#successdiv").empty()
   .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
   setTimeout(function(){ 
-  $("#successdiv").fadeOut( "slow", function() {
-    // Animation complete.
-    });
+    $("#successdiv").fadeOut( "slow", function() {
+        // Animation complete.
+      });
   }, 5000 );
 }
 
@@ -119,9 +119,9 @@ function errormsg(text){
     $("#errordiv").empty()
     .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
     setTimeout(function(){ 
-    $("#convert_button").fadeOut( "slow", function() {
-    // Animation complete.
-    });
+      $("#errordiv").fadeOut( "slow", function() {
+         // Animation complete.
+      });
   }, 5000 );
 }
 
