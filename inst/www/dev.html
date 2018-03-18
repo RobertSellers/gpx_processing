@@ -46,7 +46,8 @@ $(document).ready(function() {
     get_name: ko.observable(),//returns the name of the GPX track
     get_distance_imp: ko.observable(),//returns the total track distance in miles
     get_start_time: ko.observable(),//returns a Javascript Date object representing the starting time
-    get_end_time: ko.observable(),//returns a Javascript Date object representing when the last point was recorded
+    get_time_zone: ko.observable(),
+    get_start_date: ko.observable(),
     get_moving_time: ko.observable(),//returns the moving time, in milliseconds
     get_total_time: ko.observable(),//returns the total track time, in milliseconds
     get_moving_pace_imp: ko.observable(),//returns the average moving pace in milliseconds per hour
@@ -66,6 +67,19 @@ $(document).ready(function() {
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
   };
+
+  function msToTime(duration) {
+        var milliseconds = parseInt((duration%1000)/100)
+            , seconds = parseInt((duration/1000)%60)
+            , minutes = parseInt((duration/(1000*60))%60)
+            , hours = parseInt((duration/(1000*60*60))%24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+    }
 
   initDT({}, false)
   //Display if dev.html or not
@@ -129,18 +143,19 @@ $(document).ready(function() {
           gpxLayer.on('loaded', function(e) {
             map.fitBounds(e.target.getBounds());
             viewModel.get_name(e.target.get_name())//returns the name of the GPX track
-            viewModel.get_distance_imp(e.target.get_distance_imp())//returns the total track distance in miles
-            viewModel.get_start_time(e.target.get_start_time())//returns a Javascript Date object representing the starting time
-            viewModel.get_end_time(e.target.get_end_time())//returns a Javascript Date object representing when the last point was recorded
-            viewModel.get_moving_time(e.target.get_moving_time())//returns the moving time, in milliseconds
-            viewModel.get_total_time(e.target.get_total_time())//returns the total track time, in milliseconds
-            viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
-            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp())//returns the average moving speed in miles per hour
-            viewModel.get_total_speed_imp(e.target.get_total_speed_imp())//returns the average total speed in miles per hour
-            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp())// returns the lowest elevation, in feet
-            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp())// returns the highest elevation, in feet
-            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp())// returns the cumulative elevation gain, in feet
-            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp())//returns the cumulative elevation loss, in feet
+            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + 'mi')//returns the total track distance in miles
+            viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
+            viewModel.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
+            viewModel.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
+            viewModel.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
+            viewModel.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
+            // viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
+            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+'mph')//returns the average moving speed in miles per hour
+            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + 'mph')//returns the average total speed in miles per hour
+            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + 'ft')// returns the lowest elevation, in feet
+            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + 'ft')// returns the highest elevation, in feet
+            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + 'ft')// returns the cumulative elevation gain, in feet
+            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + 'ft')//returns the cumulative elevation loss, in feet
             //full elevation, heartrate, cadence and temperature data
             viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
             viewModel.get_heartrate_data_imp(e.target.get_heartrate_data_imp())
@@ -306,7 +321,7 @@ function initDT(data , update){
         <b>End Time:</b> <span data-bind="text: get_end_time"></span><br>
         <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
         <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
-        <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br>
+        <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
         <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
         <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
         <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
