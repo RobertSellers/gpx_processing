@@ -63,6 +63,8 @@ $(document).ready(function() {
       });
   }
 
+  var instance = new viewModel();
+
   //Display if dev.html or not
   var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
   if(cur_url == "dev.html"){
