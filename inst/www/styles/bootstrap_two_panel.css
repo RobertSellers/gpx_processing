@@ -72,10 +72,7 @@ body{
 }
 .flex-container {
 	display: inline-flex;
-	flex-direction: row;
-	justify-content: space-around;
-	align-content: flex-start;
-	align-items: center;
+	flex-flow: row wrap;
 }
 .flex-item:nth-child(1) {
 	order: 0;
