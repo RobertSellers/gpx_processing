@@ -172,20 +172,18 @@ $(function(){
     //////////////////////////////
 
     $.get(viewModel.session_tmp() + 'R/.val/csv', function(d) {
-          debugger
-    });
-
-    //perform the request
-    var table = $('#gpx_processed').DataTable({
+      //data table request
+      var table = $('#gpx_processed').DataTable({
         dom: 'frtip',
         ajax: viewModel.session_tmp()+'R/.val/json',
         buttons: [
           {
-             extend: 'collection',
-             text: 'Export',
-             buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+            extend: 'collection',
+            text: 'Export',
+            buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
           }
-       ]
+        ]
+      });
     });
 
   });
