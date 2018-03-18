@@ -47,6 +47,8 @@ $(document).ready(function() {
       showLoader: ko.observable(false)
   };
 
+  ko.applyBindings(viewModel)
+
   //Display if dev.html or not
   var url = window.location.href.split(/[\\\/]/);
   var cur_url = url[url.length-1]
@@ -95,7 +97,7 @@ $(document).ready(function() {
             viewModel.leafletMap().off()
             viewModel.leafletMap().remove()
           }catch(err){
-            errormsg('Leaflet error');
+            // errormsg('Leaflet error');
           }
         });
 
@@ -176,13 +178,13 @@ $(function(){
         {"data":  "dUp", title: "dUp"}
         ],
       buttons: [
-          {
-            extend: 'collection',
-            text: 'Export',
-            buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
-          }
-        ]
-      });
+        {
+          extend: 'collection',
+          text: 'Export',
+          buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+        }
+      ]
+    });
   });
 });
 
