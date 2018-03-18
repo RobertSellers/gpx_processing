@@ -54,6 +54,15 @@ $(document).ready(function() {
   $("#process_data").attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
+  //initialize leaflet map
+  var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+
+    viewModel.leafletMap(map)
+
   //automatically upload GPX file on change.
   $("#gpxfile").on("change", function(){
 
@@ -145,22 +154,23 @@ $(function(){
     //Retrieve saved GPX
     var gpx = viewModel.session_tmp() +'files/'+ viewModel.gpx_file_name(); 
 
-    var map = L.map('plotdiv');
-    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
-        subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map);
+    // var map = L.map('plotdiv');
+    // L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    //     maxZoom: 20,
+    //     subdomains:['mt0','mt1','mt2','mt3']
+    // }).addTo(map);
 
     new L.GPX(gpx, {async: true}).on('loaded', function(e) {
       map.fitBounds(e.target.getBounds());
-    }).addTo(map);
+    }).addTo(viewModel.leafletMap());
 
-    viewModel.leafletMap(map)
+    // viewModel.leafletMap(map)
 
     //////////////////////////////
     //Data Table
     //////////////////////////////
 
+    $('#gpxDataTable').empty();
 
     $('#gpxDataTable').dataTable({
       dom: 'Bfrtip',
