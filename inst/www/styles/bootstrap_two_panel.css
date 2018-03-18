@@ -51,16 +51,23 @@ body{
     margin-top: 20px;
 }
 
-#gpxTable th {
+/* #gpxTable th {
 	font-size: 10px; 
 }
 
 #gpxTable td {
 	font-size: 8px; 
-}
+} */
+
+
 
 #gpx_processed{
 	/* width:100%; */
+	table-layout: fixed;
+}
+
+#gpx_processed td {
+	text-overflow: ellipsis;
 }
 
 .plot_btn {
