@@ -288,15 +288,15 @@ function initDT(data , update){
   });
 
   //////////////////////////////
-  //Ajax Progress Bar
+  //Ajax spinLoad Bar
   //////////////////////////////
 
   $(document).ajaxStart(function() {
-    $(".progress").show();
+    $(".spinLoad").show();
   });
 
   $(document).ajaxStop(function() {
-    $(".progress").hide();
+    $(".spinLoad").hide();
   });
 
   ko.applyBindings(viewModel)
@@ -332,7 +332,7 @@ function initDT(data , update){
             <legend>Load GPX data</legend>
             <div class="form-group">
               <input id="gpxfile" type="file">
-              <img src="./img/h6viz.gif" alt="spinner" class="progress" style="width:20px;height:20px;">
+              <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;display: inline-block;vertical-align: top;">
             </div>
           </fieldset>
           <div id='step_2'>
@@ -363,7 +363,7 @@ function initDT(data , update){
             </fieldset>
           </div>
         </form>
-        <!-- R Relayed Message and Progress Information -->
+        <!-- R Relayed Message and spinLoad Information -->
         <div id="warning">
           <div id="successdiv"></div>
           <div id="errordiv"></div>
