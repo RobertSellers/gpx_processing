@@ -7,7 +7,7 @@ html, body {
 
 #warning {
 	position: absolute;
-    top: 160px;
+    top: 145px;
     z-index: 9999;
 }
 
@@ -17,6 +17,14 @@ html, body {
     line-height: 1.5;
     margin-left: 5px;
     border-radius: 3px;
+}
+
+#step_1 legend{
+	margin-bottom: 0px !important;
+}
+
+.spinLoad{
+	padding-left:5px;
 }
 
 #user_input_panel {
