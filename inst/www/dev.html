@@ -73,6 +73,7 @@ $(document).ready(function() {
         viewModel.leafletMap().setView([37.8, -96], 4);
       }
     });
+    map_lock('lock')
     viewModel.get_name(null);
     viewModel.get_distance_imp(null);
     viewModel.get_start_time(null);
@@ -94,6 +95,28 @@ $(document).ready(function() {
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
   };
+
+  function map_lock(toggle){
+    if (toggle=='lock'){
+      viewModel.leafletMap().dragging.enable();
+      viewModel.leafletMap().touchZoom.enable();
+      viewModel.leafletMap().doubleClickZoom.enable();
+      viewModel.leafletMap().scrollWheelZoom.enable();
+      viewModel.leafletMap().boxZoom.enable();
+      viewModel.leafletMap().keyboard.enable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
+      document.getElementById('plotdiv').style.cursor='grab';
+    }if (toggle=='unlock'){
+      viewModel.leafletMap().dragging.disable();
+      viewModel.leafletMap().touchZoom.disable();
+      viewModel.leafletMap().doubleClickZoom.disable();
+      viewModel.leafletMap().scrollWheelZoom.disable();
+      viewModel.leafletMap().boxZoom.disable();
+      viewModel.leafletMap().keyboard.disable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
+      document.getElementById('plotdiv').style.cursor='default';
+    }
+  }
 
   function msToTime(duration) {
     var milliseconds = parseInt((duration%1000)/100),
@@ -131,7 +154,8 @@ $(document).ready(function() {
     }).addTo(map);
     map.setView([37.8, -96], 4);
 
-    viewModel.leafletMap(map)
+  viewModel.leafletMap(map)
+  map_lock('lock')
 
   //automatically upload GPX file on change.
   $("#gpxfile").on("change", function(){
@@ -162,7 +186,6 @@ $(document).ready(function() {
 
           $('#step_2').css("opacity", 1);
           $('#plotdiv').css("opacity", 1);
-          $('#gpxTable').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
           //refresh the map
@@ -196,7 +219,7 @@ $(document).ready(function() {
             viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
             viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
           }).addTo(viewModel.leafletMap());
-
+          map_lock('unlock')
         });
 
       }).fail(function(jqXHR){
@@ -281,6 +304,7 @@ function initDT(data , update){
   //////////////////////////////
   $(function(){
     $("#process_data").on("click", function(){
+      $('#gpxTable').css("opacity", 1);
       $(".dt-button").removeAttr("disabled");
       $("#process_data").attr("disabled", "disabled");
         initDT(viewModel.rDataOutput(), true)
