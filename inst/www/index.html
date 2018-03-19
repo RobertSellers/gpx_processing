@@ -42,9 +42,6 @@ $(document).ready(function() {
     gpx_file_name: ko.observable(),
     leafletMap: ko.observable(),
     rDataOutput: ko.observable(),
-    // gpx_js_calc: ko.observable({
-
-    // }),
     //gpx.js output data
     get_name: ko.observable(),//returns the name of the GPX track
     get_distance_imp: ko.observable(),//returns the total track distance in miles
@@ -65,22 +62,74 @@ $(document).ready(function() {
     get_cadence_data_imp: ko.observable()
   };
 
+  function clearData(){
+    $('#step_2').css("opacity", 0.2);
+    $('#plotdiv').css("opacity", 0.2);
+    $('#gpxTable').css("opacity", 0.2);
+    viewModel.leafletMap().eachLayer(function (layer) {
+      // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+      if (layer.hasOwnProperty('_gpx')){
+        viewModel.leafletMap().removeLayer(layer);
+        viewModel.leafletMap().setView([37.8, -96], 4);
+      }
+    });
+    map_lock('lock')
+    viewModel.get_name(null);
+    viewModel.get_distance_imp(null);
+    viewModel.get_start_time(null);
+    viewModel.get_time_zone(null);
+    viewModel.get_start_date(null);
+    viewModel.get_moving_time(null);
+    viewModel.get_total_time(null);
+    viewModel.get_moving_pace_imp(null);
+    viewModel.get_moving_speed_imp(null);
+    viewModel.get_total_speed_imp(null);
+    viewModel.get_elevation_min_imp(null);
+    viewModel.get_elevation_max_imp(null);
+    viewModel.get_elevation_gain_imp(null);
+    viewModel.get_elevation_loss_imp(null);
+    viewModel.get_elevation_data_imp(null);
+    viewModel.get_cadence_data_imp(null);
+  }
+
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
   };
 
-  function msToTime(duration) {
-        var milliseconds = parseInt((duration%1000)/100)
-            , seconds = parseInt((duration/1000)%60)
-            , minutes = parseInt((duration/(1000*60))%60)
-            , hours = parseInt((duration/(1000*60*60))%24);
-
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-
-        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  function map_lock(toggle){
+    if (toggle=='unlock'){
+      viewModel.leafletMap().dragging.enable();
+      viewModel.leafletMap().touchZoom.enable();
+      viewModel.leafletMap().doubleClickZoom.enable();
+      viewModel.leafletMap().scrollWheelZoom.enable();
+      viewModel.leafletMap().boxZoom.enable();
+      viewModel.leafletMap().keyboard.enable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
+      document.getElementById('plotdiv').style.cursor='grab';
+    }if (toggle=='lock'){
+      viewModel.leafletMap().dragging.disable();
+      viewModel.leafletMap().touchZoom.disable();
+      viewModel.leafletMap().doubleClickZoom.disable();
+      viewModel.leafletMap().scrollWheelZoom.disable();
+      viewModel.leafletMap().boxZoom.disable();
+      viewModel.leafletMap().keyboard.disable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
+      document.getElementById('plotdiv').style.cursor='default';
     }
+  }
+
+  function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100),
+    seconds = parseInt((duration/1000)%60),
+    minutes = parseInt((duration/(1000*60))%60),
+    hours = parseInt((duration/(1000*60*60))%24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  }
 
   initDT({}, false)
   //Display if dev.html or not
@@ -105,14 +154,15 @@ $(document).ready(function() {
     }).addTo(map);
     map.setView([37.8, -96], 4);
 
-    viewModel.leafletMap(map)
+  viewModel.leafletMap(map)
+  map_lock('lock')
 
   //automatically upload GPX file on change.
   $("#gpxfile").on("change", function(){
 
   //verify that a file is selected
   if($("#gpxfile")[0].files[0]){
-
+    clearData()
     $("#successdiv").empty().show();
     $("#errordiv").empty().show();
 
@@ -136,7 +186,6 @@ $(document).ready(function() {
 
           $('#step_2').css("opacity", 1);
           $('#plotdiv').css("opacity", 1);
-          $('#gpxTable').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
           //refresh the map
@@ -170,21 +219,12 @@ $(document).ready(function() {
             viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
             viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
           }).addTo(viewModel.leafletMap());
-
+          map_lock('unlock')
         });
 
       }).fail(function(jqXHR){
-        $('#step_2').css("opacity", 0.2);
-        $('#plotdiv').css("opacity", 0.2);
-        $('#gpxTable').css("opacity", 0.2);
+        clearData()
         errormsg(jqXHR.responseText);
-        viewModel.leafletMap().eachLayer(function (layer) {
-            // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
-            if (layer.hasOwnProperty('_gpx')){
-              viewModel.leafletMap().removeLayer(layer);
-              viewModel.leafletMap().setView([37.8, -96], 4);
-            }
-          });
       }).always(function(){
         var session_url = document.getElementById("session_url");
         session_url.style.cursor = "pointer";
@@ -195,25 +235,24 @@ $(document).ready(function() {
 
 //R output to popup
 function successmsg(text){
-  $("#successdiv").empty()
-  .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
-  setTimeout(function(){ 
-    $("#successdiv").fadeOut( "slow", function() {
-        // Animation complete.
-      });
-  }, 5000 );
+  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+
+  // setTimeout(function(){ 
+  //   $("#successdiv").fadeOut( "slow", function() {
+  //       // Animation complete.
+  //     });
+  // }, 5000 );
 }
 
 //R output to popup
 function errormsg(text){
-    $("#convert_button").attr("disabled", "disabled");
-    $("#errordiv").empty()
-    .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
-    setTimeout(function(){ 
-      $("#errordiv").fadeOut( "slow", function() {
-         // Animation complete.
-      });
-  }, 5000 );
+    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+
+  //   setTimeout(function(){ 
+  //     $("#errordiv").fadeOut( "slow", function() {
+  //        // Animation complete.
+  //     });
+  // }, 5000 );
 }
 
 function initDT(data , update){
@@ -265,6 +304,7 @@ function initDT(data , update){
   //////////////////////////////
   $(function(){
     $("#process_data").on("click", function(){
+      $('#gpxTable').css("opacity", 1);
       $(".dt-button").removeAttr("disabled");
       $("#process_data").attr("disabled", "disabled");
         initDT(viewModel.rDataOutput(), true)
@@ -272,15 +312,15 @@ function initDT(data , update){
   });
 
   //////////////////////////////
-  //Ajax Progress Bar
+  //Ajax spinLoad Bar
   //////////////////////////////
 
   $(document).ajaxStart(function() {
-    $(".progress").show();
+    $(".spinLoad").show();
   });
 
   $(document).ajaxStop(function() {
-    $(".progress").hide();
+    $(".spinLoad").hide();
   });
 
   ko.applyBindings(viewModel)
@@ -304,7 +344,7 @@ function initDT(data , update){
         </div>
         <!-- Title Div -->
         <div id="project_title">
-          GPX QA v1.3
+          GPX QA v1.4
         </div>
          <!-- Credits Div -->
         <div id="credits">
@@ -315,7 +355,10 @@ function initDT(data , update){
           <fieldset id="step_1">
             <legend>Load GPX data</legend>
             <div class="form-group">
-              <input id="gpxfile" type="file">
+              <div class="loadFileContainer" style="margin-bottom: 15px;">
+              <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+              <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:left; display: none; vertical-align: top;">
+            </div>
             </div>
           </fieldset>
           <div id='step_2'>
@@ -341,18 +384,15 @@ function initDT(data , update){
             <fieldset>
               <legend>Load DataTable</legend>
               <div class="form-group">
-                <button disabled="disabled" id="process_data" type="button">Load table</button><br>
+                <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
               </div>
             </fieldset>
           </div>
         </form>
-        <!-- R Relayed Message and Progress Information -->
+        <!-- R Relayed Message and spinLoad Information -->
         <div id="warning">
           <div id="successdiv"></div>
           <div id="errordiv"></div>
-          <div class="progress progress-striped active">
-            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%"></div>
-          </div>
         </div>
       </div>
       <div class="flex-item well" id="plotdiv"></div>
