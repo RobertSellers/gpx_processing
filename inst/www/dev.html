@@ -97,7 +97,7 @@ $(document).ready(function() {
   };
 
   function map_lock(toggle){
-    if (toggle=='lock'){
+    if (toggle=='unlock'){
       viewModel.leafletMap().dragging.enable();
       viewModel.leafletMap().touchZoom.enable();
       viewModel.leafletMap().doubleClickZoom.enable();
@@ -106,7 +106,7 @@ $(document).ready(function() {
       viewModel.leafletMap().keyboard.enable();
       if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
       document.getElementById('plotdiv').style.cursor='grab';
-    }if (toggle=='unlock'){
+    }if (toggle=='lock'){
       viewModel.leafletMap().dragging.disable();
       viewModel.leafletMap().touchZoom.disable();
       viewModel.leafletMap().doubleClickZoom.disable();
