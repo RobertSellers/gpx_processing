@@ -90,7 +90,7 @@ $(document).ready(function() {
   $('.dt-button').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
-  $('#step2').css("opacity", 0.2);
+  $('#step_2').css("opacity", 0.2);
   $('#plotdiv').css("opacity", 0.2);
   $('#gpxTable').css("opacity", 0.2);
 
@@ -131,10 +131,10 @@ $(document).ready(function() {
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $("#process_data").removeAttr("disabled");
 
-          $('#step2').css("opacity", 1);
+          $('#step_2').css("opacity", 1);
           $('#plotdiv').css("opacity", 1);
           $('#gpxTable').css("opacity", 1);
-          
+
           successmsg("GPX file successfully loaded!");
           //refresh the map
 
