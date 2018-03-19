@@ -332,6 +332,9 @@ function initDT(data , update){
             <legend>Load GPX data</legend>
             <div class="form-group">
               <input id="gpxfile" type="file">
+              <div class="progress progress-striped active">
+                <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 20px"></div>
+              </div>
             </div>
           </fieldset>
           <div id='step_2'>
@@ -366,9 +369,6 @@ function initDT(data , update){
         <div id="warning">
           <div id="successdiv"></div>
           <div id="errordiv"></div>
-          <div class="progress progress-striped active">
-            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
-          </div>
         </div>
       </div>
       <div class="flex-item well" id="plotdiv"></div>

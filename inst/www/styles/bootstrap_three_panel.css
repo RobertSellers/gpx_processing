@@ -70,7 +70,7 @@ html, body {
 	height: auto;
 }
 #gpxfile {
-	max-width: 250px;
+	max-width: 200px;
 }
 .progress {
 	display: none;
