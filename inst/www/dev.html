@@ -62,22 +62,51 @@ $(document).ready(function() {
     get_cadence_data_imp: ko.observable()
   };
 
+  function clearData(){
+    $('#step_2').css("opacity", 0.2);
+    $('#plotdiv').css("opacity", 0.2);
+    $('#gpxTable').css("opacity", 0.2);
+    viewModel.leafletMap().eachLayer(function (layer) {
+      // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
+      if (layer.hasOwnProperty('_gpx')){
+        viewModel.leafletMap().removeLayer(layer);
+        viewModel.leafletMap().setView([37.8, -96], 4);
+      }
+    });
+    viewModel.get_name(null);
+    viewModel.get_distance_imp(null);
+    viewModel.get_start_time(null);
+    viewModel.get_time_zone(null);
+    viewModel.get_start_date(null);
+    viewModel.get_moving_time(null);
+    viewModel.get_total_time(null);
+    viewModel.get_moving_pace_imp(null);
+    viewModel.get_moving_speed_imp(null);
+    viewModel.get_total_speed_imp(null);
+    viewModel.get_elevation_min_imp(null);
+    viewModel.get_elevation_max_imp(null);
+    viewModel.get_elevation_gain_imp(null);
+    viewModel.get_elevation_loss_imp(null);
+    viewModel.get_elevation_data_imp(null);
+    viewModel.get_cadence_data_imp(null);
+  }
+
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
   };
 
   function msToTime(duration) {
-        var milliseconds = parseInt((duration%1000)/100)
-            , seconds = parseInt((duration/1000)%60)
-            , minutes = parseInt((duration/(1000*60))%60)
-            , hours = parseInt((duration/(1000*60*60))%24);
+    var milliseconds = parseInt((duration%1000)/100),
+    seconds = parseInt((duration/1000)%60),
+    minutes = parseInt((duration/(1000*60))%60),
+    hours = parseInt((duration/(1000*60*60))%24);
 
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
 
-        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-    }
+    return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  }
 
   initDT({}, false)
   //Display if dev.html or not
@@ -122,6 +151,7 @@ $(document).ready(function() {
     var req = ocpu.call("gpx_validation", {
         gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
+        clearData()
         viewModel.session_tmp(session.getLoc())
 
         //retrieve javascript object as json
@@ -171,19 +201,12 @@ $(document).ready(function() {
         });
 
       }).fail(function(jqXHR){
-          $('.step2').css("opacity", 0.2);
-          errormsg(jqXHR.responseText);
-          viewModel.leafletMap().eachLayer(function (layer) {
-              // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
-              if (layer.hasOwnProperty('_gpx')){
-                viewModel.leafletMap().removeLayer(layer);
-                viewModel.leafletMap().setView([37.8, -96], 4);
-              }
-            });
+        clearData()
+        errormsg(jqXHR.responseText);
       }).always(function(){
-          var session_url = document.getElementById("session_url");
-          session_url.style.cursor = "pointer";
-          initDT({}, true) //clear datatable
+        var session_url = document.getElementById("session_url");
+        session_url.style.cursor = "pointer";
+        initDT({}, true) //clear datatable
     });
   }
 });
@@ -299,7 +322,7 @@ function initDT(data , update){
         </div>
         <!-- Title Div -->
         <div id="project_title">
-          GPX QA v1.2
+          GPX QA v1.3
         </div>
          <!-- Credits Div -->
         <div id="credits">
