@@ -138,7 +138,7 @@ $(document).ready(function() {
 
   //verify that a file is selected
   if($("#gpxfile")[0].files[0]){
-
+    clearData()
     $("#successdiv").empty().show();
     $("#errordiv").empty().show();
 
@@ -151,7 +151,6 @@ $(document).ready(function() {
     var req = ocpu.call("gpx_validation", {
         gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
-        clearData()
         viewModel.session_tmp(session.getLoc())
 
         //retrieve javascript object as json
@@ -215,11 +214,11 @@ $(document).ready(function() {
 function successmsg(text){
   $("#successdiv").empty()
   .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
-  setTimeout(function(){ 
-    $("#successdiv").fadeOut( "slow", function() {
-        // Animation complete.
-      });
-  }, 5000 );
+  // setTimeout(function(){ 
+  //   $("#successdiv").fadeOut( "slow", function() {
+  //       // Animation complete.
+  //     });
+  // }, 5000 );
 }
 
 //R output to popup
@@ -227,11 +226,11 @@ function errormsg(text){
     $("#convert_button").attr("disabled", "disabled");
     $("#errordiv").empty()
     .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
-    setTimeout(function(){ 
-      $("#errordiv").fadeOut( "slow", function() {
-         // Animation complete.
-      });
-  }, 5000 );
+  //   setTimeout(function(){ 
+  //     $("#errordiv").fadeOut( "slow", function() {
+  //        // Animation complete.
+  //     });
+  // }, 5000 );
 }
 
 function initDT(data , update){
@@ -369,7 +368,7 @@ function initDT(data , update){
           <div id="successdiv"></div>
           <div id="errordiv"></div>
           <div class="progress progress-striped active">
-            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%"></div>
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%; z-index:9999;"></div>
           </div>
         </div>
       </div>
