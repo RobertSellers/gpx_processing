@@ -6,11 +6,8 @@ html, body {
 }
 
 #warning {
-	position: absolute;
-    top: 150px;
-    left: 300px;
-    z-index: 9999;
-    max-width: 400px;
+	padding: 10px;
+	max-width: 380px;
 }
 
 

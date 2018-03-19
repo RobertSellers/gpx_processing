@@ -212,8 +212,8 @@ $(document).ready(function() {
 
 //R output to popup
 function successmsg(text){
-  $("#successdiv").empty()
-  .append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
+  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+
   // setTimeout(function(){ 
   //   $("#successdiv").fadeOut( "slow", function() {
   //       // Animation complete.
@@ -223,9 +223,8 @@ function successmsg(text){
 
 //R output to popup
 function errormsg(text){
-    $("#convert_button").attr("disabled", "disabled");
-    $("#errordiv").empty()
-    .append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+
   //   setTimeout(function(){ 
   //     $("#errordiv").fadeOut( "slow", function() {
   //        // Animation complete.
@@ -368,7 +367,7 @@ function initDT(data , update){
           <div id="successdiv"></div>
           <div id="errordiv"></div>
           <div class="progress progress-striped active">
-            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="45" class="progress-bar" role="progressbar" style="width: 100%; z-index:9999;"></div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
           </div>
         </div>
       </div>
