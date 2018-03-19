@@ -7,7 +7,8 @@ html, body {
 
 #warning {
 	position: absolute;
-    top: 130px;
+    top: 160px;
+    z-index: 9999;
 }
 
 
@@ -19,6 +20,7 @@ html, body {
 }
 
 #user_input_panel {
+	width: 280px;
 	max-width: 280px;
     font-family: 'Source Sans Pro', sans-serif;
     margin-left: 20px;
@@ -99,7 +101,6 @@ html, body {
 .loadFileContainer{
 	padding: 0;
 	margin: 0;
-	position: fixed;
 }
 
 #session_url{
@@ -120,6 +121,7 @@ html, body {
 
 #step_1{
 	border-bottom: 1px solid #000000;
+	padding-bottom: 15px;
 }
 
 /* ////////// */
