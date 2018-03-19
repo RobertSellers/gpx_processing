@@ -96,6 +96,12 @@ html, body {
 	top: 20px;
 }
 
+.loadFileContainer{
+	padding: 0;
+	margin: 0;
+	position: fixed;
+}
+
 #session_url{
 	display:inline-block;
 	cursor: not-allowed;

@@ -331,8 +331,10 @@ function initDT(data , update){
           <fieldset id="step_1">
             <legend>Load GPX data</legend>
             <div class="form-group">
-              <input id="gpxfile" type="file">
-              <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;display: inline-block;vertical-align: top;">
+              <div class="loadFileContainer">
+              <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+              <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:left; display: inline-block;vertical-align: top;">
+            </div>
             </div>
           </fieldset>
           <div id='step_2'>
