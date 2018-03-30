@@ -39,28 +39,6 @@
 
 $(document).ready(function() {
 
-  /* ----- Counting up numbers ----- */
-
-  var $length = $('#length');
-  var lengthMax = parseInt($length.attr('data-max'), 10);
-  var current = 0;
-
-  var updateLength = function () {
-    current += 99135710;
-    $length.html(current.toLocaleString() + ' km');
-    updateTick();
-  };
-
-  var updateTick = function () {
-    if (current < lengthMax) {
-      requestAnimationFrame(updateLength);
-    } else {
-      $length.html(lengthMax.toLocaleString() + ' km');
-    }
-  };
-
-  updateLength();
-
 
   /* ----- Navigation ----- */
 
