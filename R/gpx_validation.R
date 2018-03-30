@@ -29,6 +29,7 @@ gpx_df_construct <- function(gpxfile){
 
   # Identify .gpx version
   if (toString.XMLNode(top[[1]][[1]][[1]][[1]])=="Garmin International "){
+    if(xmlName(top[[2]])!="trk") stop('Incomplete .GPX file')
     version <- "Garmin"
     title <- toString.XMLNode(top[[2]][[1]][[1]])
     description <- toString.XMLNode(top[[2]][[2]][[1]])
