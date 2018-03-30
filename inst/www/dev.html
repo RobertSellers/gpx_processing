@@ -35,87 +35,89 @@
 
 <script type="text/javascript">
 
-/* ----- Counting up numbers ----- */
-
-var $length = $('#length');
-var lengthMax = parseInt($length.attr('data-max'), 10);
-var current = 0;
-
-var updateLength = function () {
-  current += 99135710;
-  $length.html(current.toLocaleString() + ' km');
-  updateTick();
-};
-
-var updateTick = function () {
-  if (current < lengthMax) {
-    requestAnimationFrame(updateLength);
-  } else {
-    $length.html(lengthMax.toLocaleString() + ' km');
-  }
-};
-
-updateLength();
 
 
-/* ----- Navigation ----- */
+$(document).ready(function() {
 
-$('.nav').find('a').attr('tabindex', -1);
+  /* ----- Counting up numbers ----- */
 
-$('.nav-btn').on('click', function () {
-  if ($('.nav-wrap').hasClass('is-open')) {
-    $('.nav-wrap').removeClass('is-open');
-    $('.nav').attr('aria-hidden', true);
-    $('.nav-btn').attr('aria-expanded', false);
-    $('.nav').find('a').attr('tabindex', -1);
-  } else {
-    $('.nav-wrap').addClass('is-open');
-    $('.nav-wrap').addClass('is-fixed');
-    $('.nav-btn').addClass('is-active');
-    $('.nav').attr('aria-hidden', false);
-    $('.nav-btn').attr('aria-expanded', true);
-    $('.nav').find('a').attr('tabindex', 0);
-  }
-});
+  var $length = $('#length');
+  var lengthMax = parseInt($length.attr('data-max'), 10);
+  var current = 0;
 
-$('.nav-wrap').on('transitionend', function () {
-  if (!$('.nav-wrap').hasClass('is-open')) {
-    $('.nav-wrap').removeClass('is-fixed');
-    $('.nav-btn').removeClass('is-active');
-  }
-});
+  var updateLength = function () {
+    current += 99135710;
+    $length.html(current.toLocaleString() + ' km');
+    updateTick();
+  };
 
-$('.nav-wrap').on('keypress', function (e) {
-  switch (e.keyCode) {
-    case 27:
+  var updateTick = function () {
+    if (current < lengthMax) {
+      requestAnimationFrame(updateLength);
+    } else {
+      $length.html(lengthMax.toLocaleString() + ' km');
+    }
+  };
+
+  updateLength();
+
+
+  /* ----- Navigation ----- */
+
+  $('.nav').find('a').attr('tabindex', -1);
+
+  $('.nav-btn').on('click', function () {
+    if ($('.nav-wrap').hasClass('is-open')) {
       $('.nav-wrap').removeClass('is-open');
       $('.nav').attr('aria-hidden', true);
       $('.nav-btn').attr('aria-expanded', false);
       $('.nav').find('a').attr('tabindex', -1);
-      $('.nav-btn').focus();
-      break;
-  }
-});
+    } else {
+      $('.nav-wrap').addClass('is-open');
+      $('.nav-wrap').addClass('is-fixed');
+      $('.nav-btn').addClass('is-active');
+      $('.nav').attr('aria-hidden', false);
+      $('.nav-btn').attr('aria-expanded', true);
+      $('.nav').find('a').attr('tabindex', 0);
+    }
+  });
 
-/* ----- Tabs ----- */
+  $('.nav-wrap').on('transitionend', function () {
+    if (!$('.nav-wrap').hasClass('is-open')) {
+      $('.nav-wrap').removeClass('is-fixed');
+      $('.nav-btn').removeClass('is-active');
+    }
+  });
 
-var $tabs = $('.tabs');
-var $panels = $('.tab-panel');
+  $('.nav-wrap').on('keypress', function (e) {
+    switch (e.keyCode) {
+      case 27:
+        $('.nav-wrap').removeClass('is-open');
+        $('.nav').attr('aria-hidden', true);
+        $('.nav-btn').attr('aria-expanded', false);
+        $('.nav').find('a').attr('tabindex', -1);
+        $('.nav-btn').focus();
+        break;
+    }
+  });
 
-$tabs.on('click', 'a', function (e) {
-  e.preventDefault();
+  /* ----- Tabs ----- */
 
-  var id = $(this).attr('href');
+  var $tabs = $('.tabs');
+  var $panels = $('.tab-panel');
 
-  $panels.filter('[aria-hidden="false"]').attr('aria-hidden', true);
-  $tabs.find('[aria-selected="true"]').attr('aria-selected', false);
+  $tabs.on('click', 'a', function (e) {
+    e.preventDefault();
 
-  $(this).attr('aria-selected', true);
-  $(id).attr('aria-hidden', false);
-});
+    var id = $(this).attr('href');
 
+    $panels.filter('[aria-hidden="false"]').attr('aria-hidden', true);
+    $tabs.find('[aria-selected="true"]').attr('aria-selected', false);
 
-$(document).ready(function() {
+    $(this).attr('aria-selected', true);
+    $(id).attr('aria-hidden', false);
+  });
+
 
   var viewModel = {
     session_tmp: ko.observable(),
