@@ -60,43 +60,39 @@ updateLength();
 
 /* ----- Navigation ----- */
 
-var $navWrap = $('.nav-wrap');
-var $navBtn = $('.nav-btn');
-var $nav = $('.nav');
+$('.nav').find('a').attr('tabindex', -1);
 
-$nav.find('a').attr('tabindex', -1);
-
-$navBtn.on('click', function () {
-  if ($navWrap.hasClass('is-open')) {
-    $navWrap.removeClass('is-open');
-    $nav.attr('aria-hidden', true);
-    $navBtn.attr('aria-expanded', false);
-    $nav.find('a').attr('tabindex', -1);
+$('.nav-btn').on('click', function () {
+  if ($('.nav-wrap').hasClass('is-open')) {
+    $('.nav-wrap').removeClass('is-open');
+    $('.nav').attr('aria-hidden', true);
+    $('.nav-btn').attr('aria-expanded', false);
+    $('.nav').find('a').attr('tabindex', -1);
   } else {
-    $navWrap.addClass('is-open');
-    $navWrap.addClass('is-fixed');
-    $navBtn.addClass('is-active');
-    $nav.attr('aria-hidden', false);
-    $navBtn.attr('aria-expanded', true);
-    $nav.find('a').attr('tabindex', 0);
+    $('.nav-wrap').addClass('is-open');
+    $('.nav-wrap').addClass('is-fixed');
+    $('.nav-btn').addClass('is-active');
+    $('.nav').attr('aria-hidden', false);
+    $('.nav-btn').attr('aria-expanded', true);
+    $('.nav').find('a').attr('tabindex', 0);
   }
 });
 
-$navWrap.on('transitionend', function () {
-  if (!$navWrap.hasClass('is-open')) {
-    $navWrap.removeClass('is-fixed');
-    $navBtn.removeClass('is-active');
+$('.nav-wrap').on('transitionend', function () {
+  if (!$('.nav-wrap').hasClass('is-open')) {
+    $('.nav-wrap').removeClass('is-fixed');
+    $('.nav-btn').removeClass('is-active');
   }
 });
 
-$navWrap.on('keypress', function (e) {
+$('.nav-wrap').on('keypress', function (e) {
   switch (e.keyCode) {
     case 27:
-      $navWrap.removeClass('is-open');
-      $nav.attr('aria-hidden', true);
-      $navBtn.attr('aria-expanded', false);
-      $nav.find('a').attr('tabindex', -1);
-      $navBtn.focus();
+      $('.nav-wrap').removeClass('is-open');
+      $('.nav').attr('aria-hidden', true);
+      $('.nav-btn').attr('aria-expanded', false);
+      $('.nav').find('a').attr('tabindex', -1);
+      $('.nav-btn').focus();
       break;
   }
 });
