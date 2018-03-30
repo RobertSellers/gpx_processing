@@ -23,7 +23,7 @@ gpx_df_construct <- function(gpxfile){
   # check http://lwlss.net/GarminReports/GarminFunctions.R
   library(XML)
 
-  doc <- xmlParse(test_gpx,useInternalNodes=TRUE)
+  doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
 
   top <- xmlRoot(doc)
 
