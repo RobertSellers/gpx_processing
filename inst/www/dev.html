@@ -428,95 +428,76 @@ function initDT(data , update){
   
       <article class="panel farthest">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
-        <div class="farthest-wrap">
-          <p class="farthest-km"><strong id="length" data-max="19692258000">19 692 258 000 km</strong></p>
-          <p class="farthest-probe">Voyageur 1</p>
-        </div>
+        <!-- Display session info -->
+        <div id='env_wrapper'>
+            <a id="session_url">Session URL</a>
+            <div id="dev_check"></div>
+          </div>
+          <!-- Title Div -->
+          <div id="project_title">
+            GPX QA v1.5
+          </div>
+           <!-- Credits Div -->
+          <div id="credits">
+            by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
+          </div>
+          <!-- Step 1: Load File -->
+          <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <fieldset id="step_1">
+              <legend>Load GPX data</legend>
+              <div class="form-group">
+                <div class="loadFileContainer" style="margin-bottom: 15px;">
+                <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:left; display: none; vertical-align: top;">
+              </div>
+              </div>
+            </fieldset>
+            <div id='step_2'>
+              <div class='gpx_metadata'>
+                <legend>Preview Metadata</legend>
+                <b>File name:</b> <span data-bind="text: get_name"></span><br>
+                <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+                <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+                <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+                <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+                <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+                <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+                <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+                <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+                <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+                <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+                <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+                <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+                <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+                <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
+              </div>
+              <!-- Step 2: Display Data -->
+              <fieldset>
+                <legend>Load DataTable</legend>
+                <div class="form-group">
+                  <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
+                </div>
+              </fieldset>
+            </div>
+          </form>
+          <!-- R Relayed Message and spinLoad Information -->
+          <div id="warning">
+            <div id="successdiv"></div>
+            <div id="errordiv"></div>
+          </div>
       </article>
   
       <article class="panel distances">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
-        <div>
-          <svg class="bar-chart" viewBox="0 0 1000 821.8">
-            <title>Distances of farthest probes from Earth.</title>
-            <style>
-              .st0{fill:#6c8fe0;} .st1{fill:#6c8fe0;} .st2{fill:#6c8fe0;} .st3{fill:#6c8fe0;} .st4{fill:#fff;font-family:Ubuntu} .st5{font-size:52.7692px;} .st6{font-size:37.6923px;} .st7{font-size:40.2051px;} .st8{fill:none;stroke:#233e75;stroke-width:5;}
-            </style>
-            <g class="bar-wrap">
-              <path id="bar-voy-1" d="M765.6 422.2h199v30.6h-199z" class="bar st0"/>
-            </g>
-            <g class="bar-wrap">
-              <path id="bar-voy-2" d="M546.7 347.8h199v105h-199z" class="bar st1"/>
-            </g>
-            <g class="bar-wrap">
-              <path id="bar-nh" d="M327.7 94h199v358.7h-199z" class="bar st2"/>
-            </g>
-            <g class="bar-wrap">
-              <path id="bar-cas" d="M108.8 22.5h199v430.2h-199z" class="bar st3"/>
-            </g>
-            <text transform="matrix(0 -1 1 0 204.475 739.456)">
-              <tspan x="0" y="0" class="st4 st5">Voyageur 1</tspan><tspan x="84" y="45.2" class="st4 st6">19.86 B km</tspan>
-            </text>
-            <text transform="matrix(0 -1 1 0 427.26 739.456)">
-              <tspan x="0" y="0" class="st4 st5">Voyageur 2</tspan><tspan x="84" y="45.2" class="st4 st6">16.41 B km</tspan>
-            </text>
-            <text transform="matrix(0 -1 1 0 646.202 800.298)">
-              <tspan x="0" y="0" class="st4 st5">New Horizons</tspan><tspan x="187.4" y="45.2" class="st4 st6">4.8 B km</tspan>
-            </text>
-            <text transform="matrix(0 -1 1 0 865.145 631.651)">
-              <tspan x="0" y="0" class="st4 st5">Cassini</tspan><tspan x="-2.5" y="45.2" class="st4 st6">1.43 B km</tspan>
-            </text>
-            <text transform="translate(32.675 467.33)" class="st4 st7" aria-hidden="true">0</text>
-            <text transform="translate(10 248.72)" class="st4 st7" aria-hidden="true">10</text>
-            <path d="M83.5 452.8H990" class="st8"/>
-            <path d="M83.5 452.8V22.5" class="st8"/>
-            <path d="M83.5 452.8H65" class="st8"/>
-            <path d="M83.5 234.2H65" class="st8"/>
-          </svg>
-        </div>
+        <div id="plotdiv"></div>
       </article>
   
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Map</span></h2>
-        <div class="table-wrap">
-          <table>
-            <caption>Probe details including launch date &amp; destination.</caption>
-            <thead>
-              <tr>
-                <th scope="col">Probe</th>
-                <th scope="col">Launch date</th>
-                <th scope="col">Destination</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Juno</th>
-                <td><time datetime="2011-08-05">Aug. 5, 2011</time></td>
-                <td>Jupiter</td>
-              </tr>
-              <tr>
-                <th scope="row">Rosetta</th>
-                <td><time datetime="2004-03-02">Mar. 2, 2004</time></td>
-                <td>Comet 67P/Churyumov-Gerasimenko</td>
-              </tr>
-              <tr>
-                <th scope="row">Okras</th>
-                <td><time datetime="2010-05-20">May 20, 2010</time></td>
-                <td>Venus</td>
-              </tr>
-              <tr>
-                <th scope="row">Shin’en 2</th>
-                <td><time datetime="2014-12-03">Dec. 3, 2014</time></td>
-                <td>Heliocentric orbit</td>
-              </tr>
-              <tr>
-                <th scope="row">Gaia</th>
-                <td><time datetime="2013-12-19">Dec. 19, 2013</time></td>
-                <td>Sun-Earth L2 point</td>
-              </tr>
-            </tbody>
+      <div class="flex-item well" id="gpxTable">
+          <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
-        </div>
+      </div>
       </article>
   
       <article class="panel">
@@ -526,20 +507,48 @@ function initDT(data , update){
           <ul class="tabs clearfix" role="tablist">
             <li class="tab" role="presentation"><a href="#pluto" role="tab" aria-controls="pluto" aria-selected="true">Pluto</a></li>
             <li class="tab" role="presentation"><a href="#67pcg" role="tab" aria-controls="67pcg">67P/C-G</a></li>
-            <li class="tab" role="presentation"><a href="#jupiter" role="tab" aria-controls="jupiter">Jupiter</a></li>
           </ul>
   
           <div class="tab-panels">
             <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="false">
-              <img class="flex-img details-img" src="img/pluto.jpg" alt="Composite photo of Pluto taken by New Horizons">
-              <dl class="details">
-                <dt>Name</dt>
-                <dd>Pluto</dd>
-                <dt>Discovery year</dt>
-                <dd>1930</dd>
-                <dt>Discovered by</dt>
-                <dd>Clyde W. Tombaugh</dd>
-              </dl>
+                <div>
+                    <svg class="bar-chart" viewBox="0 0 1000 821.8">
+                      <title>Distances of farthest probes from Earth.</title>
+                      <style>
+                        .st0{fill:#6c8fe0;} .st1{fill:#6c8fe0;} .st2{fill:#6c8fe0;} .st3{fill:#6c8fe0;} .st4{fill:#fff;font-family:Ubuntu} .st5{font-size:52.7692px;} .st6{font-size:37.6923px;} .st7{font-size:40.2051px;} .st8{fill:none;stroke:#233e75;stroke-width:5;}
+                      </style>
+                      <g class="bar-wrap">
+                        <path id="bar-voy-1" d="M765.6 422.2h199v30.6h-199z" class="bar st0"/>
+                      </g>
+                      <g class="bar-wrap">
+                        <path id="bar-voy-2" d="M546.7 347.8h199v105h-199z" class="bar st1"/>
+                      </g>
+                      <g class="bar-wrap">
+                        <path id="bar-nh" d="M327.7 94h199v358.7h-199z" class="bar st2"/>
+                      </g>
+                      <g class="bar-wrap">
+                        <path id="bar-cas" d="M108.8 22.5h199v430.2h-199z" class="bar st3"/>
+                      </g>
+                      <text transform="matrix(0 -1 1 0 204.475 739.456)">
+                        <tspan x="0" y="0" class="st4 st5">Voyageur 1</tspan><tspan x="84" y="45.2" class="st4 st6">19.86 B km</tspan>
+                      </text>
+                      <text transform="matrix(0 -1 1 0 427.26 739.456)">
+                        <tspan x="0" y="0" class="st4 st5">Voyageur 2</tspan><tspan x="84" y="45.2" class="st4 st6">16.41 B km</tspan>
+                      </text>
+                      <text transform="matrix(0 -1 1 0 646.202 800.298)">
+                        <tspan x="0" y="0" class="st4 st5">New Horizons</tspan><tspan x="187.4" y="45.2" class="st4 st6">4.8 B km</tspan>
+                      </text>
+                      <text transform="matrix(0 -1 1 0 865.145 631.651)">
+                        <tspan x="0" y="0" class="st4 st5">Cassini</tspan><tspan x="-2.5" y="45.2" class="st4 st6">1.43 B km</tspan>
+                      </text>
+                      <text transform="translate(32.675 467.33)" class="st4 st7" aria-hidden="true">0</text>
+                      <text transform="translate(10 248.72)" class="st4 st7" aria-hidden="true">10</text>
+                      <path d="M83.5 452.8H990" class="st8"/>
+                      <path d="M83.5 452.8V22.5" class="st8"/>
+                      <path d="M83.5 452.8H65" class="st8"/>
+                      <path d="M83.5 234.2H65" class="st8"/>
+                    </svg>
+                  </div>
             </div>
             <div class="tab-panel" id="67pcg" role="tabpanel" aria-hidden="true">
               <img class="flex-img details-img" src="img/cg.jpg" alt="Photo taken by the Rosetta spacecraft">
@@ -550,17 +559,6 @@ function initDT(data , update){
                 <dd>1969</dd>
                 <dt>Discovered by</dt>
                 <dd>Klim Ivanovych Churyumov, Svetlana Ivanovna Gerasimenko</dd>
-              </dl>
-            </div>
-            <div class="tab-panel" id="jupiter" role="tabpanel" aria-hidden="true">
-              <img class="flex-img details-img" src="img/jupiter.jpg" alt="Photo of Jupiter taken by New Horizons during its gravity assist">
-              <dl class="details">
-                <dt>Name</dt>
-                <dd>Jupiter</dd>
-                <dt>Discovery year</dt>
-                <dd>7–8 BCE</dd>
-                <dt>Discovered by</dt>
-                <dd>Babylonian astronomers</dd>
               </dl>
             </div>
           </div>
