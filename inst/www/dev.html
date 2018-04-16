@@ -296,22 +296,11 @@ $(document).ready(function() {
 function successmsg(text){
   $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
 
-  // setTimeout(function(){ 
-  //   $("#successdiv").fadeOut( "slow", function() {
-  //       // Animation complete.
-  //     });
-  // }, 5000 );
 }
 
 //R output to popup
 function errormsg(text){
     $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
-
-  //   setTimeout(function(){ 
-  //     $("#errordiv").fadeOut( "slow", function() {
-  //        // Animation complete.
-  //     });
-  // }, 5000 );
 }
 
 function initDT(data , update){
@@ -452,7 +441,7 @@ function initDT(data , update){
               </div>
             </fieldset>
             <!-- R Relayed Message and spinLoad Information -->
-            <fieldset>
+            <fieldset id="warnings_panel">
                 <legend>Warnings</legend>
                 <div id="successdiv"></div>
                 <div id="errordiv"></div>
