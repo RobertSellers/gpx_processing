@@ -279,7 +279,7 @@ $(document).ready(function() {
           }).addTo(viewModel.leafletMap());
           map_lock('unlock')
         });
-        initDT({}, true) //clear datatable
+        // initDT({}, true) //clear datatable
         $('#gpxTable').css("opacity", 1);
         $(".dt-button").removeAttr("disabled");
         initDT(viewModel.rDataOutput(), true)
@@ -308,7 +308,7 @@ function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable();
-      datatable.clear();
+     datatable.clear();
       datatable.rows.add(data);
       datatable.draw();
 
