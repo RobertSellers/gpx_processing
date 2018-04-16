@@ -365,8 +365,11 @@ function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable({
+      dom: 'Bfrtip',
       searching: false,
-      responsive: true
+      responsive: true,
+      paging: false,
+      "bAutoWidth": false
     });
     datatable.clear();
     datatable.rows.add(data);
@@ -374,12 +377,8 @@ function initDT(data , update){
 
   }else{
     $('#gpxDataTable').dataTable({
-      dom: 'Bfrtip',
       data: data,
-      searching: false,
       pageLength: 5,
-      responsive: true,
-      "bAutoWidth": false,
       "aoColumns" : [
             {"data": "DateTime", title: "DateTime"},
             {"data":  "Dist", title: "Dist"},
