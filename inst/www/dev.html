@@ -179,7 +179,6 @@ responsive: {
   };
 
   function clearData(){
-    initDT({}, false)
     $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
@@ -343,6 +342,7 @@ responsive: {
         });
       }).fail(function(jqXHR){
         clearData()
+        initDT({}, false)
         errormsg(jqXHR.responseText);
       }).always(function(){
         var session_url = document.getElementById("session_url");
