@@ -8,3 +8,4 @@ links/*
 gpx_processing.Rproj
 read_gpx_baseline.R
 read_gpx_test.R
+settings.json

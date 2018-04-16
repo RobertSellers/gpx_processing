@@ -124,7 +124,7 @@ $(document).ready(function() {
 
   function clearData(){
     $('#step_2').css("opacity", 0.2);
-    $('#map').css("opacity", 0.2);
+    $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
     viewModel.leafletMap().eachLayer(function (layer) {
       // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
@@ -165,7 +165,7 @@ $(document).ready(function() {
       viewModel.leafletMap().boxZoom.enable();
       viewModel.leafletMap().keyboard.enable();
       if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
-      document.getElementById('map').style.cursor='grab';
+      document.getElementById('plotdiv').style.cursor='grab';
     }if (toggle=='lock'){
       viewModel.leafletMap().dragging.disable();
       viewModel.leafletMap().touchZoom.disable();
@@ -174,7 +174,7 @@ $(document).ready(function() {
       viewModel.leafletMap().boxZoom.disable();
       viewModel.leafletMap().keyboard.disable();
       if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
-      document.getElementById('map').style.cursor='default';
+      document.getElementById('plotdiv').style.cursor='default';
     }
   }
 
@@ -203,11 +203,11 @@ $(document).ready(function() {
   $("#session_url").attr("disabled", "disabled");
 
   $('#step_2').css("opacity", 0.2);
-  $('#map').css("opacity", 0.2);
+  $('#plotdiv').css("opacity", 0.2);
   $('#gpxTable').css("opacity", 0.2);
 
   //initialize leaflet map
-  var map = L.map('map');
+  var map = L.map('plotdiv');
     L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
         maxZoom: 20,
         subdomains:['mt0','mt1','mt2','mt3']
@@ -245,7 +245,7 @@ $(document).ready(function() {
           $("#process_data").removeAttr("disabled");
 
           $('#step_2').css("opacity", 1);
-          $('#map').css("opacity", 1);
+          $('#plotdiv').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
           //refresh the map
@@ -489,19 +489,19 @@ function initDT(data , update){
   
       <article class="panel distances">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
-        <div id="map"></div>
-      </article>
-  
-      <article class="panel">
-        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Map</span></h2>
-      <div class="flex-item well" id="gpxTable">
+        <div class="flex-item well" id="gpxTable">
           <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
       </div>
       </article>
   
       <article class="panel">
-        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Visual Analysis</span></h2>
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Map</span></h2>
+        <div id="plotdiv"></div>
+      </article>
+  
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Visualizations</span></h2>
   
         <div class="tab-group">
           <ul class="tabs clearfix" role="tablist">
