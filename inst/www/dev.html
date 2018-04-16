@@ -246,8 +246,13 @@ $(document).ready(function() {
           $('#plotdiv').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
-          //refresh the map
+          
+          //Populate Data Table
+          $('#gpxTable').css("opacity", 1);
+          $(".dt-button").removeAttr("disabled");
+          initDT(viewModel.rDataOutput(), true)
 
+          //refresh the map
           viewModel.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
               viewModel.leafletMap().removeLayer(layer);
@@ -279,10 +284,6 @@ $(document).ready(function() {
           }).addTo(viewModel.leafletMap());
           map_lock('unlock')
         });
-        // initDT({}, true) //clear datatable
-        $('#gpxTable').css("opacity", 1);
-        $(".dt-button").removeAttr("disabled");
-        initDT(viewModel.rDataOutput(), true)
       }).fail(function(jqXHR){
         clearData()
         errormsg(jqXHR.responseText);
