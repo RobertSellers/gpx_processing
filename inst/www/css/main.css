@@ -6,7 +6,7 @@ html {
   box-sizing: border-box;
 
   color: #fff;
-  font: normal 100%/1.4 Verdana,sans-serif;
+  font-family: 'Source Sans Pro', sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
@@ -389,17 +389,6 @@ td {
    font-size: 10px; 
    color:black;
 }
-/* #env_wrapper{
-  right: 50px;
-  position: absolute;
-  line-height: 40px;
-} */
-
-#project_title{
-  position: relative;
-  top: -30px;
-  text-align: center;
-}
 
 .alert-danger {
   background-image: linear-gradient(to bottom,#f2dede 0,#e7c3c3 100%);
@@ -447,28 +436,3 @@ td {
 #warnings_panel{
   max-height: 120px;
 }
-
-/* .close {
-  float: right;
-  font-size: 21px;
-  font-weight: bold;
-  line-height: 1;
-  color: #000;
-  text-shadow: 0 1px 0 #fff;
-  opacity: .2;
-  filter: alpha(opacity=20);
-}
-.alert-dismissable .close {
-  position: relative;
-  top: -2px;
-  right: -21px;
-  color: inherit;
-}
-
-.close:hover, .close:focus {
-  color: #000;
-  text-decoration: none;
-  cursor: pointer;
-  opacity: .5;
-  filter: alpha(opacity=50);
-} */

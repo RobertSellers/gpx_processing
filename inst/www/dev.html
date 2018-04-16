@@ -197,7 +197,7 @@ $(document).ready(function() {
     $("#dev_check").html(cur_url);
   }
 
-  $("#process_data").attr("disabled", "disabled");
+  // $("#process_data").attr("disabled", "disabled");
   $('.dt-button').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
@@ -241,8 +241,6 @@ $(document).ready(function() {
           viewModel.rDataOutput(data)
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#process_data").removeAttr("disabled");
-
           $('#step_2').css("opacity", 1);
           $('#plotdiv').css("opacity", 1);
 
@@ -288,6 +286,9 @@ $(document).ready(function() {
         var session_url = document.getElementById("session_url");
         session_url.style.cursor = "pointer";
         initDT({}, true) //clear datatable
+        $('#gpxTable').css("opacity", 1);
+        $(".dt-button").removeAttr("disabled");
+        initDT(viewModel.rDataOutput(), true)
     });
   }
 });
@@ -346,18 +347,6 @@ function initDT(data , update){
       });
     }
 }
-
-  //////////////////////////////
-  //Process Data Table
-  //////////////////////////////
-  $(function(){
-    $("#process_data").on("click", function(){
-      $('#gpxTable').css("opacity", 1);
-      $(".dt-button").removeAttr("disabled");
-      $("#process_data").attr("disabled", "disabled");
-        initDT(viewModel.rDataOutput(), true)
-    });
-  });
 
   //////////////////////////////
   //Ajax spinLoad Bar
@@ -446,15 +435,15 @@ function initDT(data , update){
                 <div id="successdiv"></div>
                 <div id="errordiv"></div>
             </fieldset>
-            <div id='step_2'>
+            <!-- <div id='step_2'> -->
               <!-- Step 2: Display Data -->
-              <fieldset>
-                <legend>Load DataTable</legend>
-                <div class="form-group">
-                  <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
-                </div>
-              </fieldset>
-            </div>
+              <!-- <fieldset> -->
+                <!-- <legend>Load DataTable</legend> -->
+                <!-- <div class="form-group"> -->
+                  <!-- <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br> -->
+                <!-- </div> -->
+              <!-- </fieldset> -->
+            <!-- </div> -->
           </form>
 
           <article class="panel" style="width:100%;">
