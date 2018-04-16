@@ -38,62 +38,59 @@
 
 $(document).ready(function() {
 
-  //initialize datatable
-  viewModel.dataTable($('#gpxDataTable').DataTable())
-
   // Initialize highcharts
   
-Highcharts.chart('container', {
+  Highcharts.chart('container', {
 
-  title: {
-      text: 'Elevation Profile'
-  },
-  subtitle: {
-      text: '',
-      style: {
-          display: 'none'
-      }
-  },
-  yAxis: {
-      title: {
-          text: 'Elevation (ft.)'
-      }
-  },
-  legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle'
-  },
-  plotOptions: {
-      series: {
-          label: {
-              connectorAllowed: false
-          },
-          pointStart: 2010
-      }
-  },
-  series: [{
-      name: 'Installation',
-      data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-  }, {
-      name: 'Manufacturing',
-      data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-  }],
-  responsive: {
-      rules: [{
-          condition: {
-              maxWidth: 500
-          },
-          chartOptions: {
-              legend: {
-                  layout: 'horizontal',
-                  align: 'center',
-                  verticalAlign: 'bottom'
-              }
-          }
-      }]
-  }
-});
+    title: {
+        text: 'Elevation Profile'
+    },
+    subtitle: {
+        text: '',
+        style: {
+            display: 'none'
+        }
+    },
+    yAxis: {
+        title: {
+            text: 'Elevation (ft.)'
+        }
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+    plotOptions: {
+        series: {
+            label: {
+                connectorAllowed: false
+            },
+            pointStart: 2010
+        }
+    },
+    series: [{
+        name: 'Installation',
+        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+    }, {
+        name: 'Manufacturing',
+        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+    }],
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+            }
+        }]
+    }
+  });
 
   /* ----- Navigation ----- */
 
@@ -153,6 +150,7 @@ Highcharts.chart('container', {
 
 
   var viewModel = {
+    dataTable: ko.observable(),
     session_tmp: ko.observable(),
     gpx_file_name: ko.observable(),
     leafletMap: ko.observable(),
@@ -206,6 +204,10 @@ Highcharts.chart('container', {
     viewModel.get_elevation_data_imp(null);
     viewModel.get_cadence_data_imp(null);
   }
+
+
+  //initialize datatable
+  viewModel.dataTable($('#gpxDataTable').DataTable())
 
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
