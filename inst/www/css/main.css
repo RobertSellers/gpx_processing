@@ -443,6 +443,10 @@ _dataTables_wrapper{
   height: 95px;
 }
 
-.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+/* .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   color: white;
+} */
+
+.dt-buttons{
+  float : left !important;
 }
