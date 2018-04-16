@@ -40,57 +40,61 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-  Highcharts.chart('container', {
+Highcharts.chart('container', {
 
-    title: {
-        text: 'Elevation Profile'
-    },
-    subtitle: {
-        text: '',
-        style: {
-            display: 'none'
-        }
-    },
-    yAxis: {
-        title: {
-            text: 'Elevation (ft.)'
-        }
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-    plotOptions: {
-        series: {
-            label: {
-                connectorAllowed: false
-            },
-            pointStart: 2010
-        }
-    },
-    series: [{
-        name: 'Installation',
-        data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-    }, {
-        name: 'Manufacturing',
-        data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-    }],
-    responsive: {
-        rules: [{
-            condition: {
-                maxWidth: 500
-            },
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-                }
-            }
-        }]
+title: {
+    text: 'Elevation Profile'
+},
+
+subtitle: {
+    text: '',
+    style: {
+        display: 'none'
     }
-  });
+},
+yAxis: {
+    title: {
+        text: 'Elevation (ft.)'
+    }
+},
+legend: {
+    layout: 'vertical',
+    align: 'right',
+    verticalAlign: 'middle'
+},
+plotOptions: {
+    series: {
+        label: {
+            connectorAllowed: false
+        },
+        pointStart: 2010
+    }
+},
+
+series: [{
+    name: 'Installation',
+    data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+}, {
+    name: 'Manufacturing',
+    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+}],
+
+responsive: {
+    rules: [{
+        condition: {
+            maxWidth: 500
+        },
+        chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+        }
+    }]
+}
+
+});
 
   /* ----- Navigation ----- */
 
@@ -150,7 +154,6 @@ $(document).ready(function() {
 
 
   var viewModel = {
-    dataTable: ko.observable(),
     session_tmp: ko.observable(),
     gpx_file_name: ko.observable(),
     leafletMap: ko.observable(),
@@ -204,11 +207,6 @@ $(document).ready(function() {
     viewModel.get_elevation_data_imp(null);
     viewModel.get_cadence_data_imp(null);
   }
-
-
-  //initialize datatable
-  var dt = $('#gpxDataTable').DataTable()
-  viewModel.dataTable(dt)
 
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
@@ -344,7 +342,6 @@ $(document).ready(function() {
         });
       }).fail(function(jqXHR){
         clearData()
-        viewModel.dataTable().clear();
         errormsg(jqXHR.responseText);
       }).always(function(){
         var session_url = document.getElementById("session_url");
@@ -367,12 +364,13 @@ function errormsg(text){
 function initDT(data , update){
 
   if(update){
-    viewModel.dataTable().clear();
-    viewModel.dataTable().rows.add(data);
-    viewModel.dataTable().draw();
+    var datatable = $('#gpxDataTable').DataTable();
+    datatable.clear();
+    datatable.rows.add(data);
+    datatable.draw();
 
   }else{
-    viewModel.dataTable()({
+    $('#gpxDataTable').dataTable({
       data: data,
       dom: 'Bfrtip',
       searching: false,
