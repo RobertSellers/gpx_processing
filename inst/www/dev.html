@@ -443,7 +443,7 @@ function initDT(data , update){
               </ul>
       
               <div class="tab-panels">
-                  <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
+                  <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
                       <div class='gpx_metadata'>
                         <b>File name:</b> <span data-bind="text: get_name"></span><br>
                         <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
@@ -462,7 +462,7 @@ function initDT(data , update){
                         <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
                       </div>
                     </div>
-                <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="false">
+                <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="true">
                     <div>
                         <svg class="bar-chart" viewBox="0 0 1000 821.8">
                           <title>Distances of farthest probes from Earth.</title>
