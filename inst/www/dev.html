@@ -421,16 +421,29 @@ function initDT(data , update){
               <li><a href="#">pointCollect</a></li>
             </ol>
           </li>
+          <li>
+            <span class="nav-label"><span class="nav-label-back">Session URL</span></span>
+            <ol>
+              <li><a id="session_url">Session URL</a></li>
+            </ol>
+          </li>
+          <li>
+            <span class="nav-label"><span class="nav-label-back">Dev/Prod</span></span>
+            <ol>
+              <li><div id="dev_check"></div></li>
+            </ol>
+          </li>
+          <li>
+              <span class="nav-label"><span class="nav-label-back">Credits</span></span>
+              <ol>
+                <li>by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a></li>
+              </ol>
+            </li>
         </ul>
       </nav>
       <!-- Title Div -->
       <div id="project_title">
         GPX QA v1.5
-      </div>
-      <!-- Display session info -->
-      <div id='env_wrapper'>
-          <a id="session_url">Session URL</a>
-          <div id="dev_check"></div>
       </div>
     </header>
   
@@ -438,10 +451,6 @@ function initDT(data , update){
   
       <article class="panel farthest">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
-           <!-- Credits Div -->
-          <div id="credits">
-            by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
-          </div>
           <!-- Step 1: Load File -->
           <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
             <fieldset id="step_1">

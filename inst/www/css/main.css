@@ -389,14 +389,14 @@ td {
    font-size: 10px; 
    color:black;
 }
-#env_wrapper{
+/* #env_wrapper{
   right: 50px;
   position: absolute;
   line-height: 40px;
-}
+} */
 
 #project_title{
-  height: 40px;
+  position: relative;
+  top: -30px;
   text-align: center;
-  line-height: 40px;
 }
