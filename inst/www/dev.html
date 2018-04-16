@@ -400,6 +400,15 @@ function initDT(data , update){
       </strong>
       <h1 class="title">Menu</h1>
       <nav class="nav-wrap" role="navigation">
+        <!-- Title Div -->
+        <div id="project_title">
+          GPX QA v1.5
+        </div>
+        <!-- Display session info -->
+        <div id='env_wrapper'>
+            <a id="session_url">Session URL</a>
+            <div id="dev_check"></div>
+          </div>
         <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
         <ul class="nav" id="nav" aria-hidden="true">
           <li>
@@ -428,15 +437,6 @@ function initDT(data , update){
   
       <article class="panel farthest">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
-        <!-- Display session info -->
-        <div id='env_wrapper'>
-            <a id="session_url">Session URL</a>
-            <div id="dev_check"></div>
-          </div>
-          <!-- Title Div -->
-          <div id="project_title">
-            GPX QA v1.5
-          </div>
            <!-- Credits Div -->
           <div id="credits">
             by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
@@ -474,7 +474,7 @@ function initDT(data , update){
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#pluto" role="tab" aria-controls="pluto" aria-selected="true">Pluto</a></li>
-                <li class="tab" role="presentation"><a href="#67pcg" role="tab" aria-controls="67pcg">67P/C-G</a></li>
+                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata">Metadata</a></li>
               </ul>
       
               <div class="tab-panels">
@@ -518,7 +518,7 @@ function initDT(data , update){
                         </svg>
                       </div>
                 </div>
-                <div class="tab-panel" id="67pcg" role="tabpanel" aria-hidden="true">
+                <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
                   <div class='gpx_metadata'>
                     <legend>Preview Metadata</legend>
                     <b>File name:</b> <span data-bind="text: get_name"></span><br>
@@ -551,7 +551,7 @@ function initDT(data , update){
   
       <article class="panel" style="width:100%;">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
-        <div class="flex-item well" id="gpxTable">
+        <div id="gpxTable">
           <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
       </div>

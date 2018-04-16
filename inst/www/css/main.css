@@ -376,5 +376,27 @@ tbody th {
   }
 }
 
-th { font-size: 10px; }
-td { font-size: 9px; }
+/* additional css 4/16 */
+
+a{
+  color:darkcyan;
+}
+
+th { 
+  font-size: 11px; 
+}
+td {
+   font-size: 10px; 
+   color:black;
+}
+#env_wrapper{
+  right: 50px;
+  position: absolute;
+  line-height: 40px;
+}
+
+#project_title{
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+}
