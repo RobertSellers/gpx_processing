@@ -448,7 +448,7 @@ td {
   max-height: 120px;
 }
 
-.close {
+/* .close {
   float: right;
   font-size: 21px;
   font-weight: bold;
@@ -471,4 +471,4 @@ td {
   cursor: pointer;
   opacity: .5;
   filter: alpha(opacity=50);
-}
+} */
