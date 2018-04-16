@@ -1,25 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>GPX QA and Analysis</title>
+<title>GPX - QA and Analysis</title>
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-<!-- styles -->
-<link href="scripts/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<link href="scripts/bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
-<link href="scripts/jqueryui/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" media="screen">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet"/>
 <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" rel="stylesheet"/>
 <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+<link href="css/main.css" rel="stylesheet">
 
 <!-- libraries -->
 <script src="scripts/jquery-1.10.2.min.js"> </script>
 <script src="scripts/opencpu-0.4.js"> </script>
-<script src="scripts/bootstrap/js/bootstrap.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
 <script src="scripts/knockout-min.js"></script>
 <script src="scripts/leaflet.js"></script>
@@ -27,7 +23,6 @@
 <script src="scripts/jquery.dataTables.min.js"></script>
 <script src="scripts/dataTables.buttons.min.js"></script>
 <script src="scripts/dataTables.flash.min.js"></script>
-<script src="scripts/jszip.min.js"></script>
 <script src="scripts/pdfmake.min.js"></script>
 <script src="scripts/vfs_font.js"></script>
 <script src="scripts/buttons.html5.min.js"></script>
@@ -35,7 +30,67 @@
 
 <script type="text/javascript">
 
+
+
 $(document).ready(function() {
+
+
+  /* ----- Navigation ----- */
+
+  $('.nav').find('a').attr('tabindex', -1);
+
+  $('.nav-btn').on('click', function () {
+    if ($('.nav-wrap').hasClass('is-open')) {
+      $('.nav-wrap').removeClass('is-open');
+      $('.nav').attr('aria-hidden', true);
+      $('.nav-btn').attr('aria-expanded', false);
+      $('.nav').find('a').attr('tabindex', -1);
+    } else {
+      $('.nav-wrap').addClass('is-open');
+      $('.nav-wrap').addClass('is-fixed');
+      $('.nav-btn').addClass('is-active');
+      $('.nav').attr('aria-hidden', false);
+      $('.nav-btn').attr('aria-expanded', true);
+      $('.nav').find('a').attr('tabindex', 0);
+    }
+  });
+
+  $('.nav-wrap').on('transitionend', function () {
+    if (!$('.nav-wrap').hasClass('is-open')) {
+      $('.nav-wrap').removeClass('is-fixed');
+      $('.nav-btn').removeClass('is-active');
+    }
+  });
+
+  $('.nav-wrap').on('keypress', function (e) {
+    switch (e.keyCode) {
+      case 27:
+        $('.nav-wrap').removeClass('is-open');
+        $('.nav').attr('aria-hidden', true);
+        $('.nav-btn').attr('aria-expanded', false);
+        $('.nav').find('a').attr('tabindex', -1);
+        $('.nav-btn').focus();
+        break;
+    }
+  });
+
+  /* ----- Tabs ----- */
+
+  var $tabs = $('.tabs');
+  var $panels = $('.tab-panel');
+
+  $tabs.on('click', 'a', function (e) {
+    e.preventDefault();
+
+    var id = $(this).attr('href');
+
+    $panels.filter('[aria-hidden="false"]').attr('aria-hidden', true);
+    $tabs.find('[aria-selected="true"]').attr('aria-selected', false);
+
+    $(this).attr('aria-selected', true);
+    $(id).attr('aria-hidden', false);
+  });
+
 
   var viewModel = {
     session_tmp: ko.observable(),
@@ -66,8 +121,8 @@ $(document).ready(function() {
     $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
+    $(".dt-button").css("disabled", true);
     viewModel.leafletMap().eachLayer(function (layer) {
-      // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
       if (layer.hasOwnProperty('_gpx')){
         viewModel.leafletMap().removeLayer(layer);
         viewModel.leafletMap().setView([37.8, -96], 4);
@@ -138,7 +193,7 @@ $(document).ready(function() {
     $("#dev_check").html(cur_url);
   }
 
-  $("#process_data").attr("disabled", "disabled");
+  // $("#process_data").attr("disabled", "disabled");
   $('.dt-button').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
 
@@ -182,14 +237,17 @@ $(document).ready(function() {
           viewModel.rDataOutput(data)
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
-          $("#process_data").removeAttr("disabled");
-
           $('#step_2').css("opacity", 1);
           $('#plotdiv').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
-          //refresh the map
 
+          //Populate Data Table
+          $('#gpxTable').css("opacity", 1);
+          $(".dt-button").removeAttr("disabled");
+          initDT(viewModel.rDataOutput(), true)
+
+          //refresh the map
           viewModel.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
               viewModel.leafletMap().removeLayer(layer);
@@ -221,45 +279,32 @@ $(document).ready(function() {
           }).addTo(viewModel.leafletMap());
           map_lock('unlock')
         });
-
       }).fail(function(jqXHR){
         clearData()
         errormsg(jqXHR.responseText);
       }).always(function(){
         var session_url = document.getElementById("session_url");
         session_url.style.cursor = "pointer";
-        initDT({}, true) //clear datatable
     });
   }
 });
 
 //R output to popup
 function successmsg(text){
-  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
 
-  // setTimeout(function(){ 
-  //   $("#successdiv").fadeOut( "slow", function() {
-  //       // Animation complete.
-  //     });
-  // }, 5000 );
 }
 
 //R output to popup
 function errormsg(text){
-    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
-
-  //   setTimeout(function(){ 
-  //     $("#errordiv").fadeOut( "slow", function() {
-  //        // Animation complete.
-  //     });
-  // }, 5000 );
+    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
 }
 
 function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable();
-      datatable.clear();
+     datatable.clear();
       datatable.rows.add(data);
       datatable.draw();
 
@@ -282,7 +327,7 @@ function initDT(data , update){
         {"data":  "Pace", title: "Pace"},
         {"data":  "Seconds", title: "Seconds"},
         {"data":  "Speed", title: "Speed"},
-        {"data":  "dDist", title: "dDist"},
+        //{"data":  "dDist", title: "dDist"},
         // {"data":  "dDist2D", title: "dDist2D"},
         // {"data":  "dEast", title: "dEast"},
         // {"data":  "dNorth", title: "dNorth"},
@@ -298,18 +343,6 @@ function initDT(data , update){
       });
     }
 }
-
-  //////////////////////////////
-  //Process Data Table
-  //////////////////////////////
-  $(function(){
-    $("#process_data").on("click", function(){
-      $('#gpxTable').css("opacity", 1);
-      $(".dt-button").removeAttr("disabled");
-      $("#process_data").attr("disabled", "disabled");
-        initDT(viewModel.rDataOutput(), true)
-    });
-  });
 
   //////////////////////////////
   //Ajax spinLoad Bar
@@ -329,77 +362,164 @@ function initDT(data , update){
 
 </script>
 
-<link href="styles/bootstrap_three_panel.css" rel="stylesheet" type="text/css">
-
 </head>
 
   <body>
-    <div class="flex-container">
-      <!-- First Panel -->
-      <div class="flex-item well" id="user_input_panel">
-        <!-- Display session info -->
-        <div id='env_wrapper'>
-          <a id="session_url">Session URL</a>
-          <div id="dev_check"></div>
-        </div>
-        <!-- Title Div -->
-        <div id="project_title">
-          GPX QA v1.4
-        </div>
-         <!-- Credits Div -->
-        <div id="credits">
-          by <a href="http://www.azimuth1.com">Robert Sellers/Azimuth1</a>
-        </div>
-        <!-- Step 1: Load File -->
-        <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
-          <fieldset id="step_1">
-            <legend>Load GPX data</legend>
-            <div class="form-group">
-              <div class="loadFileContainer" style="margin-bottom: 15px;">
-              <input id="gpxfile" type="file" style="float:left; display: inline-block;">
-              <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:left; display: none; vertical-align: top;">
-            </div>
-            </div>
-          </fieldset>
-          <div id='step_2'>
-            <div class='gpx_metadata'>
-              <legend>Preview Metadata</legend>
-              <b>File name:</b> <span data-bind="text: get_name"></span><br>
-              <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
-              <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
-              <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
-              <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
-              <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
-              <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
-              <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
-              <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
-              <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
-              <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
-              <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
-              <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
-              <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
-              <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
-            </div>
-            <!-- Step 2: Display Data -->
-            <fieldset>
-              <legend>Load DataTable</legend>
+    <header class="masthead" role="banner">
+      <strong class="logo">
+        <!-- Add logo to this -->
+        <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
+        <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
+      </strong>
+      <h1 class="title">Menu | GPX QA v1.7</h1>
+      <nav class="nav-wrap" role="navigation">
+
+        <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
+        <ul class="nav" id="nav" aria-hidden="true">
+          <li>
+            <span class="nav-label"><span class="nav-label-back">GPS</span></span>
+            <ol>
+              <li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li>
+            </ol>
+          </li>
+          <li>
+            <span class="nav-label"><span class="nav-label-back">MIP</span></span>
+            <ol>
+              <li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li>
+            </ol>
+          </li>
+          <li>
+            <span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
+            <ol>
+              <li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li>
+            </ol>
+          </li>
+          <li>
+            <span class="nav-label"><span class="nav-label-back">Session URL</span></span>
+            <ol>
+              <li><a id="session_url">View Session</a></li>
+            </ol>
+          </li>
+          <li>
+              <span class="nav-label"><span class="nav-label-back">Credits</span></span>
+              <ol>
+                <li>by <a href="http://www.azimuth1.com">Azimuth1</a></li>
+              </ol>
+            </li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main role="main">
+  
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
+          <!-- Step 1: Load File -->
+          <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <fieldset id="step_1">
+              <legend>Load GPX data</legend>
               <div class="form-group">
-                <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
+                <div class="loadFileContainer">
+                <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
+              </div>
               </div>
             </fieldset>
-          </div>
-        </form>
-        <!-- R Relayed Message and spinLoad Information -->
-        <div id="warning">
-          <div id="successdiv"></div>
-          <div id="errordiv"></div>
-        </div>
-      </div>
-      <div class="flex-item well" id="plotdiv"></div>
-      <div class="flex-item well" id="gpxTable">
+            <!-- R Relayed Message and spinLoad Information -->
+            <fieldset id="warnings_panel">
+                <legend>Warnings</legend>
+                <div id="successdiv"></div>
+                <div id="errordiv"></div>
+            </fieldset>
+  
+          </form>
+
+          <article class="panel" style="width:100%;">
+      
+            <div class="tab-group">
+              <ul class="tabs clearfix" role="tablist" style="height:250px">
+                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
+                <li class="tab" role="presentation"><a href="#pluto" role="tab" aria-controls="pluto">D3</a></li>
+              </ul>
+      
+              <div class="tab-panels">
+                <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="false">
+                    <div>
+                        <svg class="bar-chart" viewBox="0 0 1000 821.8">
+                          <title>Distances of farthest probes from Earth.</title>
+                          <style>
+                            .st0{fill:#6c8fe0;} .st1{fill:#6c8fe0;} .st2{fill:#6c8fe0;} .st3{fill:#6c8fe0;} .st4{fill:#fff;font-family:Ubuntu} .st5{font-size:52.7692px;} .st6{font-size:37.6923px;} .st7{font-size:40.2051px;} .st8{fill:none;stroke:#233e75;stroke-width:5;}
+                          </style>
+                          <g class="bar-wrap">
+                            <path id="bar-voy-1" d="M765.6 422.2h199v30.6h-199z" class="bar st0"/>
+                          </g>
+                          <g class="bar-wrap">
+                            <path id="bar-voy-2" d="M546.7 347.8h199v105h-199z" class="bar st1"/>
+                          </g>
+                          <g class="bar-wrap">
+                            <path id="bar-nh" d="M327.7 94h199v358.7h-199z" class="bar st2"/>
+                          </g>
+                          <g class="bar-wrap">
+                            <path id="bar-cas" d="M108.8 22.5h199v430.2h-199z" class="bar st3"/>
+                          </g>
+                          <text transform="matrix(0 -1 1 0 204.475 739.456)">
+                            <tspan x="0" y="0" class="st4 st5">Voyageur 1</tspan><tspan x="84" y="45.2" class="st4 st6">19.86 B km</tspan>
+                          </text>
+                          <text transform="matrix(0 -1 1 0 427.26 739.456)">
+                            <tspan x="0" y="0" class="st4 st5">Voyageur 2</tspan><tspan x="84" y="45.2" class="st4 st6">16.41 B km</tspan>
+                          </text>
+                          <text transform="matrix(0 -1 1 0 646.202 800.298)">
+                            <tspan x="0" y="0" class="st4 st5">New Horizons</tspan><tspan x="187.4" y="45.2" class="st4 st6">4.8 B km</tspan>
+                          </text>
+                          <text transform="matrix(0 -1 1 0 865.145 631.651)">
+                            <tspan x="0" y="0" class="st4 st5">Cassini</tspan><tspan x="-2.5" y="45.2" class="st4 st6">1.43 B km</tspan>
+                          </text>
+                          <text transform="translate(32.675 467.33)" class="st4 st7" aria-hidden="true">0</text>
+                          <text transform="translate(10 248.72)" class="st4 st7" aria-hidden="true">10</text>
+                          <path d="M83.5 452.8H990" class="st8"/>
+                          <path d="M83.5 452.8V22.5" class="st8"/>
+                          <path d="M83.5 452.8H65" class="st8"/>
+                          <path d="M83.5 234.2H65" class="st8"/>
+                        </svg>
+                      </div>
+                </div>
+                <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
+                  <div class='gpx_metadata'>
+                    <!-- <b>File name:</b> <span data-bind="text: get_name"></span><br> -->
+                    <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+                    <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+                    <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+                    <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+                    <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+                    <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+                    <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+                    <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+                    <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+                    <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+                    <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+                    <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+                    <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+                    <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+          </article>
+      </article>
+    
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
+        <div id="plotdiv" style="height:460px;"></div>
+      </article>
+  
+      <article class="panel" style="width:100%;">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
+        <div id="gpxTable" style="background:#6c8fe0" >
           <table id="gpxDataTable" class="display" cellspacing="0">
           </table>
       </div>
-    </div>
-  </body>
+      </article>
+    </main>
+    </body>
 </html>
