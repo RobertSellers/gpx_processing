@@ -398,7 +398,7 @@ function initDT(data , update){
         <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
         <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
       </strong>
-      <h1 class="title">Menu | GPX QA v1.5 | Azimuth1 / Robert Sellers</h1>
+      <h1 class="title">Menu | GPX QA v1.6</h1>
       <nav class="nav-wrap" role="navigation">
 
         <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
@@ -406,31 +406,25 @@ function initDT(data , update){
           <li>
             <span class="nav-label"><span class="nav-label-back">GPS</span></span>
             <ol>
-              <li><a href="#">GPX Analyzer</a></li>
+              <li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li>
             </ol>
           </li>
           <li>
             <span class="nav-label"><span class="nav-label-back">MIP</span></span>
             <ol>
-              <li><a href="#">MIHPT</a></li>
+              <li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li>
             </ol>
           </li>
           <li>
             <span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
             <ol>
-              <li><a href="#">pointCollect</a></li>
+              <li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li>
             </ol>
           </li>
           <li>
             <span class="nav-label"><span class="nav-label-back">Session URL</span></span>
             <ol>
-              <li><a id="session_url">Session URL</a></li>
-            </ol>
-          </li>
-          <li>
-            <span class="nav-label"><span class="nav-label-back">Dev/Prod</span></span>
-            <ol>
-              <li><div id="dev_check"></div></li>
+              <li><a id="session_url">View Session</a></li>
             </ol>
           </li>
           <li>
@@ -445,7 +439,7 @@ function initDT(data , update){
   
     <main role="main">
   
-      <article class="panel farthest">
+      <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
           <!-- Step 1: Load File -->
           <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
@@ -469,10 +463,11 @@ function initDT(data , update){
             </div>
           </form>
           <!-- R Relayed Message and spinLoad Information -->
-          <div id="warning">
+          <fieldset>
+              <legend>Warnings</legend>
             <div id="successdiv"></div>
             <div id="errordiv"></div>
-          </div>
+          </fieldset>
 
           <article class="panel" style="width:100%;">
             <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Visualizations</span></h2>
