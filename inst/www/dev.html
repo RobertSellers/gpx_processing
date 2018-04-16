@@ -365,11 +365,6 @@ function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable({
-      dom: 'Bfrtip',
-      searching: false,
-      responsive: true,
-      paging: false,
-      "bAutoWidth": false
     });
     datatable.clear();
     datatable.rows.add(data);
@@ -377,6 +372,11 @@ function initDT(data , update){
 
   }else{
     $('#gpxDataTable').dataTable({
+      dom: 'Bfrtip',
+      searching: false,
+      responsive: true,
+      paging: false,
+      "bAutoWidth": false,
       data: data,
       pageLength: 5,
       "aoColumns" : [
@@ -500,7 +500,7 @@ function initDT(data , update){
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
-                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">D3</a></li>
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
               </ul>
       
               <div class="tab-panels">
@@ -534,7 +534,7 @@ function initDT(data , update){
     
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv" style="height:400px;"></div>
+        <div id="plotdiv" style="height:450px;"></div>
       </article>
   
       <article class="panel" style="width:100%;">
