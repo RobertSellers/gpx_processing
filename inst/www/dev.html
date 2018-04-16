@@ -126,6 +126,7 @@ $(document).ready(function() {
     $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
+    $(".dt-button").css("disabled", true);
     viewModel.leafletMap().eachLayer(function (layer) {
       if (layer.hasOwnProperty('_gpx')){
         viewModel.leafletMap().removeLayer(layer);
@@ -278,17 +279,16 @@ $(document).ready(function() {
           }).addTo(viewModel.leafletMap());
           map_lock('unlock')
         });
-
+        initDT({}, true) //clear datatable
+        $('#gpxTable').css("opacity", 1);
+        $(".dt-button").removeAttr("disabled");
+        initDT(viewModel.rDataOutput(), true)
       }).fail(function(jqXHR){
         clearData()
         errormsg(jqXHR.responseText);
       }).always(function(){
         var session_url = document.getElementById("session_url");
         session_url.style.cursor = "pointer";
-        initDT({}, true) //clear datatable
-        $('#gpxTable').css("opacity", 1);
-        $(".dt-button").removeAttr("disabled");
-        initDT(viewModel.rDataOutput(), true)
     });
   }
 });
