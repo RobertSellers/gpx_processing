@@ -416,8 +416,9 @@ _dataTables_wrapper{
   padding-right: 35px;
 }
 .alert {
-  padding: 15px;
-  margin-bottom: 20px;
+  font-size: 12px;
+  padding: 5px;
+  /* margin-bottom: 20px; */
   border: 1px solid transparent;
   border-radius: 4px;
 }
@@ -439,13 +440,9 @@ _dataTables_wrapper{
 }
 
 #warnings_panel{
-  max-height: 95px;
-  height: 95px;
+  max-height: 70px;
+  height: 70px;
 }
-
-/* .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-  color: white;
-} */
 
 .dt-buttons{
   float : left !important;
@@ -454,4 +451,7 @@ _dataTables_wrapper{
 .datatables_buttons_info{
   z-index:9999;
   color: black;
+}
+#gpx_metadata{
+  font-size: 12px;
 }
