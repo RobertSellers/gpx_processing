@@ -375,3 +375,6 @@ tbody th {
     transform: scaleY(1);
   }
 }
+
+th { font-size: 10px; }
+td { font-size: 9px; }

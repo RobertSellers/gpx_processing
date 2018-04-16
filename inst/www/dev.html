@@ -342,7 +342,7 @@ function initDT(data , update){
         {"data":  "Pace", title: "Pace"},
         {"data":  "Seconds", title: "Seconds"},
         {"data":  "Speed", title: "Speed"},
-        {"data":  "dDist", title: "dDist"},
+        //{"data":  "dDist", title: "dDist"},
         // {"data":  "dDist2D", title: "dDist2D"},
         // {"data":  "dEast", title: "dEast"},
         // {"data":  "dNorth", title: "dNorth"},
@@ -453,6 +453,13 @@ function initDT(data , update){
               </div>
             </fieldset>
             <div id='step_2'>
+              <!-- Step 2: Display Data -->
+              <fieldset>
+                <legend>Load DataTable</legend>
+                <div class="form-group">
+                  <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
+                </div>
+              </fieldset>
               <div class='gpx_metadata'>
                 <legend>Preview Metadata</legend>
                 <b>File name:</b> <span data-bind="text: get_name"></span><br>
@@ -471,13 +478,6 @@ function initDT(data , update){
                 <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
                 <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
               </div>
-              <!-- Step 2: Display Data -->
-              <fieldset>
-                <legend>Load DataTable</legend>
-                <div class="form-group">
-                  <button disabled="disabled" id="process_data" type="button">Load Data Table</button><br>
-                </div>
-              </fieldset>
             </div>
           </form>
           <!-- R Relayed Message and spinLoad Information -->
