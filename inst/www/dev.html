@@ -498,7 +498,8 @@ function initDT(data , update){
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
           <!-- Step 1: Load File -->
           <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
-            <fieldset id="step_1" style="width:50%; float: left;">
+            <table> <td> 
+            <fieldset id="step_1">
               <legend>Load GPX data</legend>
               <div class="form-group">
                 <div class="loadFileContainer">
@@ -507,13 +508,14 @@ function initDT(data , update){
               </div>
               </div>
             </fieldset>
+          </td> <td>
             <!-- R Relayed Message and spinLoad Information -->
-            <fieldset id="warnings_panel" style="width:50%; float: left;">
+            <fieldset id="warnings_panel">
                 <legend>Warnings</legend>
                 <div id="successdiv"></div>
                 <div id="errordiv"></div>
             </fieldset>
-  
+          </td></table>
           </form>
 
           <article class="panel" style="width:100%;">
