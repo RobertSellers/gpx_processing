@@ -28,12 +28,73 @@
 <script src="scripts/buttons.html5.min.js"></script>
 <script src="scripts/buttons.print.min.js"></script>
 
+<!-- Highcharts libraries -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
 <script type="text/javascript">
-
-
 
 $(document).ready(function() {
 
+  // Initialize highcharts
+  
+Highcharts.chart('container', {
+
+title: {
+    text: 'Elevation Profile'
+},
+
+subtitle: {
+    text: '',
+    style: {
+        display: 'none'
+    }
+},
+yAxis: {
+    title: {
+        text: 'Elevation (ft.)'
+    }
+},
+legend: {
+    layout: 'vertical',
+    align: 'right',
+    verticalAlign: 'middle'
+},
+plotOptions: {
+    series: {
+        label: {
+            connectorAllowed: false
+        },
+        pointStart: 2010
+    }
+},
+
+series: [{
+    name: 'Installation',
+    data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+}, {
+    name: 'Manufacturing',
+    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+}],
+
+responsive: {
+    rules: [{
+        condition: {
+            maxWidth: 500
+        },
+        chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+        }
+    }]
+}
+
+});
 
   /* ----- Navigation ----- */
 
@@ -304,35 +365,48 @@ function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable();
-     datatable.clear();
-      datatable.rows.add(data);
-      datatable.draw();
+    datatable.clear();
+    datatable.rows.add(data);
+    datatable.draw();
 
   }else{
     $('#gpxDataTable').dataTable({
-      dom: 'Bfrtip',
       data: data,
+      dom: 'Bfrtip',
       searching: false,
+      responsive: true,
+      "bAutoWidth": false,
       pageLength: 5,
-      columns: [
-        {"data": "DateTime", title: "DateTime"},
-        {"data":  "Dist", title: "Dist"},
-        // {"data":  "Dist2D", title: "Dist2D"},
-        // {"data":  "East", title: "East"},
-        {"data":  "Elevation", title: "Elevation"},
-        {"data":  "Gradient", title: "Gradient"},
-        {"data":  "Latitude", title: "Latitude"},
-        {"data":  "Longitude", title: "Longitude"},
-        // {"data":  "North", title: "North"},
-        {"data":  "Pace", title: "Pace"},
-        {"data":  "Seconds", title: "Seconds"},
-        {"data":  "Speed", title: "Speed"},
-        //{"data":  "dDist", title: "dDist"},
-        // {"data":  "dDist2D", title: "dDist2D"},
-        // {"data":  "dEast", title: "dEast"},
-        // {"data":  "dNorth", title: "dNorth"},
-        // {"data":  "dUp", title: "dUp"}
+      "aoColumns" : [
+            {"data": "DateTime", title: "DateTime"},
+            {"data":  "Dist", title: "Dist"},
+            {"data":  "Elevation", title: "Elev"},
+            {"data":  "Gradient", title: "Grad"},
+            {"data":  "Latitude", title: "Lat"},
+            {"data":  "Longitude", title: "Lon"},
+            {"data":  "Pace", title: "Pace"},
+            {"data":  "Seconds", title: "Seconds"},
+            {"data":  "Speed", title: "Speed"}
         ],
+      // columns: [
+      //   {"data": "DateTime", title: "DateTime"},
+      //   {"data":  "Dist", title: "Dist"},
+      //   // {"data":  "Dist2D", title: "Dist2D"},
+      //   // {"data":  "East", title: "East"},
+      //   {"data":  "Elevation", title: "Elevation"},
+      //   {"data":  "Gradient", title: "Gradient"},
+      //   {"data":  "Latitude", title: "Latitude"},
+      //   {"data":  "Longitude", title: "Longitude"},
+      //   // {"data":  "North", title: "North"},
+      //   {"data":  "Pace", title: "Pace"},
+      //   {"data":  "Seconds", title: "Seconds"},
+      //   {"data":  "Speed", title: "Speed"},
+      //   //{"data":  "dDist", title: "dDist"},
+      //   // {"data":  "dDist2D", title: "dDist2D"},
+      //   // {"data":  "dEast", title: "dEast"},
+      //   // {"data":  "dNorth", title: "dNorth"},
+      //   // {"data":  "dUp", title: "dUp"}
+      //   ],
       buttons: [
           {
             extend: 'collection',
@@ -371,51 +445,36 @@ function initDT(data , update){
         <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
         <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
       </strong>
-      <h1 class="title">Menu | GPX QA v1.7</h1>
+      <h1 class="title">Menu | GPX QA v8</h1>
       <nav class="nav-wrap" role="navigation">
 
         <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
         <ul class="nav" id="nav" aria-hidden="true">
-          <li>
-            <span class="nav-label"><span class="nav-label-back">GPS</span></span>
-            <ol>
-              <li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li>
-            </ol>
+          <li><span class="nav-label"><span class="nav-label-back">GPS</span></span>
+            <ol><li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li></ol>
           </li>
-          <li>
-            <span class="nav-label"><span class="nav-label-back">MIP</span></span>
-            <ol>
-              <li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li>
-            </ol>
+          <li><span class="nav-label"><span class="nav-label-back">MIP</span></span>
+            <ol><li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li></ol>
           </li>
-          <li>
-            <span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
-            <ol>
-              <li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li>
-            </ol>
+          <li><span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
+            <ol><li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li></ol>
           </li>
-          <li>
-            <span class="nav-label"><span class="nav-label-back">Session URL</span></span>
-            <ol>
-              <li><a id="session_url">View Session</a></li>
-            </ol>
+          <li><span class="nav-label"><span class="nav-label-back">Session URL</span></span>
+            <ol><li><a id="session_url">View Session</a></li></ol>
           </li>
-          <li>
-              <span class="nav-label"><span class="nav-label-back">Credits</span></span>
-              <ol>
-                <li>by <a href="http://www.azimuth1.com">Azimuth1</a></li>
-              </ol>
+          <li><span class="nav-label"><span class="nav-label-back">Credits</span></span>
+              <ol><li>by <a href="http://www.azimuth1.com">Azimuth1</a></li></ol>
             </li>
         </ul>
       </nav>
     </header>
   
     <main role="main">
-  
+
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
           <!-- Step 1: Load File -->
-          <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
             <fieldset id="step_1">
               <legend>Load GPX data</legend>
               <div class="form-group">
@@ -431,76 +490,39 @@ function initDT(data , update){
                 <div id="successdiv"></div>
                 <div id="errordiv"></div>
             </fieldset>
-  
+          </td></table>
           </form>
 
           <article class="panel" style="width:100%;">
       
             <div class="tab-group">
-              <ul class="tabs clearfix" role="tablist" style="height:250px">
+              <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
-                <li class="tab" role="presentation"><a href="#pluto" role="tab" aria-controls="pluto">D3</a></li>
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
               </ul>
       
               <div class="tab-panels">
-                <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="false">
-                    <div>
-                        <svg class="bar-chart" viewBox="0 0 1000 821.8">
-                          <title>Distances of farthest probes from Earth.</title>
-                          <style>
-                            .st0{fill:#6c8fe0;} .st1{fill:#6c8fe0;} .st2{fill:#6c8fe0;} .st3{fill:#6c8fe0;} .st4{fill:#fff;font-family:Ubuntu} .st5{font-size:52.7692px;} .st6{font-size:37.6923px;} .st7{font-size:40.2051px;} .st8{fill:none;stroke:#233e75;stroke-width:5;}
-                          </style>
-                          <g class="bar-wrap">
-                            <path id="bar-voy-1" d="M765.6 422.2h199v30.6h-199z" class="bar st0"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-voy-2" d="M546.7 347.8h199v105h-199z" class="bar st1"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-nh" d="M327.7 94h199v358.7h-199z" class="bar st2"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-cas" d="M108.8 22.5h199v430.2h-199z" class="bar st3"/>
-                          </g>
-                          <text transform="matrix(0 -1 1 0 204.475 739.456)">
-                            <tspan x="0" y="0" class="st4 st5">Voyageur 1</tspan><tspan x="84" y="45.2" class="st4 st6">19.86 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 427.26 739.456)">
-                            <tspan x="0" y="0" class="st4 st5">Voyageur 2</tspan><tspan x="84" y="45.2" class="st4 st6">16.41 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 646.202 800.298)">
-                            <tspan x="0" y="0" class="st4 st5">New Horizons</tspan><tspan x="187.4" y="45.2" class="st4 st6">4.8 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 865.145 631.651)">
-                            <tspan x="0" y="0" class="st4 st5">Cassini</tspan><tspan x="-2.5" y="45.2" class="st4 st6">1.43 B km</tspan>
-                          </text>
-                          <text transform="translate(32.675 467.33)" class="st4 st7" aria-hidden="true">0</text>
-                          <text transform="translate(10 248.72)" class="st4 st7" aria-hidden="true">10</text>
-                          <path d="M83.5 452.8H990" class="st8"/>
-                          <path d="M83.5 452.8V22.5" class="st8"/>
-                          <path d="M83.5 452.8H65" class="st8"/>
-                          <path d="M83.5 234.2H65" class="st8"/>
-                        </svg>
+                  <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
+                      <div class='gpx_metadata'>
+                        <!-- <b>File name:</b> <span data-bind="text: get_name"></span><br> -->
+                        <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+                        <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+                        <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+                        <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+                        <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+                        <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+                        <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+                        <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+                        <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+                        <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+                        <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+                        <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+                        <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+                        <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
                       </div>
-                </div>
-                <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
-                  <div class='gpx_metadata'>
-                    <!-- <b>File name:</b> <span data-bind="text: get_name"></span><br> -->
-                    <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
-                    <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
-                    <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
-                    <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
-                    <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
-                    <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
-                    <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
-                    <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
-                    <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
-                    <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
-                    <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
-                    <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
-                    <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
-                    <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
-                  </div>
+                    </div>
+                <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
+                    <div id="container"></div>
                 </div>
               </div>
             </div>
@@ -510,13 +532,13 @@ function initDT(data , update){
     
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv" style="height:460px;"></div>
+        <div id="plotdiv" style="height:450px;"></div>
       </article>
   
       <article class="panel" style="width:100%;">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
         <div id="gpxTable" style="background:#6c8fe0" >
-          <table id="gpxDataTable" class="display" cellspacing="0">
+          <table id="gpxDataTable" class="display" cellspacing="0" width="100%">
           </table>
       </div>
       </article>
