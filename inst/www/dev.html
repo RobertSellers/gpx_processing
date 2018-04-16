@@ -304,9 +304,9 @@ function initDT(data , update){
 
   if(update){
     var datatable = $('#gpxDataTable').DataTable();
-     datatable.clear();
-      datatable.rows.add(data);
-      datatable.draw();
+    datatable.clear();
+    datatable.rows.add(data);
+    datatable.draw();
 
   }else{
     $('#gpxDataTable').dataTable({
@@ -314,6 +314,18 @@ function initDT(data , update){
       data: data,
       searching: false,
       pageLength: 5,
+      "bAutoWidth": false,
+      "aoColumns" : [
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' },
+            { sWidth: '10px' }
+        ],
       columns: [
         {"data": "DateTime", title: "DateTime"},
         {"data":  "Dist", title: "Dist"},
