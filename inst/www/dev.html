@@ -364,20 +364,18 @@ function errormsg(text){
 function initDT(data , update){
 
   if(update){
-    var datatable = $('#gpxDataTable').DataTable({
-    });
+    var datatable = $('#gpxDataTable').DataTable();
     datatable.clear();
     datatable.rows.add(data);
     datatable.draw();
 
   }else{
     $('#gpxDataTable').dataTable({
+      data: data,
       dom: 'Bfrtip',
       searching: false,
       responsive: true,
-      paging: false,
       "bAutoWidth": false,
-      data: data,
       pageLength: 5,
       "aoColumns" : [
             {"data": "DateTime", title: "DateTime"},
