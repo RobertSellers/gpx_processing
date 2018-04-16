@@ -296,13 +296,13 @@ $(document).ready(function() {
 
 //R output to popup
 function successmsg(text){
-  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
 
 }
 
 //R output to popup
 function errormsg(text){
-    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable"><a href="#" class="close" data-dismiss="alert">&times;</a>' + text + '</div>');
+    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
 }
 
 function initDT(data , update){
@@ -426,7 +426,7 @@ function initDT(data , update){
               <div class="form-group">
                 <div class="loadFileContainer">
                 <input id="gpxfile" type="file" style="float:left; display: inline-block;">
-                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:left; display: none; vertical-align: top;">
+                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
             </fieldset>
