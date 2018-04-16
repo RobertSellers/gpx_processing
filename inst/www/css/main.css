@@ -452,6 +452,6 @@ _dataTables_wrapper{
   z-index:9999;
   color: black;
 }
-#gpx_metadata{
+.gpx_metadata{
   font-size: 12px;
 }
