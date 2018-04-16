@@ -246,7 +246,7 @@ $(document).ready(function() {
           $('#plotdiv').css("opacity", 1);
 
           successmsg("GPX file successfully loaded!");
-          
+
           //Populate Data Table
           $('#gpxTable').css("opacity", 1);
           $(".dt-button").removeAttr("disabled");
@@ -499,7 +499,6 @@ function initDT(data , update){
                 </div>
                 <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
                   <div class='gpx_metadata'>
-                    <legend>Preview Metadata</legend>
                     <b>File name:</b> <span data-bind="text: get_name"></span><br>
                     <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
                     <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
