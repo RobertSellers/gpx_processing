@@ -1,6 +1,4 @@
-@-moz-viewport { width: device-width; scale: 1; }
 @-ms-viewport { width: device-width; scale: 1; }
-@-webkit-viewport { width: device-width; scale: 1; }
 @viewport { width: device-width; scale: 1; }
 
 html {
@@ -8,7 +6,7 @@ html {
   box-sizing: border-box;
 
   color: #fff;
-  font: normal 100%/1.4 Ubuntu,sans-serif;
+  font: normal 100%/1.4 Verdana,sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
