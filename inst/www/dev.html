@@ -28,12 +28,81 @@
 <script src="scripts/buttons.html5.min.js"></script>
 <script src="scripts/buttons.print.min.js"></script>
 
+<!-- Highcharts libraries -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
 <script type="text/javascript">
-
-
 
 $(document).ready(function() {
 
+  // Initialize highcharts
+  
+Highcharts.chart('container', {
+
+title: {
+    text: 'Solar Employment Growth by Sector, 2010-2016'
+},
+
+subtitle: {
+    text: 'Source: thesolarfoundation.com'
+},
+
+yAxis: {
+    title: {
+        text: 'Number of Employees'
+    }
+},
+legend: {
+    layout: 'vertical',
+    align: 'right',
+    verticalAlign: 'middle'
+},
+
+plotOptions: {
+    series: {
+        label: {
+            connectorAllowed: false
+        },
+        pointStart: 2010
+    }
+},
+
+series: [{
+    name: 'Installation',
+    data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+}, {
+    name: 'Manufacturing',
+    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+}, {
+    name: 'Sales & Distribution',
+    data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
+}, {
+    name: 'Project Development',
+    data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
+}, {
+    name: 'Other',
+    data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+}],
+
+responsive: {
+    rules: [{
+        condition: {
+            maxWidth: 500
+        },
+        chartOptions: {
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            }
+        }
+    }]
+}
+
+});
 
   /* ----- Navigation ----- */
 
@@ -452,13 +521,13 @@ function initDT(data , update){
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
-                <li class="tab" role="presentation"><a href="#pluto" role="tab" aria-controls="pluto">D3</a></li>
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">D3</a></li>
               </ul>
       
               <div class="tab-panels">
                   <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
                       <div class='gpx_metadata'>
-                        <b>File name:</b> <span data-bind="text: get_name"></span><br>
+                        <!-- <b>File name:</b> <span data-bind="text: get_name"></span><br> -->
                         <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
                         <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
                         <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
@@ -475,45 +544,8 @@ function initDT(data , update){
                         <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
                       </div>
                     </div>
-                <div class="tab-panel" id="pluto" role="tabpanel" aria-hidden="true">
-                    <div>
-                        <svg class="bar-chart" viewBox="0 0 1000 821.8">
-                          <title>Distances of farthest probes from Earth.</title>
-                          <style>
-                            .st0{fill:#6c8fe0;} .st1{fill:#6c8fe0;} .st2{fill:#6c8fe0;} .st3{fill:#6c8fe0;} .st4{fill:#fff;font-family:Ubuntu} .st5{font-size:52.7692px;} .st6{font-size:37.6923px;} .st7{font-size:40.2051px;} .st8{fill:none;stroke:#233e75;stroke-width:5;}
-                          </style>
-                          <g class="bar-wrap">
-                            <path id="bar-voy-1" d="M765.6 422.2h199v30.6h-199z" class="bar st0"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-voy-2" d="M546.7 347.8h199v105h-199z" class="bar st1"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-nh" d="M327.7 94h199v358.7h-199z" class="bar st2"/>
-                          </g>
-                          <g class="bar-wrap">
-                            <path id="bar-cas" d="M108.8 22.5h199v430.2h-199z" class="bar st3"/>
-                          </g>
-                          <text transform="matrix(0 -1 1 0 204.475 739.456)">
-                            <tspan x="0" y="0" class="st4 st5">Voyageur 1</tspan><tspan x="84" y="45.2" class="st4 st6">19.86 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 427.26 739.456)">
-                            <tspan x="0" y="0" class="st4 st5">Voyageur 2</tspan><tspan x="84" y="45.2" class="st4 st6">16.41 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 646.202 800.298)">
-                            <tspan x="0" y="0" class="st4 st5">New Horizons</tspan><tspan x="187.4" y="45.2" class="st4 st6">4.8 B km</tspan>
-                          </text>
-                          <text transform="matrix(0 -1 1 0 865.145 631.651)">
-                            <tspan x="0" y="0" class="st4 st5">Cassini</tspan><tspan x="-2.5" y="45.2" class="st4 st6">1.43 B km</tspan>
-                          </text>
-                          <text transform="translate(32.675 467.33)" class="st4 st7" aria-hidden="true">0</text>
-                          <text transform="translate(10 248.72)" class="st4 st7" aria-hidden="true">10</text>
-                          <path d="M83.5 452.8H990" class="st8"/>
-                          <path d="M83.5 452.8V22.5" class="st8"/>
-                          <path d="M83.5 452.8H65" class="st8"/>
-                          <path d="M83.5 234.2H65" class="st8"/>
-                        </svg>
-                      </div>
+                <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
+                    <div id="container"></div>
                 </div>
               </div>
             </div>
