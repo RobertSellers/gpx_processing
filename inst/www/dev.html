@@ -372,7 +372,11 @@ function errormsg(text){
 function initDT(data , update){
 
   if(update){
-    var datatable = $('#gpxDataTable').DataTable();
+    var datatable = $('#gpxDataTable').DataTable({
+      searching: false,
+      responsive: true,
+      paging: false
+    });
     datatable.clear();
     datatable.rows.add(data);
     datatable.draw();

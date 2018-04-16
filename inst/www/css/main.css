@@ -383,7 +383,7 @@ a{
 }
 
 
-td {
+#gpxTable td {
    color:black;
 }
 
@@ -391,9 +391,6 @@ td {
 	color: tomato;
 }
 
-_dataTables_wrapper{
-  background: #e2e2e2;
-}
 
 .alert-danger {
   background-image: linear-gradient(to bottom,#f2dede 0,#e7c3c3 100%);
@@ -440,8 +437,8 @@ _dataTables_wrapper{
 }
 
 #warnings_panel{
-  max-height: 70px;
-  height: 70px;
+  max-height: 58.59px;
+  height: 58.59px;
 }
 
 .dt-buttons{
@@ -449,7 +446,6 @@ _dataTables_wrapper{
 }
 
 .datatables_buttons_info{
-  z-index:9999;
   color: black;
 }
 .gpx_metadata{
