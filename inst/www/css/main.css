@@ -450,3 +450,8 @@ _dataTables_wrapper{
 .dt-buttons{
   float : left !important;
 }
+
+.datatables_buttons_info{
+  z-index:9999;
+  color: black;
+}
