@@ -127,7 +127,6 @@ $(document).ready(function() {
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
     viewModel.leafletMap().eachLayer(function (layer) {
-      // if (layer._url!='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'){
       if (layer.hasOwnProperty('_gpx')){
         viewModel.leafletMap().removeLayer(layer);
         viewModel.leafletMap().setView([37.8, -96], 4);
@@ -452,6 +451,12 @@ function initDT(data , update){
               </div>
               </div>
             </fieldset>
+            <!-- R Relayed Message and spinLoad Information -->
+            <fieldset>
+                <legend>Warnings</legend>
+                <div id="successdiv"></div>
+                <div id="errordiv"></div>
+            </fieldset>
             <div id='step_2'>
               <!-- Step 2: Display Data -->
               <fieldset>
@@ -462,12 +467,6 @@ function initDT(data , update){
               </fieldset>
             </div>
           </form>
-          <!-- R Relayed Message and spinLoad Information -->
-          <fieldset>
-              <legend>Warnings</legend>
-            <div id="successdiv"></div>
-            <div id="errordiv"></div>
-          </fieldset>
 
           <article class="panel" style="width:100%;">
             <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Visualizations</span></h2>
