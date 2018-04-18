@@ -29,6 +29,8 @@
 <script src="scripts/vfs_font.js"></script>
 <script src="scripts/buttons.html5.min.js"></script>
 <script src="scripts/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.min.js"></script>
+
 
 <!-- Highcharts libraries -->
 <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -98,11 +100,11 @@ $(document).ready(function() {
       },
       series: [
         {
-          name: "Winter 2014-2015",
+          name: "Elevation",
           data: [null,null]
         },
         {
-          name: "Winter 2015-2016",
+          name: "Speed",
           data: [null,null]
         }],
       responsive: {
@@ -367,7 +369,7 @@ $(document).ready(function() {
           //////////////////////////////////
           //Update Highcharts
           var chart = $('#container').highcharts();
-          
+          var timeRange = vm.rDataOutput().map(a => a.DateTime);
           chart.series[0].setData([
             [Date.UTC(1970, 10, 25), 0],
             [Date.UTC(1970, 11,  6), 0.25],
@@ -396,8 +398,8 @@ $(document).ready(function() {
             [Date.UTC(1971, 5, 29), 0.67],
             [Date.UTC(1971, 6,  3), 0.18],
             [Date.UTC(1971, 6,  4), 0]
-        ]
-    ,false)
+        ],false)
+
     chart.series[1].setData ([
             [Date.UTC(1970, 10,  9), 0],
             [Date.UTC(1970, 10, 15), 0.23],
@@ -422,10 +424,8 @@ $(document).ready(function() {
             [Date.UTC(1971, 4,  9), 1.7],
             [Date.UTC(1971, 4, 29), 0.85],
             [Date.UTC(1971, 5,  7), 0]
-        ]
-    ,false)
-      var timeRange = vm.rDataOutput().map(a => a.DateTime);
-          $('#container').highcharts().redraw();
+        ],false)
+        $('#container').highcharts().redraw();
 
         });
       }).fail(function(jqXHR){
