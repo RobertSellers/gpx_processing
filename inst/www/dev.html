@@ -96,11 +96,15 @@ $(document).ready(function() {
               label: {connectorAllowed: false}
           }
       },
-      series: [{
-        name: "Winter 2014-2015",
-        data: [null]},{
-        name: "Winter 2015-2016",
-        data: [null]}],
+      series: [
+        {
+          name: "Winter 2014-2015",
+          data: [null,null]
+        },
+        {
+          name: "Winter 2015-2016",
+          data: [null,null]
+        }],
       responsive: {
           rules: [{
               condition: {maxWidth: 500},
