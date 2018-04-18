@@ -64,6 +64,13 @@ $(document).ready(function() {
               label: {connectorAllowed: false}
           }
       },
+      chart: {
+        events: {
+          load: function() {
+            $(window).resize();
+          }
+        }
+      },
       series: [{data:[null]}],
       responsive: {
           rules: [{
