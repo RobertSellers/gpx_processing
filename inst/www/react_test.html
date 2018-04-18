@@ -42,35 +42,40 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-  Highcharts.chart('container', {
-    title: {text: 'Elevation Profile'},
-    subtitle: {
-      text: '',
-      style: {display: 'none'}
+  var element = React.createElement('div', { id: 'chart' });
+
+  ReactDOM.render(element, document.getElementById('container'), function () {
+    Highcharts.chart('container', {
+      title: {text: 'Elevation Profile'},
+      subtitle: {
+        text: '',
+        style: {display: 'none'}
+        },
+      yAxis: {
+          title: {text: 'Elevation (feet)'}
       },
-    yAxis: {
-        title: {text: 'Elevation (feet)'}
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-    plotOptions: {
-        series: {
-            label: {connectorAllowed: false}
-        }
-    },
-    series: [{data:[null,null]}],
-    responsive: {
-        rules: [{
-            condition: {maxWidth: 500},
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-    }}}]}
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+      },
+      plotOptions: {
+          series: {
+              label: {connectorAllowed: false}
+          }
+      },
+      series: [{data:[null,null]}],
+      responsive: {
+          rules: [{
+              condition: {maxWidth: 500},
+              chartOptions: {
+                  legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+      }}}]}
+    });
+
   });
 
   /* ----- Navigation ----- */
