@@ -372,7 +372,7 @@ $(document).ready(function() {
             [Date.UTC(1971, 6,  3), 0.18],
             [Date.UTC(1971, 6,  4), 0]
         ]
-    }, , {
+    }, {
         name: "Winter 2015-2016",
         data: [
             [Date.UTC(1970, 10,  9), 0],
@@ -400,6 +400,7 @@ $(document).ready(function() {
             [Date.UTC(1971, 5,  7), 0]
         ]
     },false)
+      var timeRange = vm.rDataOutput().map(a => a.DateTime);
           $('#container').highcharts().redraw();
 
         });
