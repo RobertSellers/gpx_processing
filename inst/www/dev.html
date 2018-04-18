@@ -369,7 +369,22 @@ $(document).ready(function() {
           //////////////////////////////////
           //Update Highcharts
           var chart = $('#container').highcharts();
-          var timeRange = vm.rDataOutput().map(a => a.DateTime);
+
+          var timeRange = vm.rDataOutput()
+              .map(a => a.DateTime)
+              .map(elem => moment(Date.parse(elem)).toDate());
+
+          var timeRange2 = vm.rDataOutput()
+              .map(a => a.DateTime)
+              .map(elem => moment(Date.parse(elem)).utc());
+
+          var elevations = vm.rDataOutput()
+              .map(a => a.Elevation)
+
+          var values = timeRange.map(function(v,i) {
+              return [v, elevations[i]];
+          });
+
           chart.series[0].setData([
             [Date.UTC(1970, 10, 25), 0],
             [Date.UTC(1970, 11,  6), 0.25],
