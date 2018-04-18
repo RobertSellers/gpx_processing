@@ -41,21 +41,6 @@
 
 $(document).ready(function() {
 
-  ko.components.register("search-component", {
-      viewModel: function(params) {
-          var self = this;
-          self.Show = params.show;
-          self.Callback = params.callback;
-          
-          self.Submit = function() {
-              // hide dialog
-              self.Show(false);
-              // return result
-              self.Callback("result");
-          };
-      },
-      template: "<div data-bind='visible: Show'><p>search dialog goes here</p><button data-bind='click: Submit'>Submit</button></div>"});
-
   var viewModel = function() {
     var self = this;
     self.session_tmp= ko.observable();
@@ -433,14 +418,6 @@ function initDT(data , update){
 
   <body>
     <header class="masthead" role="banner">
-        <h1>Component Test</h1>
-        <p>The component contains a dialog , which we 
-            want to show based on events on the main viewmodel. There is no way to invoke a method on a component, so I have to pass an observable to be able to mimic this.</p>
-            <button data-bind="click: Find">Find Customer</button>
-        <p>Result: <span data-bind="text: Result"></span> </p>
-        <hr/>
-        Component:
-        <search-component params="show: DialogVisible, callback: Update"></search-component>
       <strong class="logo">
         <!-- Add logo to this -->
         <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
