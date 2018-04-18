@@ -46,6 +46,9 @@ $(document).ready(function() {
 
   // ReactDOM.render(element, document.getElementById('container'), function () {
     Highcharts.chart('container', {
+      chart: {
+        type: 'spline'
+      },
       title: {text: 'Elevation Profile'},
       subtitle: {
         text: '',
@@ -72,6 +75,22 @@ $(document).ready(function() {
           align: 'right',
           verticalAlign: 'middle'
       },
+          chart: {
+        type: 'spline'
+    },
+    tooltip: {
+        headerFormat: '<b>{series.name}</b><br>',
+        pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+    },
+
+    plotOptions: {
+        spline: {
+            marker: {
+                enabled: true
+            }
+        }
+    },
+    colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
       plotOptions: {
           series: {
               label: {connectorAllowed: false}
@@ -345,9 +364,7 @@ $(document).ready(function() {
           //Update Highcharts
           var chart = $('#container').highcharts();
           
-          chart.series[0].setData({
-        name: "Winter 2014-2015",
-        data: [
+          chart.series[0].setData([
             [Date.UTC(1970, 10, 25), 0],
             [Date.UTC(1970, 11,  6), 0.25],
             [Date.UTC(1970, 11, 20), 1.41],
@@ -376,10 +393,8 @@ $(document).ready(function() {
             [Date.UTC(1971, 6,  3), 0.18],
             [Date.UTC(1971, 6,  4), 0]
         ]
-    },false)
-    chart.series[1].setData ({
-        name: "Winter 2015-2016",
-        data: [
+    ,false)
+    chart.series[1].setData ([
             [Date.UTC(1970, 10,  9), 0],
             [Date.UTC(1970, 10, 15), 0.23],
             [Date.UTC(1970, 10, 20), 0.25],
@@ -404,7 +419,7 @@ $(document).ready(function() {
             [Date.UTC(1971, 4, 29), 0.85],
             [Date.UTC(1971, 5,  7), 0]
         ]
-    },false)
+    ,false)
       var timeRange = vm.rDataOutput().map(a => a.DateTime);
           $('#container').highcharts().redraw();
 
