@@ -46,8 +46,7 @@ $(document).ready(function() {
     self.session_tmp= ko.observable();
     self.gpx_file_name= ko.observable();
     self.leafletMap= ko.observable();
-    self.rDataOutput= ko.observable();
-    self.//gpx.js output data
+    self.rDataOutput= ko.observable();//gpx.js output data
     self.get_name= ko.observable();//returns the name of the GPX track
     self.get_distance_imp= ko.observable();//returns the total track distance in miles
     self.get_start_time= ko.observable();//returns a Javascript Date object representing the starting time
@@ -66,6 +65,8 @@ $(document).ready(function() {
     self.get_elevation_data_imp= ko.observable();
     self.get_cadence_data_imp= ko.observable();
   };
+
+  ko.applyBindings(new viewModel())
 
   // Initialize highcharts
   
@@ -300,12 +301,10 @@ $(document).ready(function() {
             map.fitBounds(e.target.getBounds());
             get_name(e.target.get_name())//returns the name of the GPX track
             get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
-            // get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
             get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
             get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
             get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
             get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
-            // get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
             get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
             get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
             get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
@@ -388,8 +387,6 @@ function initDT(data , update){
   $(document).ajaxStop(function() {
     $(".spinLoad").hide();
   });
-
-  ko.applyBindings(new viewModel())
 
 });
 
