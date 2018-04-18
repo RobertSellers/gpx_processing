@@ -14,6 +14,8 @@
 <link href="css/main.css" rel="stylesheet">
 
 <!-- libraries -->
+<!-- <script src="https://unpkg.com/react@16.3.2/umd/react.development.js"> </script>
+<script src="https://unpkg.com/react-dom@16.3.2/umd/react-dom.development.js"> </script> -->
 <script src="scripts/jquery-1.10.2.min.js"> </script>
 <script src="scripts/opencpu-0.4.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
@@ -40,36 +42,54 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-  Highcharts.chart('container', {
-    title: {text: 'Elevation Profile'},
-    subtitle: {
-      text: '',
-      style: {display: 'none'}
-      },
-    yAxis: {
-        title: {text: 'Elevation (feet)'}
-    },
-    legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-    },
-    plotOptions: {
-        series: {
-            label: {connectorAllowed: false}
+  // var element = React.createElement('div', { id: 'chart' });
+
+  // ReactDOM.render(element, document.getElementById('container'), function () {
+    Highcharts.chart('container', {
+      title: {text: 'Elevation Profile'},
+      subtitle: {
+        text: '',
+        style: {display: 'none'}
+        },
+      xAxis: {
+        type: 'datetime',
+        dateTimeLabelFormats: { // don't display the dummy year
+            month: '%e. %b',
+            year: '%b'
+        },
+        title: {
+            text: 'Date'
         }
-    },
-    series: [{data:[null,null]}],
-    responsive: {
-        rules: [{
-            condition: {maxWidth: 500},
-            chartOptions: {
-                legend: {
-                    layout: 'horizontal',
-                    align: 'center',
-                    verticalAlign: 'bottom'
-    }}}]}
-  });
+      },
+      yAxis: {
+        title: {
+            text: 'Elevation (ft)'
+        },
+        min: 0
+      },
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+      },
+      plotOptions: {
+          series: {
+              label: {connectorAllowed: false}
+          }
+      },
+      series: [{data:[null]}],
+      responsive: {
+          rules: [{
+              condition: {maxWidth: 500},
+              chartOptions: {
+                  legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+      }}}]}
+    });
+
+  // });
 
   /* ----- Navigation ----- */
 
@@ -128,7 +148,7 @@ $(document).ready(function() {
   });
 
 
-  var viewModel = {
+  var vm = {
     session_tmp: ko.observable(),
     gpx_file_name: ko.observable(),
     leafletMap: ko.observable(),
@@ -158,29 +178,29 @@ $(document).ready(function() {
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
     $(".dt-button").css("disabled", true);
-    viewModel.leafletMap().eachLayer(function (layer) {
+    vm.leafletMap().eachLayer(function (layer) {
       if (layer.hasOwnProperty('_gpx')){
-        viewModel.leafletMap().removeLayer(layer);
-        viewModel.leafletMap().setView([37.8, -96], 4);
+        vm.leafletMap().removeLayer(layer);
+        vm.leafletMap().setView([37.8, -96], 4);
       }
     });
     map_lock('lock')
-    viewModel.get_name(null);
-    viewModel.get_distance_imp(null);
-    viewModel.get_start_time(null);
-    viewModel.get_time_zone(null);
-    viewModel.get_start_date(null);
-    viewModel.get_moving_time(null);
-    viewModel.get_total_time(null);
-    viewModel.get_moving_pace_imp(null);
-    viewModel.get_moving_speed_imp(null);
-    viewModel.get_total_speed_imp(null);
-    viewModel.get_elevation_min_imp(null);
-    viewModel.get_elevation_max_imp(null);
-    viewModel.get_elevation_gain_imp(null);
-    viewModel.get_elevation_loss_imp(null);
-    viewModel.get_elevation_data_imp(null);
-    viewModel.get_cadence_data_imp(null);
+    vm.get_name(null);
+    vm.get_distance_imp(null);
+    vm.get_start_time(null);
+    vm.get_time_zone(null);
+    vm.get_start_date(null);
+    vm.get_moving_time(null);
+    vm.get_total_time(null);
+    vm.get_moving_pace_imp(null);
+    vm.get_moving_speed_imp(null);
+    vm.get_total_speed_imp(null);
+    vm.get_elevation_min_imp(null);
+    vm.get_elevation_max_imp(null);
+    vm.get_elevation_gain_imp(null);
+    vm.get_elevation_loss_imp(null);
+    vm.get_elevation_data_imp(null);
+    vm.get_cadence_data_imp(null);
   }
 
   Object.prototype.hasOwnProperty = function(property) {
@@ -189,22 +209,22 @@ $(document).ready(function() {
 
   function map_lock(toggle){
     if (toggle=='unlock'){
-      viewModel.leafletMap().dragging.enable();
-      viewModel.leafletMap().touchZoom.enable();
-      viewModel.leafletMap().doubleClickZoom.enable();
-      viewModel.leafletMap().scrollWheelZoom.enable();
-      viewModel.leafletMap().boxZoom.enable();
-      viewModel.leafletMap().keyboard.enable();
-      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
+      vm.leafletMap().dragging.enable();
+      vm.leafletMap().touchZoom.enable();
+      vm.leafletMap().doubleClickZoom.enable();
+      vm.leafletMap().scrollWheelZoom.enable();
+      vm.leafletMap().boxZoom.enable();
+      vm.leafletMap().keyboard.enable();
+      if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
       document.getElementById('plotdiv').style.cursor='grab';
     }if (toggle=='lock'){
-      viewModel.leafletMap().dragging.disable();
-      viewModel.leafletMap().touchZoom.disable();
-      viewModel.leafletMap().doubleClickZoom.disable();
-      viewModel.leafletMap().scrollWheelZoom.disable();
-      viewModel.leafletMap().boxZoom.disable();
-      viewModel.leafletMap().keyboard.disable();
-      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
+      vm.leafletMap().dragging.disable();
+      vm.leafletMap().touchZoom.disable();
+      vm.leafletMap().doubleClickZoom.disable();
+      vm.leafletMap().scrollWheelZoom.disable();
+      vm.leafletMap().boxZoom.disable();
+      vm.leafletMap().keyboard.disable();
+      if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
       document.getElementById('plotdiv').style.cursor='default';
     }
   }
@@ -245,7 +265,7 @@ $(document).ready(function() {
     }).addTo(map);
     map.setView([37.8, -96], 4);
 
-  viewModel.leafletMap(map)
+  vm.leafletMap(map)
   map_lock('lock')
 
   //automatically upload GPX file on change.
@@ -261,16 +281,16 @@ $(document).ready(function() {
     //Upload and validate the data
     //////////////////////////////
 
-  viewModel.gpx_file_name($("#gpxfile")[0].files[0].name)
+  vm.gpx_file_name($("#gpxfile")[0].files[0].name)
 
     var req = ocpu.call("gpx_validation", {
         gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
-        viewModel.session_tmp(session.getLoc())
+        vm.session_tmp(session.getLoc())
 
         //retrieve javascript object as json
         session.getObject(function(data)  {
-          viewModel.rDataOutput(data)
+          vm.rDataOutput(data)
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $('#step_2').css("opacity", 1);
@@ -278,42 +298,110 @@ $(document).ready(function() {
 
           successmsg("GPX file successfully loaded!");
 
-          //Populate Data Table
+          //////////////////////////////////
+          //Update Data Table
           $('#gpxTable').css("opacity", 1);
           $(".dt-button").removeAttr("disabled");
-          initDT(viewModel.rDataOutput(), true)
+          initDT(vm.rDataOutput(), true)
 
-          //refresh the map
-          viewModel.leafletMap().eachLayer(function (layer) {
+          //////////////////////////////////
+          //Update Leaflet
+          vm.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
-              viewModel.leafletMap().removeLayer(layer);
+              vm.leafletMap().removeLayer(layer);
             }
           });
           //load gpx
-          var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+          var gpx_file = session.getLoc() +'files/'+ vm.gpx_file_name(); 
           var gpxLayer = new L.GPX(gpx_file, {async: true})
 
           gpxLayer.on('loaded', function(e) {
             map.fitBounds(e.target.getBounds());
-            viewModel.get_name(e.target.get_name())//returns the name of the GPX track
-            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
-            // viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
-            viewModel.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
-            viewModel.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
-            viewModel.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
-            viewModel.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
-            // viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
-            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
-            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
-            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
-            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
-            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
-            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
+            vm.get_name(e.target.get_name())//returns the name of the GPX track
+            vm.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
+            // vm.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
+            vm.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
+            vm.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
+            vm.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
+            vm.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
+            // vm.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
+            vm.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
+            vm.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
+            vm.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
+            vm.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
+            vm.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
+            vm.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
             //full elevation, heartrate, cadence and temperature data
-            viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
-            viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
-          }).addTo(viewModel.leafletMap());
+            vm.get_elevation_data_imp(e.target.get_elevation_data_imp())
+            vm.get_cadence_data_imp(e.target.get_cadence_data_imp())
+          }).addTo(vm.leafletMap());
           map_lock('unlock')
+
+          //////////////////////////////////
+          //Update Highcharts
+          var chart = $('#container').highcharts();
+          
+          chart.series[0].setData({
+        name: "Winter 2014-2015",
+        data: [
+            [Date.UTC(1970, 10, 25), 0],
+            [Date.UTC(1970, 11,  6), 0.25],
+            [Date.UTC(1970, 11, 20), 1.41],
+            [Date.UTC(1970, 11, 25), 1.64],
+            [Date.UTC(1971, 0,  4), 1.6],
+            [Date.UTC(1971, 0, 17), 2.55],
+            [Date.UTC(1971, 0, 24), 2.62],
+            [Date.UTC(1971, 1,  4), 2.5],
+            [Date.UTC(1971, 1, 14), 2.42],
+            [Date.UTC(1971, 2,  6), 2.74],
+            [Date.UTC(1971, 2, 14), 2.62],
+            [Date.UTC(1971, 2, 24), 2.6],
+            [Date.UTC(1971, 3,  1), 2.81],
+            [Date.UTC(1971, 3, 11), 2.63],
+            [Date.UTC(1971, 3, 27), 2.77],
+            [Date.UTC(1971, 4,  4), 2.68],
+            [Date.UTC(1971, 4,  9), 2.56],
+            [Date.UTC(1971, 4, 14), 2.39],
+            [Date.UTC(1971, 4, 19), 2.3],
+            [Date.UTC(1971, 5,  4), 2],
+            [Date.UTC(1971, 5,  9), 1.85],
+            [Date.UTC(1971, 5, 14), 1.49],
+            [Date.UTC(1971, 5, 19), 1.27],
+            [Date.UTC(1971, 5, 24), 0.99],
+            [Date.UTC(1971, 5, 29), 0.67],
+            [Date.UTC(1971, 6,  3), 0.18],
+            [Date.UTC(1971, 6,  4), 0]
+        ]
+    }, , {
+        name: "Winter 2015-2016",
+        data: [
+            [Date.UTC(1970, 10,  9), 0],
+            [Date.UTC(1970, 10, 15), 0.23],
+            [Date.UTC(1970, 10, 20), 0.25],
+            [Date.UTC(1970, 10, 25), 0.23],
+            [Date.UTC(1970, 10, 30), 0.39],
+            [Date.UTC(1970, 11,  5), 0.41],
+            [Date.UTC(1970, 11, 10), 0.59],
+            [Date.UTC(1970, 11, 15), 0.73],
+            [Date.UTC(1970, 11, 20), 0.41],
+            [Date.UTC(1970, 11, 25), 1.07],
+            [Date.UTC(1970, 11, 30), 0.88],
+            [Date.UTC(1971, 0,  5), 0.85],
+            [Date.UTC(1971, 0, 11), 0.89],
+            [Date.UTC(1971, 0, 17), 1.04],
+            [Date.UTC(1971, 0, 20), 1.02],
+            [Date.UTC(1971, 0, 25), 1.03],
+            [Date.UTC(1971, 0, 30), 1.39],
+            [Date.UTC(1971, 1,  5), 1.77],
+            [Date.UTC(1971, 1, 26), 2.12],
+            [Date.UTC(1971, 3, 19), 2.1],
+            [Date.UTC(1971, 4,  9), 1.7],
+            [Date.UTC(1971, 4, 29), 0.85],
+            [Date.UTC(1971, 5,  7), 0]
+        ]
+    },false)
+          $('#container').highcharts().redraw();
+
         });
       }).fail(function(jqXHR){
         clearData()
@@ -405,7 +493,7 @@ function initDT(data , update){
     $(".spinLoad").hide();
   });
 
-  ko.applyBindings(viewModel)
+  ko.applyBindings(vm)
 
 });
 
