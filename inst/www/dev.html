@@ -370,10 +370,6 @@ $(document).ready(function() {
           //Update Highcharts
           var chart = $('#container').highcharts();
 
-          // var timeRange = vm.rDataOutput()
-          //     .map(a => a.DateTime)
-          //     .map(elem => moment(Date.parse(elem)).toDate());
-
           var timeRange = vm.rDataOutput()
               .map(a => a.DateTime)
               .map(elem => moment(Date.parse(elem)).utc());
@@ -385,11 +381,11 @@ $(document).ready(function() {
               .map(a => a.Pace)
 
           var timeElevation = timeRange.map(function(v,i) {
-              return [v, elevationArray[i]._i];
+              return [v._i, elevationArray[i]];
           });
 
           var timePace = timeRange.map(function(v,i) {
-              return [v, paceArray[i]._i];
+              return [v._i, paceArray[i]];
           });
  
 
