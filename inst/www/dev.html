@@ -49,7 +49,7 @@ $(document).ready(function() {
   // ReactDOM.render(element, document.getElementById('container'), function () {
     Highcharts.chart('container', {
       chart: {
-        type: 'spline'
+        zoomType: 'xy'
       },
       title: {text: 'Elevation Profile'},
       subtitle: {
@@ -58,17 +58,18 @@ $(document).ready(function() {
         },
       xAxis: {
         type: 'datetime',
-        dateTimeLabelFormats: { // don't display the dummy year
-            month: '%e. %b',
-            year: '%b'
-        },
+        crosshair: true,
+        // dateTimeLabelFormats: { // don't display the dummy year
+        //     month: '%e. %b',
+        //     year: '%b'
+        // },
         title: {
-            text: 'Date'
+            text: 'Hours'
         }
       },
       yAxis: {
         title: {
-            text: 'Elevation (ft)'
+            text: ''
         },
         min: 0
       },
@@ -85,14 +86,13 @@ $(document).ready(function() {
         pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
     },
 
-    plotOptions: {
-        spline: {
-            marker: {
-                enabled: true
-            }
-        }
-    },
-    colors: ['#6CF', '#39F', '#06C', '#036', '#000'],
+    // plotOptions: {
+    //     spline: {
+    //         marker: {
+    //             enabled: true
+    //         }
+    //     }
+    // },
       plotOptions: {
           series: {
               label: {connectorAllowed: false}
@@ -236,6 +236,33 @@ $(document).ready(function() {
       return this[property] !== undefined;
   };
 
+  function updateHighcharts(){
+    var chart = $('#container').highcharts();
+
+    var timeRange = vm.rDataOutput()
+        .map(a => a.Seconds.toISOString().substr(11, 8))
+        // .map(elem => moment(Date.parse(elem)).utc());
+
+    var elevationArray = vm.rDataOutput()
+        .map(a => a.Elevation)
+
+    var paceArray = vm.rDataOutput()
+        .map(a => a.Pace)
+
+    var timeElevation = timeRange.map(function(v,i) {
+        return [v._i, elevationArray[i]];
+    });
+
+    var timePace = timeRange.map(function(v,i) {
+        return [v._i, paceArray[i]];
+    });
+
+    chart.series[0].setData(timeElevation,false)
+    chart.series[1].setData (timePace,false)
+    $('#container').highcharts().redraw();
+
+  }
+
   function map_lock(toggle){
     if (toggle=='unlock'){
       vm.leafletMap().dragging.enable();
@@ -368,31 +395,7 @@ $(document).ready(function() {
 
           //////////////////////////////////
           //Update Highcharts
-          var chart = $('#container').highcharts();
-
-          var timeRange = vm.rDataOutput()
-              .map(a => a.DateTime)
-              .map(elem => moment(Date.parse(elem)).utc());
-
-          var elevationArray = vm.rDataOutput()
-              .map(a => a.Elevation)
-
-          var paceArray = vm.rDataOutput()
-              .map(a => a.Pace)
-
-          var timeElevation = timeRange.map(function(v,i) {
-              return [v._i, elevationArray[i]];
-          });
-
-          var timePace = timeRange.map(function(v,i) {
-              return [v._i, paceArray[i]];
-          });
- 
-
-          chart.series[0].setData(timeElevation,false)
-
-    chart.series[1].setData (timePace,false)
-        $('#container').highcharts().redraw();
+          updateHighcharts()
 
         });
       }).fail(function(jqXHR){
@@ -534,7 +537,7 @@ function initDT(data , update){
               <legend>Load GPX data</legend>
               <div class="form-group">
                 <div class="loadFileContainer">
-                <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+                <input id="gpxfile" type="file" style="display: inline-block;">
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
