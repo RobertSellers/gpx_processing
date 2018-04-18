@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>GPX - QA and Analysis</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+<link href="css/main.css" rel="stylesheet">
+
+<!-- libraries -->
+<script src="scripts/jquery-1.10.2.min.js"> </script>
+<script src="scripts/opencpu-0.4.js"> </script>
+<script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
+<script src="scripts/knockout-min.js"></script>
+<script src="scripts/leaflet.js"></script>
+<script src="scripts/gpx.js"></script>
+<script src="scripts/jquery.dataTables.min.js"></script>
+<script src="scripts/dataTables.buttons.min.js"></script>
+<script src="scripts/dataTables.flash.min.js"></script>
+<script src="scripts/pdfmake.min.js"></script>
+<script src="scripts/vfs_font.js"></script>
+<script src="scripts/buttons.html5.min.js"></script>
+<script src="scripts/buttons.print.min.js"></script>
+
+<!-- Highcharts libraries -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/series-label.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<!-- Widgets -->
+<script src="leaflet_gpx.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+  ko.components.register("search-component", {
+      viewModel: function(params) {
+          var self = this;
+          self.Show = params.show;
+          self.Callback = params.callback;
+          
+          self.Submit = function() {
+              // hide dialog
+              self.Show(false);
+              // return result
+              self.Callback("result");
+          };
+      },
+      template: "<div data-bind='visible: Show'><p>search dialog goes here</p><button data-bind='click: Submit'>Submit</button></div>"});
+
+  var viewModel = function() {
+    var self = this;
+    self.session_tmp= ko.observable();
+    self.gpx_file_name= ko.observable();
+    self.leafletMap= ko.observable();
+    self.rDataOutput= ko.observable();
+    self.//gpx.js output data
+    self.get_name= ko.observable();//returns the name of the GPX track
+    self.get_distance_imp= ko.observable();//returns the total track distance in miles
+    self.get_start_time= ko.observable();//returns a Javascript Date object representing the starting time
+    self.get_time_zone= ko.observable();
+    self.get_start_date= ko.observable();
+    self.get_moving_time= ko.observable();//returns the moving time; in milliseconds
+    self.get_total_time= ko.observable();//returns the total track time; in milliseconds
+    self.get_moving_pace_imp= ko.observable();//returns the average moving pace in milliseconds per hour
+    self.get_moving_speed_imp= ko.observable();//returns the average moving speed in miles per hour
+    self.get_total_speed_imp= ko.observable();//returns the average total speed in miles per hour
+    self.get_elevation_min_imp= ko.observable();// returns the lowest elevation; in feet
+    self.get_elevation_max_imp= ko.observable();// returns the highest elevation; in feet
+    self.get_elevation_gain_imp= ko.observable();// returns the cumulative elevation gain; in feet
+    self.get_elevation_loss_imp= ko.observable();//returns the cumulative elevation loss; in feet
+    self.//full elevation; cadence  data
+    self.get_elevation_data_imp= ko.observable();
+    self.get_cadence_data_imp= ko.observable();
+  };
+
+  // Initialize highcharts
+  
+  Highcharts.chart('container', {
+    title: {text: 'Elevation Profiles'},
+    subtitle: {
+      text: '',
+      style: {display: 'none'}
+      },
+    yAxis: {
+        title: {text: 'Elevation (feet)'}
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+    plotOptions: {
+        series: {
+            label: {connectorAllowed: false}
+        }
+    },
+    series: [{data:[null,null]}],
+    responsive: {
+        rules: [{
+            condition: {maxWidth: 500},
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+    }}}]}
+  });
+
+  /* ----- Navigation ----- */
+
+  $('.nav').find('a').attr('tabindex', -1);
+
+  $('.nav-btn').on('click', function () {
+    if ($('.nav-wrap').hasClass('is-open')) {
+      $('.nav-wrap').removeClass('is-open');
+      $('.nav').attr('aria-hidden', true);
+      $('.nav-btn').attr('aria-expanded', false);
+      $('.nav').find('a').attr('tabindex', -1);
+    } else {
+      $('.nav-wrap').addClass('is-open');
+      $('.nav-wrap').addClass('is-fixed');
+      $('.nav-btn').addClass('is-active');
+      $('.nav').attr('aria-hidden', false);
+      $('.nav-btn').attr('aria-expanded', true);
+      $('.nav').find('a').attr('tabindex', 0);
+    }
+  });
+
+  $('.nav-wrap').on('transitionend', function () {
+    if (!$('.nav-wrap').hasClass('is-open')) {
+      $('.nav-wrap').removeClass('is-fixed');
+      $('.nav-btn').removeClass('is-active');
+    }
+  });
+
+  $('.nav-wrap').on('keypress', function (e) {
+    switch (e.keyCode) {
+      case 27:
+        $('.nav-wrap').removeClass('is-open');
+        $('.nav').attr('aria-hidden', true);
+        $('.nav-btn').attr('aria-expanded', false);
+        $('.nav').find('a').attr('tabindex', -1);
+        $('.nav-btn').focus();
+        break;
+    }
+  });
+
+  /* ----- Tabs ----- */
+
+  var $tabs = $('.tabs');
+  var $panels = $('.tab-panel');
+
+  $tabs.on('click', 'a', function (e) {
+    e.preventDefault();
+
+    var id = $(this).attr('href');
+
+    $panels.filter('[aria-hidden="false"]').attr('aria-hidden', true);
+    $tabs.find('[aria-selected="true"]').attr('aria-selected', false);
+
+    $(this).attr('aria-selected', true);
+    $(id).attr('aria-hidden', false);
+  });
+
+  function clearData(){
+    $('#step_2').css("opacity", 0.2);
+    $('#plotdiv').css("opacity", 0.2);
+    $('#gpxTable').css("opacity", 0.2);
+    $(".dt-button").css("disabled", true);
+    viewModel.leafletMap().eachLayer(function (layer) {
+      if (layer.hasOwnProperty('_gpx')){
+        viewModel.leafletMap().removeLayer(layer);
+        viewModel.leafletMap().setView([37.8, -96], 4);
+      }
+    });
+    map_lock('lock')
+    viewModel.get_name(null);
+    viewModel.get_distance_imp(null);
+    viewModel.get_start_time(null);
+    viewModel.get_time_zone(null);
+    viewModel.get_start_date(null);
+    viewModel.get_moving_time(null);
+    viewModel.get_total_time(null);
+    viewModel.get_moving_pace_imp(null);
+    viewModel.get_moving_speed_imp(null);
+    viewModel.get_total_speed_imp(null);
+    viewModel.get_elevation_min_imp(null);
+    viewModel.get_elevation_max_imp(null);
+    viewModel.get_elevation_gain_imp(null);
+    viewModel.get_elevation_loss_imp(null);
+    viewModel.get_elevation_data_imp(null);
+    viewModel.get_cadence_data_imp(null);
+  }
+
+  Object.prototype.hasOwnProperty = function(property) {
+      return this[property] !== undefined;
+  };
+
+  function map_lock(toggle){
+    if (toggle=='unlock'){
+      viewModel.leafletMap().dragging.enable();
+      viewModel.leafletMap().touchZoom.enable();
+      viewModel.leafletMap().doubleClickZoom.enable();
+      viewModel.leafletMap().scrollWheelZoom.enable();
+      viewModel.leafletMap().boxZoom.enable();
+      viewModel.leafletMap().keyboard.enable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
+      document.getElementById('plotdiv').style.cursor='grab';
+    }if (toggle=='lock'){
+      viewModel.leafletMap().dragging.disable();
+      viewModel.leafletMap().touchZoom.disable();
+      viewModel.leafletMap().doubleClickZoom.disable();
+      viewModel.leafletMap().scrollWheelZoom.disable();
+      viewModel.leafletMap().boxZoom.disable();
+      viewModel.leafletMap().keyboard.disable();
+      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
+      document.getElementById('plotdiv').style.cursor='default';
+    }
+  }
+
+  function msToTime(duration) {
+    var milliseconds = parseInt((duration%1000)/100),
+    seconds = parseInt((duration/1000)%60),
+    minutes = parseInt((duration/(1000*60))%60),
+    hours = parseInt((duration/(1000*60*60))%24);
+
+    hours = (hours < 10) ? "0" + hours : hours;
+    minutes = (minutes < 10) ? "0" + minutes : minutes;
+    seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+    return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
+  }
+
+  initDT({}, false)
+  //Display if dev.html or not
+  var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
+  if(cur_url == "dev.html"){
+    $("#dev_check").html(cur_url);
+  }
+
+  // $("#process_data").attr("disabled", "disabled");
+  $('.dt-button').attr("disabled", "disabled");
+  $("#session_url").attr("disabled", "disabled");
+
+  $('#step_2').css("opacity", 0.2);
+  $('#plotdiv').css("opacity", 0.2);
+  $('#gpxTable').css("opacity", 0.2);
+
+  //initialize leaflet map
+  var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+    map.setView([37.8, -96], 4);
+
+  viewModel.leafletMap(map)
+  map_lock('lock')
+
+  //automatically upload GPX file on change.
+  $("#gpxfile").on("change", function(){
+
+  //verify that a file is selected
+  if($("#gpxfile")[0].files[0]){
+    clearData()
+    $("#successdiv").empty().show();
+    $("#errordiv").empty().show();
+
+    //////////////////////////////
+    //Upload and validate the data
+    //////////////////////////////
+
+  viewModel.gpx_file_name($("#gpxfile")[0].files[0].name)
+
+    var req = ocpu.call("gpx_validation", {
+        gpxfile : $("#gpxfile")[0].files[0]
+    }, function(session){
+        viewModel.session_tmp(session.getLoc())
+
+        //retrieve javascript object as json
+        session.getObject(function(data)  {
+          viewModel.rDataOutput(data)
+          $("#session_url").removeAttr("disabled");
+          $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
+          $('#step_2').css("opacity", 1);
+          $('#plotdiv').css("opacity", 1);
+
+          successmsg("GPX file successfully loaded!");
+
+          //Populate Data Table
+          $('#gpxTable').css("opacity", 1);
+          $(".dt-button").removeAttr("disabled");
+          initDT(viewModel.rDataOutput(), true)
+
+          //refresh the map
+          viewModel.leafletMap().eachLayer(function (layer) {
+            if (layer.hasOwnProperty('_gpx')){
+              viewModel.leafletMap().removeLayer(layer);
+            }
+          });
+          //load gpx
+          var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+          var gpxLayer = new L.GPX(gpx_file, {async: true})
+
+          gpxLayer.on('loaded', function(e) {
+            map.fitBounds(e.target.getBounds());
+            viewModel.get_name(e.target.get_name())//returns the name of the GPX track
+            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
+            // viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
+            viewModel.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
+            viewModel.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
+            viewModel.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
+            viewModel.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
+            // viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
+            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
+            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
+            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
+            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
+            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
+            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
+            //full elevation, heartrate, cadence and temperature data
+            viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
+            viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
+          }).addTo(viewModel.leafletMap());
+          map_lock('unlock')
+        });
+      }).fail(function(jqXHR){
+        clearData()
+        errormsg(jqXHR.responseText);
+      }).always(function(){
+        var session_url = document.getElementById("session_url");
+        session_url.style.cursor = "pointer";
+    });
+  }
+});
+
+//R output to popup
+function successmsg(text){
+  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
+
+}
+
+//R output to popup
+function errormsg(text){
+    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+}
+
+function initDT(data , update){
+
+  if(update){
+    var datatable = $('#gpxDataTable').DataTable();
+    datatable.clear();
+    datatable.rows.add(data);
+    datatable.draw();
+
+  }else{
+    $('#gpxDataTable').dataTable({
+      data: data,
+      dom: 'Bfrtip',
+      searching: false,
+      responsive: true,
+      "bAutoWidth": false,
+      pageLength: 5,
+      "aoColumns" : [
+            {"data": "DateTime", title: "DateTime"},
+            {"data":  "Dist", title: "Dist"},
+            {"data":  "Elevation", title: "Elev"},
+            {"data":  "Gradient", title: "Grad"},
+            {"data":  "Latitude", title: "Lat"},
+            {"data":  "Longitude", title: "Lon"},
+            {"data":  "Pace", title: "Pace"},
+            {"data":  "Seconds", title: "Seconds"},
+            {"data":  "Speed", title: "Speed"}
+        ],
+      // columns: [
+      //   {"data": "DateTime", title: "DateTime"},
+      //   {"data":  "Dist", title: "Dist"},
+      //   // {"data":  "Dist2D", title: "Dist2D"},
+      //   // {"data":  "East", title: "East"},
+      //   {"data":  "Elevation", title: "Elevation"},
+      //   {"data":  "Gradient", title: "Gradient"},
+      //   {"data":  "Latitude", title: "Latitude"},
+      //   {"data":  "Longitude", title: "Longitude"},
+      //   // {"data":  "North", title: "North"},
+      //   {"data":  "Pace", title: "Pace"},
+      //   {"data":  "Seconds", title: "Seconds"},
+      //   {"data":  "Speed", title: "Speed"},
+      //   //{"data":  "dDist", title: "dDist"},
+      //   // {"data":  "dDist2D", title: "dDist2D"},
+      //   // {"data":  "dEast", title: "dEast"},
+      //   // {"data":  "dNorth", title: "dNorth"},
+      //   // {"data":  "dUp", title: "dUp"}
+      //   ],
+      buttons: [
+          {
+            extend: 'collection',
+            text: 'Export',
+            buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+          }
+        ]
+      });
+    }
+}
+
+  //////////////////////////////
+  //Ajax spinLoad Bar
+  //////////////////////////////
+
+  $(document).ajaxStart(function() {
+    $(".spinLoad").show();
+  });
+
+  $(document).ajaxStop(function() {
+    $(".spinLoad").hide();
+  });
+
+  ko.applyBindings(new viewModel())
+
+});
+
+</script>
+
+</head>
+
+  <body>
+    <header class="masthead" role="banner">
+        <h1>Component Test</h1>
+        <p>The component contains a dialog , which we 
+            want to show based on events on the main viewmodel. There is no way to invoke a method on a component, so I have to pass an observable to be able to mimic this.</p>
+            <button data-bind="click: Find">Find Customer</button>
+        <p>Result: <span data-bind="text: Result"></span> </p>
+        <hr/>
+        Component:
+        <search-component params="show: DialogVisible, callback: Update"></search-component>
+      <strong class="logo">
+        <!-- Add logo to this -->
+        <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
+        <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
+      </strong>
+      <h1 class="title">Menu</h1>
+      <nav class="nav-wrap" role="navigation">
+
+        <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
+        <ul class="nav" id="nav" aria-hidden="true">
+          <li><span class="nav-label"><span class="nav-label-back">GPS</span></span>
+            <ol><li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">MIP</span></span>
+            <ol><li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
+            <ol><li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">Session URL</span></span>
+            <ol><li><a id="session_url">View Session</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">Credits</span></span>
+              <ol><li>by <a href="http://www.azimuth1.com">Azimuth1</a></li></ol>
+            </li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main role="main">
+
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
+          <!-- Step 1: Load File -->
+            <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <fieldset id="step_1">
+              <legend>Load GPX data</legend>
+              <div class="form-group">
+                <div class="loadFileContainer">
+                <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
+              </div>
+              </div>
+            </fieldset>
+            <!-- R Relayed Message and spinLoad Information -->
+            <fieldset id="warnings_panel">
+                <legend>Warnings</legend>
+                <div id="successdiv"></div>
+                <div id="errordiv"></div>
+            </fieldset>
+          </td></table>
+          </form>
+
+          <article class="panel" style="width:100%;">
+      
+            <div class="tab-group">
+              <ul class="tabs clearfix" role="tablist">
+                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
+              </ul>
+      
+              <div class="tab-panels">
+                  <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
+                      <div class='gpx_metadata'>
+                        <!-- <b>File name:</b> <span data-bind="text: get_name"></span><br> -->
+                        <b>Start date:</b> <span data-bind="text: get_start_date"></span><br>
+                        <b>Start time:</b> <span data-bind="text: get_start_time"></span><br>
+                        <b>Distance:</b> <span data-bind="text: get_distance_imp"></span><br>
+                        <!-- <b>Time Zone:</b> <span data-bind="text: get_time_zone"></span><br> -->
+                        <!-- <b>End Time:</b> <span data-bind="text: get_end_time"></span><br> -->
+                        <b>Moving Time:</b> <span data-bind="text: get_moving_time"></span><br>
+                        <b>Total Time:</b> <span data-bind="text: get_total_time"></span><br>
+                        <!-- <b>Moving Pace:</b> <span data-bind="text: get_moving_pace_imp"></span><br> -->
+                        <b>Moving Speed:</b> <span data-bind="text: get_moving_speed_imp"></span><br>
+                        <b>Total Speed:</b> <span data-bind="text: get_total_speed_imp"></span><br>
+                        <b>Elevation (min):</b> <span data-bind="text: get_elevation_min_imp"></span><br>
+                        <b>Elevation (max):</b> <span data-bind="text: get_elevation_max_imp"></span><br>
+                        <b>Elevation gain:</b> <span data-bind="text: get_elevation_gain_imp"></span><br>
+                        <b>Elevation loss:</b> <span data-bind="text: get_elevation_loss_imp"></span><br>
+                      </div>
+                    </div>
+                <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
+                    <div id="container"></div>
+                </div>
+              </div>
+            </div>
+      
+          </article>
+      </article>
+    
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
+        <div id="plotdiv" style="height:450px;"></div>
+      </article>
+  
+      <article class="panel" style="width:100%;">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
+        <div id="gpxTable" style="background:#6c8fe0" >
+          <table id="gpxDataTable" class="display" cellspacing="0" width="100%">
+          </table>
+      </div>
+      </article>
+    </main>
+    </body>
+</html>
