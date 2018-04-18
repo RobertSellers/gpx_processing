@@ -7,7 +7,7 @@ function loadLibraries(){
             }); 
         });
     }
-    return getScripts(
+    getScripts(
         [
         "scripts/opencpu-0.4.js", 
         "scripts/jqueryui/jquery-ui-1.10.3.custom.js",
@@ -26,6 +26,6 @@ function loadLibraries(){
         "https://code.highcharts.com/modules/exporting.js",
         "https://code.highcharts.com/modules/export-data.js"
         ], function () {
-            callback(true);  
+            callback();  
     });
 }
