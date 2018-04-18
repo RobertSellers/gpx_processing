@@ -77,7 +77,11 @@ $(document).ready(function() {
               label: {connectorAllowed: false}
           }
       },
-      series: [{data:[null]}],
+      series: [{
+        name: "Winter 2014-2015",
+        data: [null]},{
+        name: "Winter 2015-2016",
+        data: [null]}],
       responsive: {
           rules: [{
               condition: {maxWidth: 500},
@@ -372,7 +376,8 @@ $(document).ready(function() {
             [Date.UTC(1971, 6,  3), 0.18],
             [Date.UTC(1971, 6,  4), 0]
         ]
-    }, {
+    },false)
+    chart.series[1].setData ({
         name: "Winter 2015-2016",
         data: [
             [Date.UTC(1970, 10,  9), 0],
