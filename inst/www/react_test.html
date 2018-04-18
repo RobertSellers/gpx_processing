@@ -14,8 +14,8 @@
 <link href="css/main.css" rel="stylesheet">
 
 <!-- libraries -->
-<script src="https://unpkg.com/react@16.3.2/umd/react.development.js"> </script>
-<script src="https://unpkg.com/react-dom@16.3.2/umd/react-dom.development.js"> </script>
+<!-- <script src="https://unpkg.com/react@16.3.2/umd/react.development.js"> </script>
+<script src="https://unpkg.com/react-dom@16.3.2/umd/react-dom.development.js"> </script> -->
 <script src="scripts/jquery-1.10.2.min.js"> </script>
 <script src="scripts/opencpu-0.4.js"> </script>
 <script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
@@ -42,9 +42,9 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-  var element = React.createElement('div', { id: 'chart' });
+  // var element = React.createElement('div', { id: 'chart' });
 
-  ReactDOM.render(element, document.getElementById('container'), function () {
+  // ReactDOM.render(element, document.getElementById('container'), function () {
     Highcharts.chart('container', {
       title: {text: 'Elevation Profile'},
       subtitle: {
@@ -67,7 +67,7 @@ $(document).ready(function() {
       series: [{data:[null]}],
       responsive: {
           rules: [{
-              // condition: {maxWidth: 500},
+              condition: {maxWidth: 500},
               chartOptions: {
                   legend: {
                       layout: 'horizontal',
@@ -76,7 +76,7 @@ $(document).ready(function() {
       }}}]}
     });
 
-  });
+  // });
 
   /* ----- Navigation ----- */
 
