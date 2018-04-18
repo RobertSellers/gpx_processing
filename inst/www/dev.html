@@ -40,61 +40,36 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-Highcharts.chart('container', {
-
-title: {
-    text: 'Elevation Profile'
-},
-
-subtitle: {
-    text: '',
-    style: {
-        display: 'none'
-    }
-},
-yAxis: {
-    title: {
-        text: 'Elevation (ft.)'
-    }
-},
-legend: {
-    layout: 'vertical',
-    align: 'right',
-    verticalAlign: 'middle'
-},
-plotOptions: {
-    series: {
-        label: {
-            connectorAllowed: false
-        },
-        pointStart: 2010
-    }
-},
-
-series: [{
-    name: 'Installation',
-    data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-}, {
-    name: 'Manufacturing',
-    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-}],
-
-responsive: {
-    rules: [{
-        condition: {
-            maxWidth: 500
-        },
-        chartOptions: {
-            legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
-            }
+  Highcharts.chart('container', {
+    title: {text: 'Elevation Profile'},
+    subtitle: {
+      text: '',
+      style: {display: 'none'}
+      },
+    yAxis: {
+        title: {text: 'Elevation (feet)'}
+    },
+    legend: {
+        layout: 'vertical',
+        align: 'right',
+        verticalAlign: 'middle'
+    },
+    plotOptions: {
+        series: {
+            label: {connectorAllowed: false}
         }
-    }]
-}
-
-});
+    },
+    series: [{data:[null,null]}],
+    responsive: {
+        rules: [{
+            condition: {maxWidth: 500},
+            chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+    }}}]}
+  });
 
   /* ----- Navigation ----- */
 
@@ -445,7 +420,7 @@ function initDT(data , update){
         <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
         <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
       </strong>
-      <h1 class="title">Menu | GPX QA v1.8</h1>
+      <h1 class="title">Menu</h1>
       <nav class="nav-wrap" role="navigation">
 
         <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
