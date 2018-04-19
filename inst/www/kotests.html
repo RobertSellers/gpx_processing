@@ -67,25 +67,21 @@ $(document).ready(function() {
       //full elevation, cadence  data
       get_elevation_data_imp: null,
       get_cadence_data_imp: null
-    }),
-    elevationArray: ko.observableArray(null),
-    secondsArray: ko.observableArray(null),
-    speedArray: ko.observableArray(null),
-    paceArray: ko.observableArray(null)
+    })
   };
 
   vm.rDataOutput.subscribe(function(){
-    vm.secondsArray(vm.rDataOutput().map(a => a.Seconds));
-    vm.elevationArray(vm.rDataOutput().map(a => a.Elevation));
-    vm.paceArray(vm.rDataOutput().map(a => a.Pace));
-    var elevationVtime = vm.secondsArray().map(function(v,i) {
-        return [v._i, vm.elevationArray()[i]];
+    var timeRange = vm.rDataOutput().map(a => a.Seconds)
+    var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+    var paceArray = vm.rDataOutput().map(a => a.Pace)
+    var timeElevation = timeRange.map(function(v,i) {
+        return [v._i, elevationArray[i]];
     });
-    var paceVtime = vm.secondsArray().map(function(v,i) {
-        return [v._i, vm.paceArray[i]];
+    var timePace = timeRange.map(function(v,i) {
+        return [v._i, paceArray[i]];
     });
-    vm.highchart().series[0].setData(elevationVtime,false)
-    vm.highchart().series[1].setData(paceVtime,false)
+    vm.highchart().series[0].setData(timeElevation,false)
+    vm.highchart().series[1].setData(timePace,false)
     vm.highchart().redraw();
   })
 
