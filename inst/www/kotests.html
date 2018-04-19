@@ -47,6 +47,7 @@ $(document).ready(function() {
         session_tmp: ko.observable(),
         gpx_file_name: ko.observable(),
         leafletMap: ko.observable(),
+        datatable: ko.observable(),
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
@@ -84,6 +85,11 @@ $(document).ready(function() {
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timePace,false)
         vm.highchart().redraw();
+
+        //Update Datatable
+        vm.datatable.clear();
+        vm.datatable.rows.add(data);
+        vm.datatable.draw();
     })
 
     vm.highchart= ko.computed(function(){
@@ -208,14 +214,7 @@ $(document).ready(function() {
 
     function initDT(data , update){
 
-        if(update){
-        var datatable = $('#gpxDataTable').DataTable();
-        datatable.clear();
-        datatable.rows.add(data);
-        datatable.draw();
-
-        }else{
-        $('#gpxDataTable').dataTable({
+        vm.datatable()({
             data: data,
             dom: 'Bfrtip',
             searching: false,
@@ -240,8 +239,7 @@ $(document).ready(function() {
                 buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
                 }
             ]
-            });
-        }
+        });
     }
 
 
@@ -327,18 +325,17 @@ $(document).ready(function() {
         map_lock('unlock');
     }
 
-    //initialize leaflet map
-    var map = L.map('plotdiv');
-        L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-            maxZoom: 18,
-            subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
 
     map.setView([37.8, -96], 4);
 
     // Initialize charts
-    vm.leafletMap(map);
+    vm.leafletMap(L.map('plotdiv'));
+    vm.leafletMap().tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+            maxZoom: 18,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }).addTo(map);
     vm.highchart()
+    vm.datatable($('#gpxDataTable').DataTable());
 
     map_lock('lock');
 
@@ -365,22 +362,21 @@ $(document).ready(function() {
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
                     
-                vm.rDataOutput(data)
-                updateLeaflet()
-                $("#session_url").removeAttr("disabled");
-                $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                $('#step_2').css("opacity", 1);
-                $('#plotdiv').css("opacity", 1);
+                    vm.rDataOutput(data)
+                    updateLeaflet()
+                    $("#session_url").removeAttr("disabled");
+                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+                    $('#step_2').css("opacity", 1);
+                    $('#plotdiv').css("opacity", 1);
 
-                successmsg("GPX file successfully loaded!");
+                    successmsg("GPX file successfully loaded!");
 
-                //////////////////////////////////
-                //Update Data Table
-                $('#gpxTable').css("opacity", 1);
-                $(".dt-button").removeAttr("disabled");
-                initDT(vm.rDataOutput(), true);
-
-
+                    //////////////////////////////////
+                    //Update Data Table
+                    $('#gpxTable').css("opacity", 1);
+                    $(".dt-button").removeAttr("disabled");
+                    
+                    // initDT(vm.rDataOutput(), true);
                 });
             }).fail(function(jqXHR){
                 clearData();
