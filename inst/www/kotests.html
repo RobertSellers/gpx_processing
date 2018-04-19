@@ -299,7 +299,7 @@ $(document).ready(function() {
             }
         });
         //load gpx
-        var gpx_file = session.getLoc() +'files/'+ vm.gpx_file_name(); 
+        var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
         var gpxLayer = new L.GPX(gpx_file, {async: true})
 
         gpxLayer.on('loaded', function(e) {
