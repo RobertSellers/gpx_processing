@@ -113,7 +113,7 @@ a:focus {
   overflow: hidden;
   width: 30px;
 
-  background: url("/img/nav-icon.svg") left top / cover no-repeat transparent;
+  background: url("./img/nav-icon.svg") left top / cover no-repeat transparent;
 
   text-indent: 100%;
   white-space: nowrap;

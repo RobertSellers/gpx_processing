@@ -6,33 +6,42 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+<!-- Primary Stylesheet -->
+<link href="main.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.css" rel="stylesheet"/>
-<link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
-<link href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css" rel="stylesheet"/>
-<link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
-<link href="css/main.css" rel="stylesheet">
 
-<!-- libraries -->
-<script src="scripts/jquery-1.10.2.min.js"> </script>
-<script src="scripts/opencpu-0.4.js"> </script>
-<script src="scripts/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
-<script src="scripts/knockout-min.js"></script>
-<script src="scripts/leaflet.js"></script>
-<script src="scripts/gpx.js"></script>
-<script src="scripts/jquery.dataTables.min.js"></script>
-<script src="scripts/dataTables.buttons.min.js"></script>
-<script src="scripts/dataTables.flash.min.js"></script>
-<script src="scripts/pdfmake.min.js"></script>
-<script src="scripts/vfs_font.js"></script>
-<script src="scripts/buttons.html5.min.js"></script>
-<script src="scripts/buttons.print.min.js"></script>
+<!-- React -->
+<!-- <script src="https://unpkg.com/react@16.3.2/umd/react.development.js"> </script>
+<script src="https://unpkg.com/react-dom@16.3.2/umd/react-dom.development.js"> </script> -->
 
-<!-- Highcharts libraries -->
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/series-label.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<!-- React -->
+<script src="components/jquery-1.10.2.min.js"> </script>
+<script src="components/opencpu-0.4.js"> </script>
+<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
+<script src="components/knockout-min.js"></script>
+<script src="components/moment.min.js"></script>
+<script src="components/vfs_font.js"></script>
+
+<!-- Jquery Datatables -->
+<script src="components/jquery_datatables/jquery.dataTables.min.js"></script>
+<script src="components/jquery_datatables/modules/dataTables.buttons.min.js"></script>
+<script src="components/jquery_datatables/modules/dataTables.flash.min.js"></script>
+<script src="components/jquery_datatables/modules/pdfmake.min.js"></script>
+<script src="components/jquery_datatables/modules/buttons.html5.min.js"></script>
+<script src="components/jquery_datatables/modules/buttons.print.min.js"></script>
+<link href="components/jquery_datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
+<link href="components/jquery_datatables/css/buttons.dataTables.min.css" rel="stylesheet"/>
+
+<!-- Highcharts -->
+<script src="components/highcharts/highcharts.js"></script>
+<script src="components/highcharts/modules/series-label.js"></script>
+<script src="components/highcharts/modules/exporting.js"></script>
+<script src="components/highcharts/modules/export-data.js"></script>
+
+<!-- Leaflet -->
+<script src="components/leaflet/leaflet.js"></script>
+<script src="components/leaflet/modules/gpx.js"></script>
+<link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
 
 <script type="text/javascript">
 
@@ -40,61 +49,81 @@ $(document).ready(function() {
 
   // Initialize highcharts
   
-Highcharts.chart('container', {
+  // var element = React.createElement('div', { id: 'chart' });
 
-title: {
-    text: 'Elevation Profile'
-},
-
-subtitle: {
-    text: '',
-    style: {
-        display: 'none'
-    }
-},
-yAxis: {
-    title: {
-        text: 'Elevation (ft.)'
-    }
-},
-legend: {
-    layout: 'vertical',
-    align: 'right',
-    verticalAlign: 'middle'
-},
-plotOptions: {
-    series: {
-        label: {
-            connectorAllowed: false
+  // ReactDOM.render(element, document.getElementById('container'), function () {
+    Highcharts.chart('container', {
+      chart: {
+        zoomType: 'xy'
+      },
+      title: {text: 'Elevation Profile'},
+      subtitle: {
+        text: '',
+        style: {display: 'none'}
         },
-        pointStart: 2010
-    }
-},
-
-series: [{
-    name: 'Installation',
-    data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
-}, {
-    name: 'Manufacturing',
-    data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
-}],
-
-responsive: {
-    rules: [{
-        condition: {
-            maxWidth: 500
-        },
-        chartOptions: {
-            legend: {
-                layout: 'horizontal',
-                align: 'center',
-                verticalAlign: 'bottom'
-            }
+      xAxis: {
+        type: 'datetime',
+        crosshair: true,
+        // dateTimeLabelFormats: { // don't display the dummy year
+        //     month: '%e. %b',
+        //     year: '%b'
+        // },
+        title: {
+            text: 'Hours'
         }
-    }]
-}
+      },
+      yAxis: {
+        title: {
+            text: ''
+        },
+        min: 0
+      },
+      legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'middle'
+      },
+          chart: {
+        type: 'spline'
+    },
+    tooltip: {
+        headerFormat: '<b>{series.name}</b><br>',
+        pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+    },
 
-});
+    // plotOptions: {
+    //     spline: {
+    //         marker: {
+    //             enabled: true
+    //         }
+    //     }
+    // },
+      plotOptions: {
+          series: {
+              label: {connectorAllowed: false}
+          }
+      },
+      series: [
+        {
+          name: "Elevation",
+          data: [null,null]
+        },
+        {
+          name: "Speed",
+          data: [null,null]
+        }],
+      responsive: {
+          rules: [{
+              condition: {maxWidth: 500},
+              chartOptions: {
+                  legend: {
+                      layout: 'horizontal',
+                      align: 'center',
+                      verticalAlign: 'bottom'
+      }}}]}
+    });
+
+  // });
 
   /* ----- Navigation ----- */
 
@@ -153,7 +182,7 @@ responsive: {
   });
 
 
-  var viewModel = {
+  var vm = {
     session_tmp: ko.observable(),
     gpx_file_name: ko.observable(),
     leafletMap: ko.observable(),
@@ -183,53 +212,80 @@ responsive: {
     $('#plotdiv').css("opacity", 0.2);
     $('#gpxTable').css("opacity", 0.2);
     $(".dt-button").css("disabled", true);
-    viewModel.leafletMap().eachLayer(function (layer) {
+    vm.leafletMap().eachLayer(function (layer) {
       if (layer.hasOwnProperty('_gpx')){
-        viewModel.leafletMap().removeLayer(layer);
-        viewModel.leafletMap().setView([37.8, -96], 4);
+        vm.leafletMap().removeLayer(layer);
+        vm.leafletMap().setView([37.8, -96], 4);
       }
     });
     map_lock('lock')
-    viewModel.get_name(null);
-    viewModel.get_distance_imp(null);
-    viewModel.get_start_time(null);
-    viewModel.get_time_zone(null);
-    viewModel.get_start_date(null);
-    viewModel.get_moving_time(null);
-    viewModel.get_total_time(null);
-    viewModel.get_moving_pace_imp(null);
-    viewModel.get_moving_speed_imp(null);
-    viewModel.get_total_speed_imp(null);
-    viewModel.get_elevation_min_imp(null);
-    viewModel.get_elevation_max_imp(null);
-    viewModel.get_elevation_gain_imp(null);
-    viewModel.get_elevation_loss_imp(null);
-    viewModel.get_elevation_data_imp(null);
-    viewModel.get_cadence_data_imp(null);
+    vm.get_name(null);
+    vm.get_distance_imp(null);
+    vm.get_start_time(null);
+    vm.get_time_zone(null);
+    vm.get_start_date(null);
+    vm.get_moving_time(null);
+    vm.get_total_time(null);
+    vm.get_moving_pace_imp(null);
+    vm.get_moving_speed_imp(null);
+    vm.get_total_speed_imp(null);
+    vm.get_elevation_min_imp(null);
+    vm.get_elevation_max_imp(null);
+    vm.get_elevation_gain_imp(null);
+    vm.get_elevation_loss_imp(null);
+    vm.get_elevation_data_imp(null);
+    vm.get_cadence_data_imp(null);
   }
 
   Object.prototype.hasOwnProperty = function(property) {
       return this[property] !== undefined;
   };
 
+  function updateHighcharts(){
+    var chart = $('#container').highcharts();
+
+    var timeRange = vm.rDataOutput()
+        .map(a => a.Seconds)
+        // .map(elem => moment(Date.parse(elem)).utc());
+
+    var elevationArray = vm.rDataOutput()
+        .map(a => a.Elevation)
+
+    var paceArray = vm.rDataOutput()
+        .map(a => a.Pace)
+
+    var timeElevation = timeRange.map(function(v,i) {
+        return [v._i, elevationArray[i]];
+    });
+
+    var timePace = timeRange.map(function(v,i) {
+        return [v._i, paceArray[i]];
+    });
+
+    chart.series[0].setData(timeElevation,false)
+    chart.series[1].setData (timePace,false)
+    $('#container').highcharts().redraw();
+
+  }
+
   function map_lock(toggle){
     if (toggle=='unlock'){
-      viewModel.leafletMap().dragging.enable();
-      viewModel.leafletMap().touchZoom.enable();
-      viewModel.leafletMap().doubleClickZoom.enable();
-      viewModel.leafletMap().scrollWheelZoom.enable();
-      viewModel.leafletMap().boxZoom.enable();
-      viewModel.leafletMap().keyboard.enable();
-      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.enable();
+      vm.leafletMap().dragging.enable();
+      vm.leafletMap().touchZoom.enable();
+      vm.leafletMap().doubleClickZoom.enable();
+      vm.leafletMap().scrollWheelZoom.enable();
+      vm.leafletMap().boxZoom.enable();
+      vm.leafletMap().keyboard.enable();
+      if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
       document.getElementById('plotdiv').style.cursor='grab';
     }if (toggle=='lock'){
-      viewModel.leafletMap().dragging.disable();
-      viewModel.leafletMap().touchZoom.disable();
-      viewModel.leafletMap().doubleClickZoom.disable();
-      viewModel.leafletMap().scrollWheelZoom.disable();
-      viewModel.leafletMap().boxZoom.disable();
-      viewModel.leafletMap().keyboard.disable();
-      if (viewModel.leafletMap().tap) viewModel.leafletMap().tap.disable();
+      vm.leafletMap().dragging.disable();
+      vm.leafletMap().touchZoom.disable();
+      vm.leafletMap().doubleClickZoom.disable();
+      vm.leafletMap().scrollWheelZoom.disable();
+      vm.leafletMap().boxZoom.disable();
+      vm.leafletMap().keyboard.disable();
+      if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
       document.getElementById('plotdiv').style.cursor='default';
     }
   }
@@ -270,7 +326,7 @@ responsive: {
     }).addTo(map);
     map.setView([37.8, -96], 4);
 
-  viewModel.leafletMap(map)
+  vm.leafletMap(map)
   map_lock('lock')
 
   //automatically upload GPX file on change.
@@ -286,16 +342,16 @@ responsive: {
     //Upload and validate the data
     //////////////////////////////
 
-  viewModel.gpx_file_name($("#gpxfile")[0].files[0].name)
+  vm.gpx_file_name($("#gpxfile")[0].files[0].name)
 
     var req = ocpu.call("gpx_validation", {
         gpxfile : $("#gpxfile")[0].files[0]
     }, function(session){
-        viewModel.session_tmp(session.getLoc())
+        vm.session_tmp(session.getLoc())
 
         //retrieve javascript object as json
         session.getObject(function(data)  {
-          viewModel.rDataOutput(data)
+          vm.rDataOutput(data)
           $("#session_url").removeAttr("disabled");
           $("#session_url").attr("href", session.getLoc()).attr("target","_blank")
           $('#step_2').css("opacity", 1);
@@ -303,42 +359,49 @@ responsive: {
 
           successmsg("GPX file successfully loaded!");
 
-          //Populate Data Table
+          //////////////////////////////////
+          //Update Data Table
           $('#gpxTable').css("opacity", 1);
           $(".dt-button").removeAttr("disabled");
-          initDT(viewModel.rDataOutput(), true)
+          initDT(vm.rDataOutput(), true)
 
-          //refresh the map
-          viewModel.leafletMap().eachLayer(function (layer) {
+          //////////////////////////////////
+          //Update Leaflet
+          vm.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
-              viewModel.leafletMap().removeLayer(layer);
+              vm.leafletMap().removeLayer(layer);
             }
           });
           //load gpx
-          var gpx_file = session.getLoc() +'files/'+ viewModel.gpx_file_name(); 
+          var gpx_file = session.getLoc() +'files/'+ vm.gpx_file_name(); 
           var gpxLayer = new L.GPX(gpx_file, {async: true})
 
           gpxLayer.on('loaded', function(e) {
             map.fitBounds(e.target.getBounds());
-            viewModel.get_name(e.target.get_name())//returns the name of the GPX track
-            viewModel.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
-            // viewModel.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
-            viewModel.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
-            viewModel.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
-            viewModel.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
-            viewModel.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
-            // viewModel.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
-            viewModel.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
-            viewModel.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
-            viewModel.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
-            viewModel.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
-            viewModel.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
-            viewModel.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
+            vm.get_name(e.target.get_name())//returns the name of the GPX track
+            vm.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
+            // vm.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
+            vm.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
+            vm.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
+            vm.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
+            vm.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
+            // vm.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
+            vm.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
+            vm.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
+            vm.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
+            vm.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
+            vm.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
+            vm.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
             //full elevation, heartrate, cadence and temperature data
-            viewModel.get_elevation_data_imp(e.target.get_elevation_data_imp())
-            viewModel.get_cadence_data_imp(e.target.get_cadence_data_imp())
-          }).addTo(viewModel.leafletMap());
+            vm.get_elevation_data_imp(e.target.get_elevation_data_imp())
+            vm.get_cadence_data_imp(e.target.get_cadence_data_imp())
+          }).addTo(vm.leafletMap());
           map_lock('unlock')
+
+          //////////////////////////////////
+          //Update Highcharts
+          updateHighcharts()
+
         });
       }).fail(function(jqXHR){
         clearData()
@@ -430,7 +493,7 @@ function initDT(data , update){
     $(".spinLoad").hide();
   });
 
-  ko.applyBindings(viewModel)
+  ko.applyBindings(vm)
 
 });
 
@@ -445,7 +508,7 @@ function initDT(data , update){
         <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
         <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
       </strong>
-      <h1 class="title">Menu | GPX QA v1.8</h1>
+      <h1 class="title">Menu</h1>
       <nav class="nav-wrap" role="navigation">
 
         <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
@@ -479,7 +542,7 @@ function initDT(data , update){
               <legend>Load GPX data</legend>
               <div class="form-group">
                 <div class="loadFileContainer">
-                <input id="gpxfile" type="file" style="float:left; display: inline-block;">
+                <input id="gpxfile" type="file" style="display: inline-block;">
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
