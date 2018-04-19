@@ -97,8 +97,8 @@ $(document).ready(function() {
   })
 
   vm.highcharts_series.subscribe(function(){
-    vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    // vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    vm.highchart().series[0].setData(vm.highcharts_series()[0],false)
+    vm.highchart().series[1].setData(vm.highcharts_series()[1],false)
     vm.highchart().redraw();
   })
 
