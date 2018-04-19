@@ -88,19 +88,15 @@ $(document).ready(function() {
 
   vm.speed_v_seconds.subscribe(function(){
     vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    // vm.highchart().redraw();
+    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    vm.highchart().redraw();
   })
 
   vm.elevation_v_seconds.subscribe(function(){
+    vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
     vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
-    // vm.highchart().redraw();
+    vm.highchart().redraw();
   })
-
-    ko.computed(function() {
-        vm.speed_v_seconds();
-        vm.elevation_v_seconds();
-        vm.highchart().redraw();
-    });
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
