@@ -74,27 +74,18 @@ $(document).ready(function() {
     paceArray: ko.observableArray(null)
   };
 
-  vm.elevation_v_seconds = ko.computed(function(){
-    return vm.secondsArray().map(function(v,i) {
+  vm.rDataOutput.subscribe(function(){
+    vm.secondsArray(vm.rDataOutput().map(a => a.Seconds));
+    vm.elevationArray(vm.rDataOutput().map(a => a.Elevation));
+    vm.paceArray(vm.rDataOutput().map(a => a.Pace));
+    var elevationVtime = vm.secondsArray().map(function(v,i) {
         return [v._i, vm.elevationArray()[i]];
     });
-  })
-
-  vm.speed_v_seconds = ko.computed(function(){
-    return vm.secondsArray().map(function(v,i) {
+    var paceVtime = vm.secondsArray().map(function(v,i) {
         return [v._i, vm.paceArray[i]];
     });
-  })
-
-  vm.speed_v_seconds.subscribe(function(){
-    vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
-    vm.highchart().redraw();
-  })
-
-  vm.elevation_v_seconds.subscribe(function(){
-    vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    vm.highchart().series[0].setData(elevationVtime,false)
+    vm.highchart().series[1].setData(paceVtime,false)
     vm.highchart().redraw();
   })
 
@@ -115,8 +106,8 @@ $(document).ready(function() {
             pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'},
         plotOptions: {series: {label: {connectorAllowed: false}}},
         series: [
-          {name: "Elevation",data: vm.elevation_v_seconds()},
-          { name: "Speed",data: vm.speed_v_seconds()}],
+          {name: "Elevation",data: [null,null]},
+          { name: "Speed",data: [null,null]}],
         responsive: {
             rules: [{
                 condition: {maxWidth: 500},
@@ -352,9 +343,9 @@ $(document).ready(function() {
 
           //////////////////////////////////
           //Update Highcharts
-          vm.secondsArray(vm.rDataOutput().map(a => a.Seconds));
-          vm.elevationArray(vm.rDataOutput().map(a => a.Elevation));
-          vm.paceArray(vm.rDataOutput().map(a => a.Pace));
+        //   vm.secondsArray(vm.rDataOutput().map(a => a.Seconds));
+        //   vm.elevationArray(vm.rDataOutput().map(a => a.Elevation));
+        //   vm.paceArray(vm.rDataOutput().map(a => a.Pace));
 
         });
       }).fail(function(jqXHR){
