@@ -318,11 +318,12 @@ $(document).ready(function() {
     }
 
     // Initialize charts
-    vm.leafletMap(L.map('plotdiv'));
-    vm.leafletMap().tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
             maxZoom: 18,
             subdomains:['mt0','mt1','mt2','mt3']
         }).addTo(map).setView([37.8, -96], 4);
+    vm.leafletMap(map);
     vm.highchart()
     vm.datatable($('#gpxDataTable').DataTable());
     initDT({}, false)
