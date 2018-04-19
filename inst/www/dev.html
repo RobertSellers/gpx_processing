@@ -47,71 +47,65 @@
 
 $(document).ready(function() {
 
-  // Initialize highcharts
-  
+  var vm = {
+    session_tmp: ko.observable(),
+    gpx_file_name: ko.observable(),
+    leafletMap: ko.observable(),
+    rDataOutput: ko.observable(),
+    //gpx.js output data
+    gpxjs_vars: ko.observable({
+      get_name: null,//returns the name of the GPX track
+      get_distance_imp: null,//returns the total track distance in miles
+      get_start_time: null,//returns a Javascript Date object representing the starting time
+      get_time_zone: null,
+      get_start_date: null,
+      get_moving_time: null,//returns the moving time, in milliseconds
+      get_total_time: null,//returns the total track time, in milliseconds
+      get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
+      get_moving_speed_imp: null,
+      get_total_speed_imp: null,//returns the average total speed in miles per hour
+      get_elevation_min_imp: null,// returns the lowest elevation, in feet
+      get_elevation_max_imp: null,// returns the highest elevation, in feet
+      get_elevation_gain_imp: null,// returns the cumulative elevation gain, in feet
+      get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
+      //full elevation, cadence  data
+      get_elevation_data_imp: null,
+      get_cadence_data_imp: null
+    }),
+    highchart: ko.computed(function(){
+      return new Highcharts.chart('container', {
+        chart: {zoomType: 'xy'},
+        title: {text: 'Elevation Profile'},
+        subtitle: {text: '',style: {display: 'none'}},
+        xAxis: {
+          type: 'datetime',
+          crosshair: true,
+          title: {text: 'Hours'}
+        }, yAxis: {title: {text: ''}, min: 0},
+        legend: {layout: 'vertical', align: 'right',verticalAlign: 'middle' },
+            chart: {type: 'spline' },
+      tooltip: {
+          headerFormat: '<b>{series.name}</b><br>',
+          pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+      },
+
+        plotOptions: {series: {label: {connectorAllowed: false}}
+        },
+        series: [{name: "Elevation",data: [null,null]},
+          { name: "Speed",data: [null,null]}],
+        responsive: {
+            rules: [{
+                condition: {maxWidth: 500},
+                chartOptions: {
+                    legend: {layout: 'horizontal',align: 'center',verticalAlign: 'bottom'
+        }}}]}});
+      })
+  };
+
   // var element = React.createElement('div', { id: 'chart' });
-
   // ReactDOM.render(element, document.getElementById('container'), function () {
-    Highcharts.chart('container', {
-      chart: {
-        zoomType: 'xy'
-      },
-      title: {text: 'Elevation Profile'},
-      subtitle: {
-        text: '',
-        style: {display: 'none'}
-        },
-      xAxis: {
-        type: 'datetime',
-        crosshair: true,
-        title: {
-            text: 'Hours'
-        }
-      },
-      yAxis: {
-        title: {
-            text: ''
-        },
-        min: 0
-      },
-      legend: {
-          layout: 'vertical',
-          align: 'right',
-          verticalAlign: 'middle'
-      },
-          chart: {
-        type: 'spline'
-    },
-    tooltip: {
-        headerFormat: '<b>{series.name}</b><br>',
-        pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-    },
-
-      plotOptions: {
-          series: {
-              label: {connectorAllowed: false}
-          }
-      },
-      series: [
-        {
-          name: "Elevation",
-          data: [null,null]
-        },
-        {
-          name: "Speed",
-          data: [null,null]
-        }],
-      responsive: {
-          rules: [{
-              condition: {maxWidth: 500},
-              chartOptions: {
-                  legend: {
-                      layout: 'horizontal',
-                      align: 'center',
-                      verticalAlign: 'bottom'
-      }}}]}
-    });
-
+    // Initialize highchart
+  vm.highchart()
   // });
 
   /* ----- Navigation ----- */
@@ -194,32 +188,6 @@ $(document).ready(function() {
       $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
   }
 
-  var vm = {
-    session_tmp: ko.observable(),
-    gpx_file_name: ko.observable(),
-    leafletMap: ko.observable(),
-    rDataOutput: ko.observable(),
-    //gpx.js output data
-    gpxjs_vars: ko.observable({
-      get_name: null,//returns the name of the GPX track
-      get_distance_imp: null,//returns the total track distance in miles
-      get_start_time: null,//returns a Javascript Date object representing the starting time
-      get_time_zone: null,
-      get_start_date: null,
-      get_moving_time: null,//returns the moving time, in milliseconds
-      get_total_time: null,//returns the total track time, in milliseconds
-      get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
-      get_moving_speed_imp: null,
-      get_total_speed_imp: null,//returns the average total speed in miles per hour
-      get_elevation_min_imp: null,// returns the lowest elevation, in feet
-      get_elevation_max_imp: null,// returns the highest elevation, in feet
-      get_elevation_gain_imp: null,// returns the cumulative elevation gain, in feet
-      get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
-      //full elevation, cadence  data
-      get_elevation_data_imp: null,
-      get_cadence_data_imp: null
-    })
-  };
 
   function clearData(){
     $('#step_2').css("opacity", 0.2);
