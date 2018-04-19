@@ -1,5 +1,5 @@
-  /* ----- Navigation ----- */
-
+/* ----- Navigation ----- */
+$(document).ready(function() {
   $('.nav').find('a').attr('tabindex', -1);
 
   $('.nav-btn').on('click', function () {
@@ -54,18 +54,19 @@
     $(id).attr('aria-hidden', false);
   });
 
-//////////////////////////////
-//Ajax spinLoad Bar
-//////////////////////////////
+  //////////////////////////////
+  //Ajax spinLoad Bar
+  //////////////////////////////
 
-$(document).ajaxStart(function() {
-$(".spinLoad").show();
+  $(document).ajaxStart(function() {
+    $(".spinLoad").show();
+  });
+
+  $(document).ajaxStop(function() {
+    $(".spinLoad").hide();
+  });
+
 });
-
-$(document).ajaxStop(function() {
-$(".spinLoad").hide();
-});
-
 //R output to popup
 function successmsg(text){
     $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
