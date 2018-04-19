@@ -280,14 +280,6 @@ $(document).ready(function() {
         return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
 
-    initDT({}, false)
-    // $("#process_data").attr("disabled", "disabled");
-    $('.dt-button').attr("disabled", "disabled");
-    $("#session_url").attr("disabled", "disabled");
-    $('#step_2').css("opacity", 0.2);
-    $('#plotdiv').css("opacity", 0.2);
-    $('#gpxTable').css("opacity", 0.2);
-
     function updateLeaflet(){
         //////////////////////////////////
         //Update Leaflet
@@ -325,18 +317,21 @@ $(document).ready(function() {
         map_lock('unlock');
     }
 
-
-    map.setView([37.8, -96], 4);
-
     // Initialize charts
     vm.leafletMap(L.map('plotdiv'));
     vm.leafletMap().tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
             maxZoom: 18,
             subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
+        }).addTo(map).setView([37.8, -96], 4);
     vm.highchart()
     vm.datatable($('#gpxDataTable').DataTable());
-
+    initDT({}, false)
+    // $("#process_data").attr("disabled", "disabled");
+    $('.dt-button').attr("disabled", "disabled");
+    $("#session_url").attr("disabled", "disabled");
+    $('#step_2').css("opacity", 0.2);
+    $('#plotdiv').css("opacity", 0.2);
+    $('#gpxTable').css("opacity", 0.2);
     map_lock('lock');
 
     //automatically upload GPX file on change.
