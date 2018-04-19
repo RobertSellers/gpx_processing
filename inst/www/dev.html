@@ -64,10 +64,6 @@ $(document).ready(function() {
       xAxis: {
         type: 'datetime',
         crosshair: true,
-        // dateTimeLabelFormats: { // don't display the dummy year
-        //     month: '%e. %b',
-        //     year: '%b'
-        // },
         title: {
             text: 'Hours'
         }
@@ -91,13 +87,6 @@ $(document).ready(function() {
         pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
     },
 
-    // plotOptions: {
-    //     spline: {
-    //         marker: {
-    //             enabled: true
-    //         }
-    //     }
-    // },
       plotOptions: {
           series: {
               label: {connectorAllowed: false}
@@ -181,6 +170,16 @@ $(document).ready(function() {
     $(id).attr('aria-hidden', false);
   });
 
+  //R output to popup
+  function successmsg(text){
+    $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
+
+  }
+
+  //R output to popup
+  function errormsg(text){
+      $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+  }
 
   var vm = {
     session_tmp: ko.observable(),
@@ -188,23 +187,25 @@ $(document).ready(function() {
     leafletMap: ko.observable(),
     rDataOutput: ko.observable(),
     //gpx.js output data
-    get_name: ko.observable(),//returns the name of the GPX track
-    get_distance_imp: ko.observable(),//returns the total track distance in miles
-    get_start_time: ko.observable(),//returns a Javascript Date object representing the starting time
-    get_time_zone: ko.observable(),
-    get_start_date: ko.observable(),
-    get_moving_time: ko.observable(),//returns the moving time, in milliseconds
-    get_total_time: ko.observable(),//returns the total track time, in milliseconds
-    get_moving_pace_imp: ko.observable(),//returns the average moving pace in milliseconds per hour
-    get_moving_speed_imp: ko.observable(),//returns the average moving speed in miles per hour
-    get_total_speed_imp: ko.observable(),//returns the average total speed in miles per hour
-    get_elevation_min_imp: ko.observable(),// returns the lowest elevation, in feet
-    get_elevation_max_imp: ko.observable(),// returns the highest elevation, in feet
-    get_elevation_gain_imp: ko.observable(),// returns the cumulative elevation gain, in feet
-    get_elevation_loss_imp: ko.observable(),//returns the cumulative elevation loss, in feet
-    //full elevation, cadence  data
-    get_elevation_data_imp: ko.observable(),
-    get_cadence_data_imp: ko.observable()
+    gpxjs_vars: ko.observable({
+      get_name: null,//returns the name of the GPX track
+      get_distance_imp: null,//returns the total track distance in miles
+      get_start_time: null,//returns a Javascript Date object representing the starting time
+      get_time_zone: null,
+      get_start_date: null,
+      get_moving_time: null,//returns the moving time, in milliseconds
+      get_total_time: null,//returns the total track time, in milliseconds
+      get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
+      get_moving_speed_imp: null,
+      get_total_speed_imp: null,//returns the average total speed in miles per hour
+      get_elevation_min_imp: null,// returns the lowest elevation, in feet
+      get_elevation_max_imp: null,// returns the highest elevation, in feet
+      get_elevation_gain_imp: null,// returns the cumulative elevation gain, in feet
+      get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
+      //full elevation, cadence  data
+      get_elevation_data_imp: null,
+      get_cadence_data_imp: null
+    })
   };
 
   function clearData(){
@@ -219,22 +220,6 @@ $(document).ready(function() {
       }
     });
     map_lock('lock')
-    vm.get_name(null);
-    vm.get_distance_imp(null);
-    vm.get_start_time(null);
-    vm.get_time_zone(null);
-    vm.get_start_date(null);
-    vm.get_moving_time(null);
-    vm.get_total_time(null);
-    vm.get_moving_pace_imp(null);
-    vm.get_moving_speed_imp(null);
-    vm.get_total_speed_imp(null);
-    vm.get_elevation_min_imp(null);
-    vm.get_elevation_max_imp(null);
-    vm.get_elevation_gain_imp(null);
-    vm.get_elevation_loss_imp(null);
-    vm.get_elevation_data_imp(null);
-    vm.get_cadence_data_imp(null);
   }
 
   Object.prototype.hasOwnProperty = function(property) {
@@ -245,14 +230,12 @@ $(document).ready(function() {
     var chart = $('#container').highcharts();
 
     var timeRange = vm.rDataOutput()
-        .map(a => a.Seconds)
-        // .map(elem => moment(Date.parse(elem)).utc());
-
+        .map(a => a.Seconds);
     var elevationArray = vm.rDataOutput()
-        .map(a => a.Elevation)
+        .map(a => a.Elevation);
 
     var paceArray = vm.rDataOutput()
-        .map(a => a.Pace)
+        .map(a => a.Pace);
 
     var timeElevation = timeRange.map(function(v,i) {
         return [v._i, elevationArray[i]];
@@ -265,7 +248,6 @@ $(document).ready(function() {
     chart.series[0].setData(timeElevation,false)
     chart.series[1].setData (timePace,false)
     $('#container').highcharts().redraw();
-
   }
 
   function map_lock(toggle){
@@ -295,11 +277,9 @@ $(document).ready(function() {
     seconds = parseInt((duration/1000)%60),
     minutes = parseInt((duration/(1000*60))%60),
     hours = parseInt((duration/(1000*60*60))%24);
-
     hours = (hours < 10) ? "0" + hours : hours;
     minutes = (minutes < 10) ? "0" + minutes : minutes;
     seconds = (seconds < 10) ? "0" + seconds : seconds;
-
     return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
   }
 
@@ -412,17 +392,6 @@ $(document).ready(function() {
     });
   }
 });
-
-//R output to popup
-function successmsg(text){
-  $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
-
-}
-
-//R output to popup
-function errormsg(text){
-    $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
-}
 
 function initDT(data , update){
 
