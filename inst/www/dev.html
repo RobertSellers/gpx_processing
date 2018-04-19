@@ -170,6 +170,19 @@ $(document).ready(function() {
     $(id).attr('aria-hidden', false);
   });
 
+  //////////////////////////////
+  //Ajax spinLoad Bar
+  //////////////////////////////
+
+  $(document).ajaxStart(function() {
+    $(".spinLoad").show();
+  });
+
+  $(document).ajaxStop(function() {
+    $(".spinLoad").hide();
+  });
+
+
   //R output to popup
   function successmsg(text){
     $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
@@ -284,16 +297,9 @@ $(document).ready(function() {
   }
 
   initDT({}, false)
-  //Display if dev.html or not
-  var cur_url = window.location.href.split(/[\\\/]/)[window.location.href.split(/[\\\/]/).length-1]
-  if(cur_url == "dev.html"){
-    $("#dev_check").html(cur_url);
-  }
-
   // $("#process_data").attr("disabled", "disabled");
   $('.dt-button').attr("disabled", "disabled");
   $("#session_url").attr("disabled", "disabled");
-
   $('#step_2').css("opacity", 0.2);
   $('#plotdiv').css("opacity", 0.2);
   $('#gpxTable').css("opacity", 0.2);
@@ -358,33 +364,35 @@ $(document).ready(function() {
 
           gpxLayer.on('loaded', function(e) {
             map.fitBounds(e.target.getBounds());
-            vm.get_name(e.target.get_name())//returns the name of the GPX track
-            vm.get_distance_imp(e.target.get_distance_imp().toFixed(2) + ' mi')//returns the total track distance in miles
-            // vm.get_time_zone(e.target.get_start_time().getTimezoneOffset())//returns a Javascript Date object representing the starting time
-            vm.get_start_date(e.target.get_start_time().toDateString())//returns a Javascript Date object representing when the last point was recorded
-            vm.get_start_time(e.target.get_start_time().toLocaleTimeString())//returns a Javascript Date object representing when the last point was recorded
-            vm.get_moving_time(msToTime(e.target.get_moving_time()))//returns the moving time, in milliseconds
-            vm.get_total_time(msToTime(e.target.get_total_time()))//returns the total track time, in milliseconds
-            // vm.get_moving_pace_imp(e.target.get_moving_pace_imp())//returns the average moving pace in milliseconds per hour
-            vm.get_moving_speed_imp(e.target.get_moving_speed_imp().toFixed(2)+' mph')//returns the average moving speed in miles per hour
-            vm.get_total_speed_imp(e.target.get_total_speed_imp().toFixed(2) + ' mph')//returns the average total speed in miles per hour
-            vm.get_elevation_min_imp(e.target.get_elevation_min_imp().toFixed(2) + "'")// returns the lowest elevation, in feet
-            vm.get_elevation_max_imp(e.target.get_elevation_max_imp().toFixed(2) + "'")// returns the highest elevation, in feet
-            vm.get_elevation_gain_imp(e.target.get_elevation_gain_imp().toFixed(2) + "'")// returns the cumulative elevation gain, in feet
-            vm.get_elevation_loss_imp(e.target.get_elevation_loss_imp().toFixed(2) + "'")//returns the cumulative elevation loss, in feet
-            //full elevation, heartrate, cadence and temperature data
-            vm.get_elevation_data_imp(e.target.get_elevation_data_imp())
-            vm.get_cadence_data_imp(e.target.get_cadence_data_imp())
+            t = e.target;
+            vm.gpxjs_vars({
+              get_name: t.get_name(),//returns the name of the GPX track
+              get_distance_imp: t.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
+              get_start_time: t.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
+              get_start_date: t.get_start_time().toDateString(),
+              get_moving_time: msToTime(t.get_moving_time()),//returns the moving time, in milliseconds
+              get_total_time: msToTime(t.get_total_time()),//returns the total track time, in milliseconds
+              get_moving_pace_imp: t.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
+              get_moving_speed_imp: t.get_moving_speed_imp().toFixed(2)+' mph',
+              get_total_speed_imp: t.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
+              get_elevation_min_imp: t.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
+              get_elevation_max_imp: t.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
+              get_elevation_gain_imp: t.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
+              get_elevation_loss_imp: t.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
+              //full elevation, cadence  data
+              get_elevation_data_imp: t.get_elevation_data_imp(),
+              get_cadence_data_imp: t.get_cadence_data_imp()
+            });
           }).addTo(vm.leafletMap());
-          map_lock('unlock')
+          map_lock('unlock');
 
           //////////////////////////////////
           //Update Highcharts
-          updateHighcharts()
+          updateHighcharts();
 
         });
       }).fail(function(jqXHR){
-        clearData()
+        clearData();
         errormsg(jqXHR.responseText);
       }).always(function(){
         var session_url = document.getElementById("session_url");
@@ -420,25 +428,6 @@ function initDT(data , update){
             {"data":  "Seconds", title: "Seconds"},
             {"data":  "Speed", title: "Speed"}
         ],
-      // columns: [
-      //   {"data": "DateTime", title: "DateTime"},
-      //   {"data":  "Dist", title: "Dist"},
-      //   // {"data":  "Dist2D", title: "Dist2D"},
-      //   // {"data":  "East", title: "East"},
-      //   {"data":  "Elevation", title: "Elevation"},
-      //   {"data":  "Gradient", title: "Gradient"},
-      //   {"data":  "Latitude", title: "Latitude"},
-      //   {"data":  "Longitude", title: "Longitude"},
-      //   // {"data":  "North", title: "North"},
-      //   {"data":  "Pace", title: "Pace"},
-      //   {"data":  "Seconds", title: "Seconds"},
-      //   {"data":  "Speed", title: "Speed"},
-      //   //{"data":  "dDist", title: "dDist"},
-      //   // {"data":  "dDist2D", title: "dDist2D"},
-      //   // {"data":  "dEast", title: "dEast"},
-      //   // {"data":  "dNorth", title: "dNorth"},
-      //   // {"data":  "dUp", title: "dUp"}
-      //   ],
       buttons: [
           {
             extend: 'collection',
@@ -449,18 +438,6 @@ function initDT(data , update){
       });
     }
 }
-
-  //////////////////////////////
-  //Ajax spinLoad Bar
-  //////////////////////////////
-
-  $(document).ajaxStart(function() {
-    $(".spinLoad").show();
-  });
-
-  $(document).ajaxStop(function() {
-    $(".spinLoad").hide();
-  });
 
   ko.applyBindings(vm)
 
