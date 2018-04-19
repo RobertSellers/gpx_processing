@@ -74,39 +74,34 @@ $(document).ready(function() {
     paceArray: ko.observableArray(null)
   };
 
-//   vm.elevation_v_seconds = ko.computed(function(){
-//     return vm.secondsArray().map(function(v,i) {
-//         return [v._i, vm.elevationArray()[i]];
-//     });
-//   })
-
-//   vm.speed_v_seconds = ko.computed(function(){
-//     return vm.secondsArray().map(function(v,i) {
-//         return [v._i, vm.paceArray[i]];
-//     });
-//   })
-
-  vm.highcharts_series = ko.computed(function(){
-      var series1 = vm.secondsArray().map(function(v,i) {
-            return [v._i, vm.elevationArray()[i]];
-        });
-      var series2 = vm.secondsArray().map(function(v,i) {
-            return [v._i, vm.paceArray[i]];
-        });
-        return [series1, series2]
+  vm.elevation_v_seconds = ko.computed(function(){
+    return vm.secondsArray().map(function(v,i) {
+        return [v._i, vm.elevationArray()[i]];
+    });
   })
 
-  vm.highcharts_series.subscribe(function(){
-    vm.highchart().series[0].setData(vm.highcharts_series()[0],false)
-    vm.highchart().series[1].setData(vm.highcharts_series()[1],false)
+  vm.speed_v_seconds = ko.computed(function(){
+    return vm.secondsArray().map(function(v,i) {
+        return [v._i, vm.paceArray[i]];
+    });
+  })
+
+//   vm.speed_v_seconds.subscribe(function(){
+    // vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
+    // vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    // vm.highchart().redraw();
+//   })
+
+  vm.highchartSeries.subscribe(function(){
+    // vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
+    // vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
     vm.highchart().redraw();
   })
 
-//   vm.elevation_v_seconds.subscribe(function(){
-//     // vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-//     vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
-//     vm.highchart().redraw();
-//   })
+    vm.highchartSeries = ko.computed(function(){
+        return [{name: "Elevation",data: vm.elevation_v_seconds()},
+        { name: "Speed",data: vm.speed_v_seconds()}]
+    })
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
@@ -124,9 +119,7 @@ $(document).ready(function() {
             headerFormat: '<b>{series.name}</b><br>',
             pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'},
         plotOptions: {series: {label: {connectorAllowed: false}}},
-        series: [
-          {name: "Elevation",data: vm.elevation_v_seconds()},
-          { name: "Speed",data: vm.speed_v_seconds()}],
+        series: vm.highchartSeries(),
         responsive: {
             rules: [{
                 condition: {maxWidth: 500},
