@@ -71,6 +71,7 @@ $(document).ready(function() {
   };
 
   vm.rDataOutput.subscribe(function(){
+    //Update Highchart
     var timeRange = vm.rDataOutput().map(a => a.Seconds)
     var elevationArray = vm.rDataOutput().map(a => a.Elevation)
     var paceArray = vm.rDataOutput().map(a => a.Pace)
@@ -83,6 +84,14 @@ $(document).ready(function() {
     vm.highchart().series[0].setData(timeElevation,false)
     vm.highchart().series[1].setData(timePace,false)
     vm.highchart().redraw();
+  })
+
+  vm.leaflet = ko.computed(function(){
+    return new L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 18,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map).setView([37.8, -96], 4);
   })
 
   vm.highchart= ko.computed(function(){
@@ -112,8 +121,6 @@ $(document).ready(function() {
             }}}]}
         });
     });
-
-  vm.highchart()
 
   /* ----- Navigation ----- */
 
@@ -183,18 +190,15 @@ $(document).ready(function() {
     $(".spinLoad").hide();
   });
 
-
   //R output to popup
   function successmsg(text){
     $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
-
   }
 
   //R output to popup
   function errormsg(text){
       $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
   }
-
 
   function clearData(){
     $('#step_2').css("opacity", 0.2);
@@ -255,15 +259,10 @@ $(document).ready(function() {
   $('#plotdiv').css("opacity", 0.2);
   $('#gpxTable').css("opacity", 0.2);
 
-  //initialize leaflet map
-  var map = L.map('plotdiv');
-    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
-        subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map);
-    map.setView([37.8, -96], 4);
+    // Initialize charts
+    vm.leafletMap();
+    vm.highchart();
 
-  vm.leafletMap(map);
   map_lock('lock');
 
   //automatically upload GPX file on change.
