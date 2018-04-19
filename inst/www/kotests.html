@@ -86,16 +86,6 @@ $(document).ready(function() {
     vm.highchart().redraw();
   })
 
-  vm.leaflet = ko.computed(function(){
-    return L.map('plotdiv')
-    .tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
-    {
-        maxZoom: 18,
-        subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map).
-    setView([37.8, -96], 4);
-  })
-
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
         chart: {zoomType: 'xy'},
@@ -261,9 +251,17 @@ $(document).ready(function() {
   $('#plotdiv').css("opacity", 0.2);
   $('#gpxTable').css("opacity", 0.2);
 
+  //initialize leaflet map
+  var map = L.map('plotdiv');
+    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        maxZoom: 18,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+    map.setView([37.8, -96], 4);
+
     // Initialize charts
-    vm.leafletMap();
-    vm.highchart();
+    vm.leafletMap(map);
+    vm.highchart()
 
   map_lock('lock');
 
