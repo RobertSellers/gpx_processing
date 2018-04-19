@@ -87,11 +87,13 @@ $(document).ready(function() {
   })
 
   vm.leaflet = ko.computed(function(){
-    return new L.map('plotdiv');
-    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+    return L.map('plotdiv')
+    .tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
+    {
         maxZoom: 18,
         subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map).setView([37.8, -96], 4);
+    }).addTo(map).
+    setView([37.8, -96], 4);
   })
 
   vm.highchart= ko.computed(function(){
