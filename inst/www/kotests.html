@@ -62,7 +62,7 @@ $(document).ready(function() {
       get_total_speed_imp: null,//returns the average total speed in miles per hour
       get_elevation_min_imp: null,// returns the lowest elevation, in feet
       get_elevation_max_imp: null,// returns the highest elevation, in feet
-      get_elevation_gain_imp: null,// returns the cumulative elevation gain, in feet
+      get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
       get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
       //full elevation, cadence  data
       get_elevation_data_imp: null,
@@ -86,15 +86,21 @@ $(document).ready(function() {
     });
   })
 
-  vm.highcharts_series = ko.computed(function(){
+  vm.speed_v_seconds.subscribe(function(){
     vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
+    // vm.highchart().redraw();
+  })
+
+  vm.elevation_v_seconds.subscribe(function(){
     vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    // vm.highchart().redraw();
   })
 
-  vm.highcharts_series.subscribe(function(){
-    vm.highchart().redraw();
-  })
-
+    ko.computed(function() {
+        vm.speed_v_seconds();
+        vm.elevation_v_seconds();
+        vm.highchart().redraw();
+    });
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
