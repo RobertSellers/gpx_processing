@@ -74,49 +74,56 @@ $(document).ready(function() {
     paceArray: ko.observableArray(null)
   };
 
-  vm.elevation_v_seconds = ko.computed(function(){
-    return vm.secondsArray().map(function(v,i) {
-        return [v._i, vm.elevationArray()[i]];
-    });
+//   vm.elevation_v_seconds = ko.computed(function(){
+//     return vm.secondsArray().map(function(v,i) {
+//         return [v._i, vm.elevationArray()[i]];
+//     });
+//   })
+
+//   vm.speed_v_seconds = ko.computed(function(){
+//     return vm.secondsArray().map(function(v,i) {
+//         return [v._i, vm.paceArray[i]];
+//     });
+//   })
+
+  vm.highcharts_series = ko.computed(function(){
+      var series1 = vm.secondsArray().map(function(v,i) {
+            return [v._i, vm.elevationArray()[i]];
+        });
+      var series2 = vm.secondsArray().map(function(v,i) {
+            return [v._i, vm.paceArray[i]];
+        });
+        return [series1, series2]
   })
 
-  vm.speed_v_seconds = ko.computed(function(){
-    return vm.secondsArray().map(function(v,i) {
-        return [v._i, vm.paceArray[i]];
-    });
-  })
-
-  vm.speed_v_seconds.subscribe(function(){
+  vm.highcharts_series.subscribe(function(){
     vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+    // vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
     vm.highchart().redraw();
   })
 
-  vm.elevation_v_seconds.subscribe(function(){
-    vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
-    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
-    vm.highchart().redraw();
-  })
+//   vm.elevation_v_seconds.subscribe(function(){
+//     // vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
+//     vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+//     vm.highchart().redraw();
+//   })
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
         chart: {zoomType: 'xy'},
-        title: {text: 'Elevation Profile'},
+        title: {text: 'Track Data Visualization'},
         subtitle: {text: '',style: {display: 'none'}},
         xAxis: {
           type: 'datetime',
           crosshair: true,
-          title: {text: 'Hours'}
-        }, yAxis: {title: {text: ''}, min: 0},
+          title: {text: 'Hours'}}, 
+        yAxis: {title: {text: ''}, min: 0},
         legend: {layout: 'vertical', align: 'right',verticalAlign: 'middle' },
             chart: {type: 'spline' },
-      tooltip: {
-          headerFormat: '<b>{series.name}</b><br>',
-          pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-      },
-
-        plotOptions: {series: {label: {connectorAllowed: false}}
-        },
+        tooltip: {
+            headerFormat: '<b>{series.name}</b><br>',
+            pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'},
+        plotOptions: {series: {label: {connectorAllowed: false}}},
         series: [
           {name: "Elevation",data: vm.elevation_v_seconds()},
           { name: "Speed",data: vm.speed_v_seconds()}],
@@ -125,8 +132,9 @@ $(document).ready(function() {
                 condition: {maxWidth: 500},
                 chartOptions: {
                     legend: {layout: 'horizontal',align: 'center',verticalAlign: 'bottom'
-        }}}]}});
-      });
+            }}}]}
+        });
+    });
 
   vm.highchart()
 
