@@ -71,11 +71,13 @@ $(document).ready(function() {
       //full elevation, cadence  data
       get_elevation_data_imp: null,
       get_cadence_data_imp: null
-    }),
-    highchart: ko.computed(function(){
+    })
+  };
+
+  vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
         chart: {zoomType: 'xy'},
-        title: {text: 'Elevation Profile'},
+        title: {text: 'Elevation Profile' + vm.gpxjs_vars()},
         subtitle: {text: '',style: {display: 'none'}},
         xAxis: {
           type: 'datetime',
@@ -91,7 +93,8 @@ $(document).ready(function() {
 
         plotOptions: {series: {label: {connectorAllowed: false}}
         },
-        series: [{name: "Elevation",data: [null,null]},
+        series: [
+          {name: "Elevation",data: [null,null]},
           { name: "Speed",data: [null,null]}],
         responsive: {
             rules: [{
@@ -99,8 +102,7 @@ $(document).ready(function() {
                 chartOptions: {
                     legend: {layout: 'horizontal',align: 'center',verticalAlign: 'bottom'
         }}}]}});
-      })
-  };
+      });
 
   // var element = React.createElement('div', { id: 'chart' });
   // ReactDOM.render(element, document.getElementById('container'), function () {
@@ -208,7 +210,6 @@ $(document).ready(function() {
   };
 
   function updateHighcharts(){
-    var chart = $('#container').highcharts();
 
     var timeRange = vm.rDataOutput().map(a => a.Seconds);
 
@@ -224,9 +225,9 @@ $(document).ready(function() {
         return [v._i, paceArray[i]];
     });
 
-    chart.series[0].setData(timeElevation,false)
-    chart.series[1].setData (timePace,false)
-    $('#container').highcharts().redraw();
+    vm.highchart().series[0].setData(timeElevation,false)
+    vm.highchart().series[1].setData (timePace,false)
+    vm.highchart().redraw();
   }
 
   function map_lock(toggle){
