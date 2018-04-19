@@ -92,16 +92,17 @@ $(document).ready(function() {
     // vm.highchart().redraw();
 //   })
 
+    vm.highchartSeries = ko.computed(function(){
+        return [{name: "Elevation",data: vm.elevation_v_seconds()},
+        { name: "Speed",data: vm.speed_v_seconds()}]
+    })
+
   vm.highchartSeries.subscribe(function(){
     // vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
     // vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
     vm.highchart().redraw();
   })
 
-    vm.highchartSeries = ko.computed(function(){
-        return [{name: "Elevation",data: vm.elevation_v_seconds()},
-        { name: "Speed",data: vm.speed_v_seconds()}]
-    })
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
