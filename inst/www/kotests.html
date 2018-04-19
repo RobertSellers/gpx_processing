@@ -212,10 +212,10 @@ $(document).ready(function() {
         map_lock('lock')
     }
 
-    function initDT(data , update){
+    function initDT(){
 
         vm.datatable()({
-            data: data,
+            data: {},
             dom: 'Bfrtip',
             searching: false,
             responsive: true,
@@ -324,11 +324,11 @@ $(document).ready(function() {
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
     map.setView([37.8, -96], 4); 
-
+    var dt = $('#gpxDataTable').DataTable();
     vm.leafletMap(map);
     vm.highchart()
-    vm.datatable($('#gpxDataTable').DataTable());
-    initDT({}, false)
+    vm.datatable(dt);
+    initDT()
     // $("#process_data").attr("disabled", "disabled");
     $('.dt-button').attr("disabled", "disabled");
     $("#session_url").attr("disabled", "disabled");
@@ -373,8 +373,7 @@ $(document).ready(function() {
                     //Update Data Table
                     $('#gpxTable').css("opacity", 1);
                     $(".dt-button").removeAttr("disabled");
-                    
-                    // initDT(vm.rDataOutput(), true);
+            
                 });
             }).fail(function(jqXHR){
                 clearData();
