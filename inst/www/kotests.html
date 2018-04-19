@@ -10,14 +10,10 @@
 <link href="main.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
-<!-- React -->
-<!-- <script src="https://unpkg.com/react@16.3.2/umd/react.development.js"> </script>
-<script src="https://unpkg.com/react-dom@16.3.2/umd/react-dom.development.js"> </script> -->
-
-<!-- React -->
-<script src="components/jquery-1.10.2.min.js"> </script>
-<script src="components/opencpu-0.4.js"> </script>
-<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"> </script>
+<!-- Stand-alone Libraries -->
+<script src="components/jquery-1.10.2.min.js"></script>
+<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script>
+<script src="components/opencpu-0.4.js"></script>
 <script src="components/knockout-min.js"></script>
 <script src="components/moment.min.js"></script>
 <script src="components/vfs_font.js"></script>
@@ -90,15 +86,15 @@ $(document).ready(function() {
     });
   })
 
-  vm.speed_v_seconds.subscribe(function(){
+  vm.highcharts_series = ko.computed(function(){
     vm.highchart().series[0].setData(vm.elevation_v_seconds(),false)
+    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
+  })
+
+  vm.highcharts_series.subscribe(function(){
     vm.highchart().redraw();
   })
 
-  vm.elevation_v_seconds.subscribe(function(){
-    vm.highchart().series[1].setData(vm.speed_v_seconds(),false)
-    vm.highchart().redraw();
-  })
 
   vm.highchart= ko.computed(function(){
       return new Highcharts.chart('container', {
