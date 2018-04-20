@@ -221,12 +221,18 @@ $(document).ready(function() {
         $('#gpxDataTable').dataTable({
             data: {},
             dom: 'Bfrtip',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
             searching: false,
             responsive: true,
-            autoWidth: false,
-            // "bAutoWidth": false,
+            // autoWidth: false,
+            "bAutoWidth": false,
             pageLength: 5,
-            "aoColumns" : [
+            Columns : [
                 {"data": "DateTime", title: "DateTime"},
                 {"data":  "Dist", title: "Dist"},
                 {"data":  "Elevation", title: "Elev"},
@@ -236,12 +242,6 @@ $(document).ready(function() {
                 {"data":  "Pace", title: "Pace"},
                 {"data":  "Seconds", title: "Seconds"},
                 {"data":  "Speed", title: "Speed"}
-            ],
-            buttons: [{
-                extend: 'collection',
-                text: 'Export Table',
-                buttons: ['csvHtml5', 'excelHtml5' ]
-                }
             ]
         });
     }
