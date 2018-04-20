@@ -130,9 +130,11 @@ $(document).ready(function() {
         		}
         	},
         	labels: {
-        		format: '{value}º',
+        		format: '{value}mph',
         		style: {
-        			color: Highcharts.getOptions().colors[1]
+        			color: function(d){
+                        debugger
+                    }//Highcharts.getOptions().colors[1]
         		}
         	},
         	opposite: true
