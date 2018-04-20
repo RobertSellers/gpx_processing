@@ -107,12 +107,14 @@ $(document).ready(function() {
         },
         xAxis: {
             labels: {
+            tickInterval: 900,
             formatter: function () {
-                var label = this.axis.defaultLabelFormatter.call(this);
-                return label;
+                // var days = Math.floor(this.value / (3600*24));
+                var hrs   = Math.floor(this.value / 3600);
+                var mnts = Math.floor(this.value / 60);
+                return hrs + ":" + mnts;
                 }
             },
-        	tickInterval: 1,
         	crosshair: true,
         	title: {
         		text: 'Seconds'
