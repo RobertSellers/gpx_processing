@@ -76,10 +76,10 @@ $(document).ready(function() {
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var paceArray = vm.rDataOutput().map(a => a.Pace)
         var timeElevation = timeRange.map(function(v,i) {
-            return [v._i, elevationArray[i]];
+            return [v, elevationArray[i]];
         });
         var timePace = timeRange.map(function(v,i) {
-            return [v._i, paceArray[i]];
+            return [v, paceArray[i]];
         });
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timePace,false)
