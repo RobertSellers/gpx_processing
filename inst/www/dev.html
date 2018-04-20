@@ -73,16 +73,44 @@ $(document).ready(function() {
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
+        //ELEVATION
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
-        var speedArray = vm.rDataOutput().map(a => a.speedMPH) //CONFIRM!
         var timeElevation = timeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
+        //SPEED
+        var speedArray = vm.rDataOutput().map(a => a.speedMPH) //CONFIRM!
         var timeSpeed = timeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
+        //DATES
+        var datetimeArray = vm.rDataOutput().map(a => a.DateTime)
+        var timeDateTime = timeRange.map(function(v,i) {
+            return [v, datetimeArray[i]];
+        });
+        //PACE
+        var paceArray = vm.rDataOutput().map(a => a.Pace)
+        var timePace = timeRange.map(function(v,i) {
+            return [v, paceArray[i]];
+        });
+        //DISTANCE
+        var distanceArray = vm.rDataOutput().map(a => a.Dist)
+        var timeDist = timeRange.map(function(v,i) {
+            return [v, distanceArray[i]];
+        });
+        //LAT LONG
+        var latArray = vm.rDataOutput().map(a => a.Latitude)
+        var lonArray = vm.rDataOutput().map(a => a.Longitude)
+        var timeLatLon = timeRange.map(function(v,i) {
+            var val = lonArray[i]+","+latArray[i]
+            return [v, val];
+        });
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timeSpeed,false)
+        vm.highchart().series[3].setData(timeDateTime,false)
+        vm.highchart().series[4].setData(timePace,false)
+        vm.highchart().series[5].setData(timeDist,false)
+        vm.highchart().series[6].setData(timeLatLon,false)
         vm.highchart().redraw();
     })
 
@@ -162,8 +190,6 @@ $(document).ready(function() {
             formatter: function () {
                 //do nothing
             }
-        	// headerFormat: '<b>{series.name}</b><br>',
-        	// pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
         },
         plotOptions: {
         	series: {
@@ -178,7 +204,8 @@ $(document).ready(function() {
                 }
             },
         },
-        series: [{
+        series: [
+        {
             name: "Elevation",
             color: elevationColor,
         	yAxis: 1,
@@ -187,16 +214,38 @@ $(document).ready(function() {
         	tooltip: {
         		valueSuffix: "'"
         	}
-        }, {
-            name: "Speed",
-            color: speedColor,
-        	data: [null, null],
-        	type: "spline",
-        	// dashStyle: 'shortdot',
-        	tooltip: {
-        		valueSuffix: ' mph'
-        	}
-        }],
+            }, {
+                name: "Speed",
+                color: speedColor,
+                data: [null, null],
+                type: "spline",
+                // dashStyle: 'shortdot',
+                tooltip: {
+                    valueSuffix: ' mph'
+                }
+            },
+            {
+                name: 'timeDateTime',
+                data: [null, null],
+                visible: false
+            },
+            {
+                name: 'timePace',
+                data: [null, null],
+                visible: false
+            },
+            {
+                name: 'timeDist',
+                data: [null, null],
+                visible: false
+            },
+            {
+                name: 'timeLatLon',
+                data: [null, null],
+                visible: false
+            }
+            //invisible_data
+        ],
         credits: {
         	enabled: false
         },
@@ -428,7 +477,8 @@ $(document).ready(function() {
             });
         }
     });
-  ko.applyBindings(vm);
+
+    ko.applyBindings(vm);
 
 });
 
