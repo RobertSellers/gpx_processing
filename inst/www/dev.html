@@ -92,38 +92,38 @@ $(document).ready(function() {
             title: {text: 'Track Data Visualization'},
             subtitle: {text: '',style: {display: 'none'}},
             xAxis: {
-                tickInterval:30,
+                tickInterval:60,
                 crosshair: true,
             title: {text: 'Hours'}}, 
             yAxis: [{ // Primary yAxis
-            labels: {
-                format: '{value}ft',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            title: {
-                text: 'Elevation in Feet',
-                style: {
-                    color: Highcharts.getOptions().colors[2]
-                }
-            },
-            opposite: true
+                labels: {
+                    format: '{value}ft',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                title: {
+                    text: 'Elevation in Feet',
+                    style: {
+                        color: Highcharts.getOptions().colors[1]
+                    }
+                },
+                opposite: true
 
-            }, { // Secondary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'Gradient',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
+                }, { // Secondary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Gradient',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
+                },
+                labels: {
+                    format: '{value} angle',
+                    style: {
+                        color: Highcharts.getOptions().colors[0]
+                    }
                 }
-            },
-            labels: {
-                format: '{value} angle',
-                style: {
-                    color: Highcharts.getOptions().colors[0]
-                }
-            }
 
             }
             // { // Tertiary yAxis
@@ -154,7 +154,6 @@ $(document).ready(function() {
             series: [
             {
                 name: "Elevation",
-                yAxis: 1,
                 data: [null,null],
                 dashStyle: 'shortdot',
                 type: "spline",
@@ -164,6 +163,7 @@ $(document).ready(function() {
             },
             {
                 name: "Gradient",
+                yAxis: 1,
                 data: [null,null],
                 type: "spline",
                 tooltip: {
