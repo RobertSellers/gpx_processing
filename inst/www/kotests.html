@@ -205,7 +205,7 @@ $(document).ready(function() {
     function clearData(){
         $('#step_2').css("opacity", 0.2);
         $('#plotdiv').css("opacity", 0.2);
-        $('#gpxTable').css("opacity", 0.2);
+        $('#gpxDataTable').css("opacity", 0.2);
         $(".dt-button").css("disabled", true);
         vm.leafletMap().eachLayer(function (layer) {
         if (layer.hasOwnProperty('_gpx')){
@@ -319,7 +319,7 @@ $(document).ready(function() {
     $("#session_url").attr("disabled", "disabled");
     $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
-    $('#gpxTable').css("opacity", 0.2);
+    $('#gpxDataTable').css("opacity", 0.2);
     map_lock('lock');
 
     //automatically upload GPX file on change.
@@ -356,7 +356,7 @@ $(document).ready(function() {
 
                     //////////////////////////////////
                     //Update Data Table
-                    $('#gpxTable').css("opacity", 1);
+                    $('#gpxDataTable').css("opacity", 1);
                     $(".dt-button").removeAttr("disabled");
             
                 });
@@ -470,12 +470,12 @@ $(document).ready(function() {
         <div id="plotdiv" style="height:450px;"></div>
       </article>
   
-      <article class="panel">
+      <article class="panel" style="width:100%">
         <h2 class="panel-head section-label"><span class="section-label-back">Data Table</span></h2>
-        <div id="gpxTable" >
-          <table id="gpxDataTable" class="display nowrap" style="width:100%">
+        <!-- <div id="gpxDataTable"> -->
+          <table id="gpxDataTable" class="display nowrap">
           </table>
-      </div>
+      <!-- </div> -->
       </article>
     </main>
     </body>
