@@ -383,9 +383,18 @@ a{
 }
 
 
-#gpxTable td {
+/* #gpxTable td {
    color:black;
+} */
+
+
+/* .dt-buttons{
+  float : left !important;
 }
+
+.datatables_buttons_info{
+  color: black;
+} */
 
 .gpx_metadata span{
 	color: tomato;
@@ -439,14 +448,6 @@ a{
 #warnings_panel{
   max-height: 58.59px;
   height: 58.59px;
-}
-
-.dt-buttons{
-  float : left !important;
-}
-
-.datatables_buttons_info{
-  color: black;
 }
 .gpx_metadata{
   font-size: 13px;

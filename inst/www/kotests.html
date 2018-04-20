@@ -6,12 +6,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
+<!-- Custom Scripts -->
+<script src="js/utilities.js"></script>
+
 <!-- Primary Stylesheet -->
 <link href="main.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 <!-- Stand-alone Libraries -->
-<script src="components/jquery-1.10.2.min.js"></script>
+<script src="components/jquery-1.12.4.min.js"></script>
 <script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script>
 <script src="components/opencpu-0.4.js"></script>
 <script src="components/knockout-min.js"></script>
@@ -25,8 +28,12 @@
 <script src="components/jquery_datatables/modules/pdfmake.min.js"></script>
 <script src="components/jquery_datatables/modules/buttons.html5.min.js"></script>
 <script src="components/jquery_datatables/modules/buttons.print.min.js"></script>
+<script src="components/jquery_datatables/modules/dataTables.responsive.min.js"></script>
+<script src="components/jquery_datatables/modules/dataTables.rowReorder.min.js"></script>
 <link href="components/jquery_datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="components/jquery_datatables/css/buttons.dataTables.min.css" rel="stylesheet"/>
+<link href="components/jquery_datatables/css/responsive.dataTables.min.css" rel="stylesheet"/>
+<link href="components/jquery_datatables/css/rowReorder.dataTables.min.css" rel="stylesheet"/>
 
 <!-- Highcharts -->
 <script src="components/highcharts/highcharts.js"></script>
@@ -47,7 +54,6 @@ $(document).ready(function() {
         session_tmp: ko.observable(),
         gpx_file_name: ko.observable(),
         leafletMap: ko.observable(),
-        datatable: ko.observable(),
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
@@ -217,6 +223,9 @@ $(document).ready(function() {
         $('#gpxDataTable').dataTable({
             data: {},
             dom: 'Bfrtip',
+            rowReorder: {
+                selector: 'td:nth-child(2)'
+            },
             searching: false,
             responsive: true,
             "bAutoWidth": false,
@@ -242,11 +251,6 @@ $(document).ready(function() {
         });
     }
 
-
-    Object.prototype.hasOwnProperty = function(property) {
-        return this[property] !== undefined;
-    };
-
     function map_lock(toggle){
         if (toggle=='unlock'){
             vm.leafletMap().dragging.enable();
@@ -267,17 +271,6 @@ $(document).ready(function() {
         if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
             document.getElementById('plotdiv').style.cursor='default';
         }
-    }
-
-    function msToTime(duration) {
-        var milliseconds = parseInt((duration%1000)/100),
-        seconds = parseInt((duration/1000)%60),
-        minutes = parseInt((duration/(1000*60))%60),
-        hours = parseInt((duration/(1000*60*60))%24);
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
     }
 
     function updateLeaflet(){
