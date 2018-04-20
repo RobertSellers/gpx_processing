@@ -259,6 +259,7 @@ $(document).ready(function() {
     function clearData(){
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
+        $(".download").attr("disabled", false);
         vm.highchart().series[0].setData([null,null],false)
         vm.highchart().series[1].setData([null,null],false)
         vm.highchart().redraw();
@@ -339,6 +340,7 @@ $(document).ready(function() {
     map.setView([37.8, -96], 4); 
     vm.leafletMap(map);
     vm.highchart()
+    $(".download").attr("disabled", true);
     $("#session_url").attr("disabled", "disabled");
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
