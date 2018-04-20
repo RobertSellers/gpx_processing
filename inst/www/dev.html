@@ -87,6 +87,10 @@ $(document).ready(function() {
     })
 
     vm.highchart= ko.computed(function(){
+
+        var elevationColor = "#76a912"
+        var paceColor = "#000000"
+
         return new Highcharts.chart('container', {
         chart: {
             zoomType: 'x',
@@ -112,13 +116,13 @@ $(document).ready(function() {
         	labels: {
         		format: '{value}ft',
         		style: {
-        			color: "#00ff00"
+        			color: elevationColor
         		}
         	},
         	title: {
         		text: 'Elevation in Feet',
         		style: {
-        			color: "#00ff00"
+        			color: elevationColor
         		}
         	}
         }, { // Secondary yAxis
@@ -126,13 +130,13 @@ $(document).ready(function() {
         	title: {
         		text: 'Pace',
         		style: {
-        			color: "#ff0000"
+        			color: paceColor
         		}
         	},
         	labels: {
         		format: '{value}mph',
         		style: {
-        			color: "#ff0000"
+        			color: paceColor
         		}
         	},
         	opposite: true
@@ -156,7 +160,8 @@ $(document).ready(function() {
             },
         },
         series: [{
-        	name: "Elevation",
+            name: "Elevation",
+            color: elevationColor,
         	yAxis: 1,
         	data: [null, null],
         	type: "areaspline",
@@ -164,7 +169,8 @@ $(document).ready(function() {
         		valueSuffix: "'"
         	}
         }, {
-        	name: "Pace",
+            name: "Pace",
+            color: paceColor,
         	data: [null, null],
         	type: "spline",
         	dashStyle: 'shortdot',
