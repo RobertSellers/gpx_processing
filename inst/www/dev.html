@@ -112,7 +112,11 @@ $(document).ready(function() {
                 // var days = Math.floor(this.value / (3600*24));
                 var hrs   = Math.floor(this.value / 3600);
                 var mnts = Math.floor(this.value / 60);
-                return hrs + ":" + mnts;
+                if (this.value===0) {
+                    return 0
+                }else{
+                    return hrs + ":" + mnts;
+                }
                 }
             },
         	crosshair: true,
@@ -121,20 +125,7 @@ $(document).ready(function() {
         	}
         },
         yAxis: [{ // Primary yAxis
-        	labels: {
-        		format: '{value}mph',
-        		style: {
-        			color: paceColor
-        		}
-        	},
-        	title: {
-        		text: 'Pace',
-        		style: {
-        			color: paceColor
-        		}
-        	}
-        }, { // Secondary yAxis
-        	gridLineWidth: 0,
+            gridLineWidth: 0,
         	title: {
         		text: 'Elevation in feet',
         		style: {
@@ -148,9 +139,25 @@ $(document).ready(function() {
         		}
         	},
         	opposite: true
+        }, { // Secondary yAxis
+            labels: {
+        		format: '{value}mph',
+        		style: {
+        			color: paceColor
+        		}
+        	},
+        	title: {
+        		text: 'Pace',
+        		style: {
+        			color: paceColor
+        		}
+        	}
         }],
         tooltip: {
-        	shared: true
+            shared: true,
+            formatter: function () {
+                //do nothing
+            }
         	// headerFormat: '<b>{series.name}</b><br>',
         	// pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
         },
