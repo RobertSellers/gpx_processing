@@ -85,11 +85,11 @@ $(document).ready(function() {
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timePace,false)
         vm.highchart().redraw();
-
         //Update Datatable
-        vm.datatable.clear();
-        vm.datatable.rows.add(data);
-        vm.datatable.draw();
+        var datatable = $('#gpxDataTable').DataTable();
+        datatable.clear();
+        datatable.rows.add(vm.rDataOutput());
+        datatable.draw();
     })
 
     vm.highchart= ko.computed(function(){
@@ -214,7 +214,7 @@ $(document).ready(function() {
 
     function initDT(){
 
-        vm.datatable()({
+        $('#gpxDataTable').dataTable({
             data: {},
             dom: 'Bfrtip',
             searching: false,
@@ -324,10 +324,8 @@ $(document).ready(function() {
         subdomains:['mt0','mt1','mt2','mt3']
     }).addTo(map);
     map.setView([37.8, -96], 4); 
-    var dt = $('#gpxDataTable').DataTable();
     vm.leafletMap(map);
     vm.highchart()
-    vm.datatable(dt);
     initDT()
     // $("#process_data").attr("disabled", "disabled");
     $('.dt-button').attr("disabled", "disabled");
