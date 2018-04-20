@@ -115,9 +115,8 @@ $(document).ready(function() {
                 if (this.value===0) {
                     return 0
                 }else{
-                    return hrs + ":" + mnts;
-                }
-                }
+                    return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
+                }}
             },
         	crosshair: true,
         	title: {
