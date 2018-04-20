@@ -404,6 +404,7 @@ function downloadCSV(){
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
+                <li class="tab" role="presentation"><input type="button" onclick="downloadCSV();" value="Download CSV" /></li>
               </ul>
       
               <div class="tab-panels">
@@ -425,7 +426,6 @@ function downloadCSV(){
                 <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
                     <div id="container"></div>
                 </div>
-                <input type="button" class="tab-panel" role="tabpanel" aria-hidden="true" onclick="downloadCSV();" value="Download CSV" />
               </div>
             </div>
       
