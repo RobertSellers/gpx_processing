@@ -108,7 +108,9 @@ $(document).ready(function() {
         xAxis: {
             type: 'datetime',
             labels: {
-                format: '{value:%A, %b %e, %H:%M}'
+                format: function(){
+                    return '{value:%A, %b %e, %H:%M}'
+                }
             },
         	tickInterval: 1,
         	crosshair: true,
