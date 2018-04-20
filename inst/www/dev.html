@@ -88,84 +88,98 @@ $(document).ready(function() {
 
     vm.highchart= ko.computed(function(){
         return new Highcharts.chart('container', {
-            chart: {zoomType: 'xy'},
-            title: {text: 'Track Data Visualization'},
-            subtitle: {text: '',style: {display: 'none'}},
-            xAxis: {
-                tickInterval:60,
-                crosshair: true,
-            title: {text: 'Seconds'}}, 
-            yAxis: [{ // Primary yAxis
-                labels: {
-                    format: '{value}ft',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                },
-                title: {
-                    text: 'Elevation in Feet',
-                    style: {
-                        color: Highcharts.getOptions().colors[1]
-                    }
-                }
-
-                }, { // Secondary yAxis
-                gridLineWidth: 0,
-                title: {
-                    text: 'Gradient',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                labels: {
-                    format: '{value} angle',
-                    style: {
-                        color: Highcharts.getOptions().colors[0]
-                    }
-                },
-                opposite: true
-
-            }
-        ],
-            tooltip: {
-                shared: true
-                // headerFormat: '<b>{series.name}</b><br>',
-                // pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
-            },
-            plotOptions: {series: {label: {connectorAllowed: false}}},
-            series: [
-            {
-                name: "Elevation",
-                yAxis: 1,
-                data: [null,null],
-                fillOpacity: 0.3,
-                type: "spline",
-                tooltip: {
-                    valueSuffix: ' ft'
-                }
-            },
-            {
-                name: "Gradient",
-                data: [null,null],
-                type: "spline",
-                dashStyle: 'shortdot',
-                tooltip: {
-                    valueSuffix: ' mph'
-                }
-            }],
-            responsive: {
-                rules: [{
-                    condition: {maxWidth: 500},
-                    chartOptions: {
-                        credits: {
-            enabled: false
-          },
-          legend: {
-            enabled: false
-          }
-            }}]}
-            });
+        chart: {
+        	zoomType: 'xy'
+        },
+        title: {
+        	text: 'Track Data Visualization'
+        },
+        subtitle: {
+        	text: '',
+        	style: {
+        		display: 'none'
+        	}
+        },
+        xAxis: {
+        	tickInterval: 60,
+        	crosshair: true,
+        	title: {
+        		text: 'Seconds'
+        	}
+        },
+        yAxis: [{ // Primary yAxis
+        	labels: {
+        		format: '{value}ft',
+        		style: {
+        			color: Highcharts.getOptions().colors[1]
+        		}
+        	},
+        	title: {
+        		text: 'Elevation in Feet',
+        		style: {
+        			color: Highcharts.getOptions().colors[1]
+        		}
+        	}
+        }, { // Secondary yAxis
+        	gridLineWidth: 0,
+        	title: {
+        		text: 'Gradient',
+        		style: {
+        			color: Highcharts.getOptions().colors[0]
+        		}
+        	},
+        	labels: {
+        		format: '{value}º',
+        		style: {
+        			color: Highcharts.getOptions().colors[0]
+        		}
+        	},
+        	opposite: true
+        }],
+        tooltip: {
+        	shared: true
+        	// headerFormat: '<b>{series.name}</b><br>',
+        	// pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+        },
+        plotOptions: {
+        	series: {
+        		label: {
+        			connectorAllowed: false
+        		}
+        	}
+        },
+        series: [{
+        	name: "Elevation",
+        	yAxis: 1,
+        	data: [null, null],
+        	type: "spline",
+        	tooltip: {
+        		valueSuffix: "'"
+        	}
+        }, {
+        	name: "Gradient",
+        	data: [null, null],
+        	type: "spline",
+        	dashStyle: 'shortdot',
+        	tooltip: {
+        		valueSuffix: ' mph'
+        	}
+        }],
+        credits: {
+        	enabled: false
+        },
+        legend: {
+        	enabled: false
+        },
+        responsive: {
+        	rules: [{
+        		condition: {
+        			maxWidth: 500
+        		}
+        	}]
+        }
         });
+    });
 
 
     /* ----- Navigation ----- */
