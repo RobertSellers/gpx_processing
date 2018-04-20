@@ -73,7 +73,12 @@ $(document).ready(function() {
             //full elevation, cadence  data
             get_elevation_data_imp: null,
             get_cadence_data_imp: null
-        })
+        }),
+        downloadCSV : function() {
+            var data = this.rDataOutput();
+            var exportData = new CSVExport(data);
+            return exportData
+        }
     };
 
     vm.rDataOutput.subscribe(function(){
@@ -334,11 +339,6 @@ $(document).ready(function() {
 
 });
 
-function downloadCSV(){
-    var exportData = new CSVExport(vm.rDataOutput());
-    return exportData
-}
-
 </script>
 
 </head>
@@ -404,7 +404,7 @@ function downloadCSV(){
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
-                <li class="tab" role="presentation"><input type="button" onclick="downloadCSV();" value="Download CSV" /></li>
+                <li class="tab" role="presentation"><input type="button" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       
               <div class="tab-panels">
