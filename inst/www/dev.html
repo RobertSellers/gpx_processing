@@ -76,7 +76,7 @@ $(document).ready(function() {
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var paceArray = vm.rDataOutput().map(a => a.Pace)
         var timeElevation = timeRange.map(function(v,i) {
-            return [v, elevationArray[i]];
+            return [v, elevationArray[i]/3600];//hourly rate
         });
         var timePace = timeRange.map(function(v,i) {
             return [v, paceArray[i]];
@@ -106,7 +106,7 @@ $(document).ready(function() {
         	}
         },
         xAxis: {
-        	tickInterval: 60,
+        	tickInterval: 1,
         	crosshair: true,
         	title: {
         		text: 'Seconds'
@@ -502,7 +502,7 @@ $(document).ready(function() {
     
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv"></div>
+        <div id="plotdiv" style="height:600px;"></div>
       </article>
 
     </main>
