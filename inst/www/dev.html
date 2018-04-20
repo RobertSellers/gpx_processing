@@ -92,8 +92,8 @@ $(document).ready(function() {
             title: {text: 'Track Data Visualization'},
             subtitle: {text: '',style: {display: 'none'}},
             xAxis: {
-            type: 'datetime',
-            crosshair: true,
+                tickInterval:30,
+                crosshair: true,
             title: {text: 'Hours'}}, 
             yAxis: [{ // Primary yAxis
             labels: {
@@ -154,6 +154,7 @@ $(document).ready(function() {
             series: [
             {
                 name: "Elevation",
+                yAxis: 1,
                 data: [null,null],
                 dashStyle: 'shortdot',
                 type: "spline",
@@ -164,7 +165,6 @@ $(document).ready(function() {
             {
                 name: "Gradient",
                 data: [null,null],
-                yAxis: 1,
                 type: "spline",
                 tooltip: {
                     valueSuffix: ' mph'
