@@ -173,7 +173,7 @@ $(document).ready(function() {
             color: paceColor,
         	data: [null, null],
         	type: "spline",
-        	dashStyle: 'shortdot',
+        	// dashStyle: 'shortdot',
         	tooltip: {
         		valueSuffix: ' mph'
         	}
@@ -292,7 +292,9 @@ $(document).ready(function() {
 
     function map_lock(toggle){
         if (toggle=='unlock'){
+            // vm.leafletMap().L.Map('map', { zoomControl:false });
             vm.leafletMap().dragging.enable();
+            vm.leafletMap().zoomControl.disable();
             vm.leafletMap().touchZoom.enable();
             vm.leafletMap().doubleClickZoom.enable();
             vm.leafletMap().scrollWheelZoom.enable();
@@ -302,6 +304,7 @@ $(document).ready(function() {
             document.getElementById('plotdiv').style.cursor='grab';
         }if (toggle=='lock'){
             vm.leafletMap().dragging.disable();
+            vm.leafletMap().zoomControl.enable();
             vm.leafletMap().touchZoom.disable();
             vm.leafletMap().doubleClickZoom.disable();
             vm.leafletMap().scrollWheelZoom.disable();
@@ -473,8 +476,8 @@ $(document).ready(function() {
       
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
-                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
-                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
+                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata">Metadata</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       

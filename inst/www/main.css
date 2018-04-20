@@ -412,6 +412,7 @@ a{
 
 .gpx_metadata{
   font-size: 20px;
+  height: 403px !important;
   width: 100%;
 	margin: 0 auto
 }
