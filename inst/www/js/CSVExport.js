@@ -8,7 +8,7 @@ Compress with: http://jscompress.com/
     /**
     Default constructor
     */
-    var _CSV = function (JSONData) {
+    var _CSV = function (JSONData, filename) {
         if (typeof JSONData === 'undefined')
             return;
 
@@ -19,7 +19,7 @@ Compress with: http://jscompress.com/
             csvRows = [],
             BREAK = '\r\n',
             DELIMITER = ',',
-			FILENAME = "export.csv";
+			FILENAME = filename + ".csv";
 
         // Get and Write the headers
         csvHeaders = Object.keys(csvData[0]);

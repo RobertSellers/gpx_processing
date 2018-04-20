@@ -64,7 +64,8 @@ $(document).ready(function() {
         }),
         downloadCSV : function() {
             var data = this.rDataOutput();
-            var exportData = new CSVExport(data);
+            var filename = this.gpx_file_name().slice(0, -4);
+            var exportData = new CSVExport(data, filename);
             return exportData
         }
     };
