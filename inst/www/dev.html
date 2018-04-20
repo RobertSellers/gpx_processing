@@ -89,7 +89,8 @@ $(document).ready(function() {
     vm.highchart= ko.computed(function(){
         return new Highcharts.chart('container', {
         chart: {
-        	zoomType: 'xy'
+            zoomType: 'x',
+			polar: false
         },
         title: {
         	text: 'Track Data Visualization'
@@ -145,14 +146,20 @@ $(document).ready(function() {
         	series: {
         		label: {
         			connectorAllowed: false
-        		}
-        	}
+                },
+                cursor: "pointer",
+                events: {
+                    click: function(event) {
+                        //do nothing
+                    }
+                }
+            },
         },
         series: [{
         	name: "Elevation",
         	yAxis: 1,
         	data: [null, null],
-        	type: "spline",
+        	type: "areaspline",
         	tooltip: {
         		valueSuffix: "'"
         	}
