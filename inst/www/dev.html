@@ -74,7 +74,7 @@ $(document).ready(function() {
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
-        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var speedArray = vm.rDataOutput().map(a => a.speedMPH) //CONFIRM!
         var timeElevation = timeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
@@ -115,24 +115,29 @@ $(document).ready(function() {
                 if (this.value===0) {
                     return 0
                 }else{
-                    return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
+                    var fifteens = (Math.round(mnts/15) * 15) % 60
+                    if (fifteens==0){
+                        return hrs + ":00"
+                    }else{
+                        return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
+                    }
                 }}
             },
         	crosshair: true,
         	title: {
-        		text: 'Duration'
+        		text: 'Duration (hh:mm)'
         	}
         },
         yAxis: [{ // Primary yAxis
             gridLineWidth: 0,
         	title: {
-        		text: 'Speed',
+        		text: 'Speed (mph)',
         		style: {
         			color: speedColor
         		}
         	},
         	labels: {
-        		format: '{value}mph',
+        		format: '{value}',
         		style: {
         			color: speedColor
         		}

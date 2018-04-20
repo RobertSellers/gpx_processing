@@ -135,5 +135,7 @@ gpx_df_construct <- function(gpxfile){
   df$Speed=speed(df$Seconds)
   df$Pace=pace(df$Seconds)
 
+
+  df$speedMPH = 2.23694 * df$Speed
   return(df)
 }
