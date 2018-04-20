@@ -106,9 +106,11 @@ $(document).ready(function() {
         	}
         },
         xAxis: {
-            type: 'datetime',
             labels: {
-                format: '{value:%H:%M}'
+            formatter: function () {
+                var label = this.axis.defaultLabelFormatter.call(this);
+                return label;
+                }
             },
         	tickInterval: 1,
         	crosshair: true,
