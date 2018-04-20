@@ -222,7 +222,7 @@ $(document).ready(function() {
 
         $('#gpxDataTable').dataTable({
             data: {},
-            // dom: 'Bfrtip',
+            dom: 'Bfrtip',
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },
@@ -243,8 +243,8 @@ $(document).ready(function() {
             ],
             buttons: [{
                 extend: 'collection',
-                text: 'Export',
-                buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
+                text: 'Export Table',
+                buttons: ['csvHtml5', 'excelHtml5' ]
                 }
             ]
         });
