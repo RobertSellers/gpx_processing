@@ -127,29 +127,29 @@ $(document).ready(function() {
         yAxis: [{ // Primary yAxis
             gridLineWidth: 0,
         	title: {
-        		text: 'Elevation in feet',
+        		text: 'Pace',
         		style: {
-        			color: elevationColor
+        			color: paceColor
         		}
         	},
         	labels: {
-        		format: '{value}',
-        		style: {
-        			color: elevationColor
-        		}
-        	},
-        	opposite: true
-        }, { // Secondary yAxis
-            labels: {
         		format: '{value}mph',
         		style: {
         			color: paceColor
         		}
         	},
-        	title: {
-        		text: 'Pace',
+        	opposite: true
+        }, { // Secondary yAxis
+            labels: {
+        		format: "'{value}'",
         		style: {
-        			color: paceColor
+        			color: elevationColor
+        		}
+        	},
+        	title: {
+        		text: 'Elevation in feet',
+        		style: {
+        			color: elevationColor
         		}
         	}
         }],
