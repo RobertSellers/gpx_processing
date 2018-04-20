@@ -43,6 +43,7 @@
 
 <!-- Custom Scripts -->
 <script src="js/utilities.js"></script>
+<script src="js/CSVExport.js"></script>
 
 <script type="text/javascript">
 
@@ -216,35 +217,6 @@ $(document).ready(function() {
         map_lock('lock')
     }
 
-    function initDT(){
-
-        $('#gpxDataTable').dataTable({
-            data: {},
-            dom: 'Bfrtip',
-            buttons: [
-                'copyHtml5',
-                'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
-            ],
-            searching: false,
-            responsive: true,
-            "bAutoWidth": false,
-            pageLength: 10,
-            "aoColumns" : [
-                {"data": "DateTime", title: "DateTime"},
-                {"data":  "Dist", title: "Dist"},
-                {"data":  "Elevation", title: "Elev"},
-                {"data":  "Gradient", title: "Grad"},
-                {"data":  "Latitude", title: "Lat"},
-                {"data":  "Longitude", title: "Lon"},
-                {"data":  "Pace", title: "Pace"},
-                {"data":  "Seconds", title: "Seconds"},
-                {"data":  "Speed", title: "Speed"}
-            ]
-        });
-    }
-
     function map_lock(toggle){
         if (toggle=='unlock'){
             vm.leafletMap().dragging.enable();
@@ -313,13 +285,9 @@ $(document).ready(function() {
     map.setView([37.8, -96], 4); 
     vm.leafletMap(map);
     vm.highchart()
-    initDT()
-    // $("#process_data").attr("disabled", "disabled");
-    $('.dt-button').attr("disabled", "disabled");
     $("#session_url").attr("disabled", "disabled");
     $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
-    $('#gpxTable').css("opacity", 0.2);
     map_lock('lock');
 
     //automatically upload GPX file on change.
@@ -344,22 +312,15 @@ $(document).ready(function() {
 
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
-                    
                     vm.rDataOutput(data)
                     updateLeaflet()
                     $("#session_url").removeAttr("disabled");
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#step_2').css("opacity", 1);
                     $('#plotdiv').css("opacity", 1);
-
                     successmsg("GPX file successfully loaded!");
-
-                    //////////////////////////////////
-                    //Update Data Table
-                    $('#gpxTable').css("opacity", 1);
-                    $(".dt-button").removeAttr("disabled");
-            
                 });
+
             }).fail(function(jqXHR){
                 clearData();
                 errormsg(jqXHR.responseText);
@@ -372,6 +333,11 @@ $(document).ready(function() {
   ko.applyBindings(vm);
 
 });
+
+function downloadCSV(){
+    var exportData = new CSVExport(vm.rDataOutput());
+    return exportData
+}
 
 </script>
 
@@ -459,6 +425,7 @@ $(document).ready(function() {
                 <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
                     <div id="container"></div>
                 </div>
+                <input type="button" class="tab-panel" role="tabpanel" aria-hidden="true" onclick="downloadCSV();" value="Download CSV" />
               </div>
             </div>
       
@@ -469,14 +436,7 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" style="height:450px;"></div>
       </article>
-  
-      <article class="panel" style="width:100%;">
-        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Data Table</span></h2>
-        <div id="gpxTable" style="background:#6c8fe0" >
-          <table id="gpxDataTable" class="display nowrap" style="width:100%">
-          </table>
-      </div>
-      </article>
+
     </main>
     </body>
 </html>

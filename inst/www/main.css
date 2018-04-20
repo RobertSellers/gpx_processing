@@ -382,24 +382,9 @@ a{
   color:darkcyan;
 }
 
-
-/* #gpxTable td {
-   color:black;
-} */
-
-
-/* .dt-buttons{
-  float : left !important;
-}
-
-.datatables_buttons_info{
-  color: black;
-} */
-
 .gpx_metadata span{
 	color: tomato;
 }
-
 
 .alert-danger {
   background-image: linear-gradient(to bottom,#f2dede 0,#e7c3c3 100%);
