@@ -83,11 +83,6 @@ $(document).ready(function() {
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timePace,false)
         vm.highchart().redraw();
-        //Update Datatable
-        var datatable = $('#gpxDataTable').DataTable();
-        datatable.clear();
-        datatable.rows.add(vm.rDataOutput());
-        datatable.draw();
     })
 
     vm.highchart= ko.computed(function(){
@@ -197,10 +192,11 @@ $(document).ready(function() {
     }
 
     function clearData(){
-        $('#step_2').css("opacity", 0.2);
         $('#plotdiv').css("opacity", 0.2);
-        $('#gpxTable').css("opacity", 0.2);
-        $(".dt-button").css("disabled", true);
+        $('#highcharts').css("opacity", 0.2);
+        vm.highchart().series[0].setData([null,null],false)
+        vm.highchart().series[1].setData([null,null],false)
+        vm.highchart().redraw();
         vm.leafletMap().eachLayer(function (layer) {
         if (layer.hasOwnProperty('_gpx')){
             vm.leafletMap().removeLayer(layer);
@@ -279,8 +275,8 @@ $(document).ready(function() {
     vm.leafletMap(map);
     vm.highchart()
     $("#session_url").attr("disabled", "disabled");
-    $('#step_2').css("opacity", 0.2);
     $('#plotdiv').css("opacity", 0.2);
+    $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
 
     //automatically upload GPX file on change.
@@ -309,8 +305,8 @@ $(document).ready(function() {
                     updateLeaflet()
                     $("#session_url").removeAttr("disabled");
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                    $('#step_2').css("opacity", 1);
                     $('#plotdiv').css("opacity", 1);
+                    $('#highcharts').css("opacity", 1);
                     successmsg("GPX file successfully loaded!");
                 });
 
