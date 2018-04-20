@@ -450,3 +450,10 @@ a{
   max-height: 256px;
 	margin: 0 auto
 }
+
+.download {
+  display: block;
+  padding: .8em .9em;
+  color: #fff;
+  background: #233e75;
+}

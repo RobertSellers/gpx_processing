@@ -18,18 +18,6 @@
 <script src="components/moment.min.js"></script>
 <script src="components/vfs_font.js"></script>
 
-<!-- Jquery Datatables -->
-<script src="components/jquery_datatables/jquery.dataTables.min.js"></script>
-<script src="components/jquery_datatables/modules/dataTables.buttons.min.js"></script>
-<script src="components/jquery_datatables/modules/dataTables.flash.min.js"></script>
-<script src="components/jquery_datatables/modules/pdfmake.min.js"></script>
-<script src="components/jquery_datatables/modules/buttons.html5.min.js"></script>
-<script src="components/jquery_datatables/modules/buttons.print.min.js"></script>
-<script src="components/jquery_datatables/modules/dataTables.responsive.min.js"></script>
-<link href="components/jquery_datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
-<link href="components/jquery_datatables/css/buttons.dataTables.min.css" rel="stylesheet"/>
-<link href="components/jquery_datatables/css/responsive.dataTables.min.css" rel="stylesheet"/>
-
 <!-- Highcharts -->
 <script src="components/highcharts/highcharts.js"></script>
 <script src="components/highcharts/modules/series-label.js"></script>
@@ -404,7 +392,7 @@ $(document).ready(function() {
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
-                <li class="tab" role="presentation"><input type="button" data-bind="click: downloadCSV" value="Download CSV" /></li>
+                <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       
               <div class="tab-panels">
