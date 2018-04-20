@@ -222,13 +222,13 @@ $(document).ready(function() {
 
         $('#gpxDataTable').dataTable({
             data: {},
-            dom: 'Bfrtip',
+            // dom: 'Bfrtip',
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },
             searching: false,
             responsive: true,
-            "bAutoWidth": false,
+            // "bAutoWidth": false,
             pageLength: 5,
             "aoColumns" : [
                 {"data": "DateTime", title: "DateTime"},
@@ -241,8 +241,7 @@ $(document).ready(function() {
                 {"data":  "Seconds", title: "Seconds"},
                 {"data":  "Speed", title: "Speed"}
             ],
-            buttons: [
-                {
+            buttons: [{
                 extend: 'collection',
                 text: 'Export',
                 buttons: [ 'pdfHtml5', 'csvHtml5', 'copyHtml5', 'excelHtml5' ]
