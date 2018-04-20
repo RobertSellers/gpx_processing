@@ -95,16 +95,82 @@ $(document).ready(function() {
             type: 'datetime',
             crosshair: true,
             title: {text: 'Hours'}}, 
-            yAxis: {title: {text: ''}, min: 0},
+            yAxis: [{ // Primary yAxis
+            labels: {
+                format: '{value}ft',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            title: {
+                text: 'Elevation in Feet',
+                style: {
+                    color: Highcharts.getOptions().colors[2]
+                }
+            },
+            opposite: true
+
+            }, { // Secondary yAxis
+            gridLineWidth: 0,
+            title: {
+                text: 'Gradient',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            },
+            labels: {
+                format: '{value} angle',
+                style: {
+                    color: Highcharts.getOptions().colors[0]
+                }
+            }
+
+            }
+            // { // Tertiary yAxis
+            // gridLineWidth: 0,
+            // title: {
+            //     text: 'Sea-Level Pressure',
+            //     style: {
+            //         color: Highcharts.getOptions().colors[1]
+            //     }
+            // },
+            // labels: {
+            //     format: '{value} mb',
+            //     style: {
+            //         color: Highcharts.getOptions().colors[1]
+            //     }
+            // },
+            // opposite: true
+            // }
+        ],
             legend: {layout: 'vertical', align: 'right',verticalAlign: 'middle' },
                 chart: {type: 'spline' },
             tooltip: {
-                headerFormat: '<b>{series.name}</b><br>',
-                pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'},
+                shared: true
+                // headerFormat: '<b>{series.name}</b><br>',
+                // pointFormat: '{point.x:%e. %b}: {point.y:.2f} m'
+            },
             plotOptions: {series: {label: {connectorAllowed: false}}},
             series: [
-            {name: "Elevation",data: [null,null]},
-            { name: "Speed",data: [null,null]}],
+            {
+                name: "Elevation",
+                data: [null,null],
+                yAxis: 1,
+                dashStyle: 'shortdot',
+                type: "spline",
+                tooltip: {
+                    valueSuffix: ' ft'
+                }
+            },
+            {
+                name: "Gradient",
+                data: [null,null],
+                yAxis: 2,
+                type: "spline",
+                tooltip: {
+                    valueSuffix: ' mph'
+                }
+            }],
             responsive: {
                 rules: [{
                     condition: {maxWidth: 500},
