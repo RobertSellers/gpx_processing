@@ -74,22 +74,22 @@ $(document).ready(function() {
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
-        var paceArray = vm.rDataOutput().map(a => a.Pace)
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
         var timeElevation = timeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
-        var timePace = timeRange.map(function(v,i) {
-            return [v, paceArray[i]];
+        var timeSpeed = timeRange.map(function(v,i) {
+            return [v, speedArray[i]];
         });
         vm.highchart().series[0].setData(timeElevation,false)
-        vm.highchart().series[1].setData(timePace,false)
+        vm.highchart().series[1].setData(timeSpeed,false)
         vm.highchart().redraw();
     })
 
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
-        var paceColor = "#000000"
+        var speedColor = "#000000"
 
         return new Highcharts.chart('container', {
         chart: {
@@ -121,27 +121,27 @@ $(document).ready(function() {
             },
         	crosshair: true,
         	title: {
-        		text: 'Seconds'
+        		text: 'Duration'
         	}
         },
         yAxis: [{ // Primary yAxis
             gridLineWidth: 0,
         	title: {
-        		text: 'Pace',
+        		text: 'Speed',
         		style: {
-        			color: paceColor
+        			color: speedColor
         		}
         	},
         	labels: {
         		format: '{value}mph',
         		style: {
-        			color: paceColor
+        			color: speedColor
         		}
         	},
         	opposite: true
         }, { // Secondary yAxis
             labels: {
-        		format: "'{value}'",
+        		format: "{value}'",
         		style: {
         			color: elevationColor
         		}
