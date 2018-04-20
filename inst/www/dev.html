@@ -76,7 +76,7 @@ $(document).ready(function() {
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var paceArray = vm.rDataOutput().map(a => a.Pace)
         var timeElevation = timeRange.map(function(v,i) {
-            return [v, elevationArray[i]/3600];//hourly rate
+            return [v, elevationArray[i]];
         });
         var timePace = timeRange.map(function(v,i) {
             return [v, paceArray[i]];
@@ -470,30 +470,30 @@ $(document).ready(function() {
       
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
-                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-controls="highcharts">Profile</a></li>
+                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata" aria-selected="true">Metadata</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       
               <div class="tab-panels">
-                  <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
-                      <div class='gpx_metadata'>
-                        <b>Start date:</b> <span data-bind="text: gpxjs_vars().get_start_date"></span><br>
-                        <b>Start time:</b> <span data-bind="text: gpxjs_vars().get_start_time"></span><br>
-                        <b>Distance:</b> <span data-bind="text: gpxjs_vars().get_distance_imp"></span><br>
-                        <b>Moving Time:</b> <span data-bind="text: gpxjs_vars().get_moving_time"></span><br>
-                        <b>Total Time:</b> <span data-bind="text: gpxjs_vars().get_total_time"></span><br>
-                        <b>Moving Speed:</b> <span data-bind="text: gpxjs_vars().get_moving_speed_imp"></span><br>
-                        <b>Total Speed:</b> <span data-bind="text: gpxjs_vars().get_total_speed_imp"></span><br>
-                        <b>Elevation (min):</b> <span data-bind="text: gpxjs_vars().get_elevation_min_imp"></span><br>
-                        <b>Elevation (max):</b> <span data-bind="text: gpxjs_vars().get_elevation_max_imp"></span><br>
-                        <b>Elevation gain:</b> <span data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span><br>
-                        <b>Elevation loss:</b> <span data-bind="text: gpxjs_vars().get_elevation_loss_imp"></span><br>
-                      </div>
+                    <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
+                        <div id="container"></div>
                     </div>
-                <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
-                    <div id="container"></div>
-                </div>
+                    <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
+                        <div class='gpx_metadata'>
+                            <b>Start date:</b> <span data-bind="text: gpxjs_vars().get_start_date"></span><br>
+                            <b>Start time:</b> <span data-bind="text: gpxjs_vars().get_start_time"></span><br>
+                            <b>Distance:</b> <span data-bind="text: gpxjs_vars().get_distance_imp"></span><br>
+                            <b>Moving Time:</b> <span data-bind="text: gpxjs_vars().get_moving_time"></span><br>
+                            <b>Total Time:</b> <span data-bind="text: gpxjs_vars().get_total_time"></span><br>
+                            <b>Moving Speed:</b> <span data-bind="text: gpxjs_vars().get_moving_speed_imp"></span><br>
+                            <b>Total Speed:</b> <span data-bind="text: gpxjs_vars().get_total_speed_imp"></span><br>
+                            <b>Elevation (min):</b> <span data-bind="text: gpxjs_vars().get_elevation_min_imp"></span><br>
+                            <b>Elevation (max):</b> <span data-bind="text: gpxjs_vars().get_elevation_max_imp"></span><br>
+                            <b>Elevation gain:</b> <span data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span><br>
+                            <b>Elevation loss:</b> <span data-bind="text: gpxjs_vars().get_elevation_loss_imp"></span><br>
+                        </div>
+                        </div>
               </div>
             </div>
       
