@@ -11,9 +11,9 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 <!-- Stand-alone Libraries -->
-<script src="components/jquery-1.10.2.min.js"></script>
-<script src="components/opencpu-0.4.js"></script>
-<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script>
+<script src="components/jquery-1.10.2.min.js"></script> <!--Must be First -->
+<script src="components/opencpu-0.4.js"></script> <!--Second -->
+<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script> <!--Third -->
 <script src="components/knockout-min.js"></script>
 <script src="components/moment.min.js"></script>
 <script src="components/vfs_font.js"></script>
@@ -26,11 +26,9 @@
 <script src="components/jquery_datatables/modules/buttons.html5.min.js"></script>
 <script src="components/jquery_datatables/modules/buttons.print.min.js"></script>
 <script src="components/jquery_datatables/modules/dataTables.responsive.min.js"></script>
-<script src="components/jquery_datatables/modules/dataTables.rowReorder.min.js"></script>
 <link href="components/jquery_datatables/css/jquery.dataTables.min.css" rel="stylesheet"/>
 <link href="components/jquery_datatables/css/buttons.dataTables.min.css" rel="stylesheet"/>
 <link href="components/jquery_datatables/css/responsive.dataTables.min.css" rel="stylesheet"/>
-<link href="components/jquery_datatables/css/rowReorder.dataTables.min.css" rel="stylesheet"/>
 
 <!-- Highcharts -->
 <script src="components/highcharts/highcharts.js"></script>
@@ -223,9 +221,6 @@ $(document).ready(function() {
         $('#gpxDataTable').dataTable({
             data: {},
             dom: 'Bfrtip',
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
             searching: false,
             responsive: true,
             // "bAutoWidth": false,
