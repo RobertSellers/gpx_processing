@@ -277,14 +277,15 @@ $(document).ready(function() {
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
         $(".download").attr("disabled", false);
+        $(".download").css("opacity", 0.2);
         vm.highchart().series[0].setData([null,null],false)
         vm.highchart().series[1].setData([null,null],false)
         vm.highchart().redraw();
         vm.leafletMap().eachLayer(function (layer) {
-        if (layer.hasOwnProperty('_gpx')){
-            vm.leafletMap().removeLayer(layer);
-            vm.leafletMap().setView([37.8, -96], 4);
-        }
+            if (layer.hasOwnProperty('_gpx')){
+                vm.leafletMap().removeLayer(layer);
+                vm.leafletMap().setView([37.8, -96], 4);
+            }
         });
         map_lock('lock')
     }
@@ -358,6 +359,7 @@ $(document).ready(function() {
     vm.leafletMap(map);
     vm.highchart()
     $(".download").attr("disabled", true);
+    $(".download").css("opacity", 0.2);
     $("#session_url").attr("disabled", "disabled");
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
@@ -388,6 +390,7 @@ $(document).ready(function() {
                     vm.rDataOutput(data)
                     updateLeaflet()
                     $("#session_url").removeAttr("disabled");
+                    $(".download").css("opacity", 1);
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#plotdiv').css("opacity", 1);
                     $('#highcharts').css("opacity", 1);
@@ -476,10 +479,10 @@ $(document).ready(function() {
               </ul>
       
               <div class="tab-panels">
-                    <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="true">
+                    <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
                         <div id="container"></div>
                     </div>
-                    <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="false">
+                    <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
                         <div class='gpx_metadata'>
                             <b>Start date:</b> <span data-bind="text: gpxjs_vars().get_start_date"></span><br>
                             <b>Start time:</b> <span data-bind="text: gpxjs_vars().get_start_time"></span><br>
