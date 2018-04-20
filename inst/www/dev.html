@@ -106,6 +106,10 @@ $(document).ready(function() {
         	}
         },
         xAxis: {
+            type: 'datetime',
+            labels: {
+                format: '{value:%A, %b %e, %H:%M}'
+            },
         	tickInterval: 1,
         	crosshair: true,
         	title: {
@@ -114,29 +118,29 @@ $(document).ready(function() {
         },
         yAxis: [{ // Primary yAxis
         	labels: {
-        		format: '{value}ft',
+        		format: '{value}mph',
         		style: {
-        			color: elevationColor
+        			color: paceColor
         		}
         	},
-        	title: {
-        		text: 'Elevation in Feet',
-        		style: {
-        			color: elevationColor
-        		}
-        	}
-        }, { // Secondary yAxis
-        	gridLineWidth: 0,
         	title: {
         		text: 'Pace',
         		style: {
         			color: paceColor
         		}
+        	}
+        }, { // Secondary yAxis
+        	gridLineWidth: 0,
+        	title: {
+        		text: 'Elevation in feet',
+        		style: {
+        			color: elevationColor
+        		}
         	},
         	labels: {
-        		format: '{value}mph',
+        		format: '{value}',
         		style: {
-        			color: paceColor
+        			color: elevationColor
         		}
         	},
         	opposite: true
@@ -465,7 +469,7 @@ $(document).ready(function() {
             </fieldset>
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
-                <legend>Warnings</legend>
+                <legend>Warnings/Messages</legend>
                 <div id="successdiv"></div>
                 <div id="errordiv"></div>
             </fieldset>
@@ -477,7 +481,7 @@ $(document).ready(function() {
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
-                <li class="tab" role="presentation"><a href="#metadata" role="tab" aria-controls="metadata">Metadata</a></li>
+                <li class="tab" role="presentation"><a href="#statistics" role="tab" aria-controls="statistics">Statistics</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       
@@ -485,8 +489,8 @@ $(document).ready(function() {
                     <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
                         <div id="container"></div>
                     </div>
-                    <div class="tab-panel" id="metadata" role="tabpanel" aria-hidden="true">
-                        <div class='gpx_metadata'>
+                    <div class="tab-panel" id="statistics" role="tabpanel" aria-hidden="true">
+                        <div class='gpx_statistics'>
                             <b>Start date:</b> <span data-bind="text: gpxjs_vars().get_start_date"></span><br>
                             <b>Start time:</b> <span data-bind="text: gpxjs_vars().get_start_time"></span><br>
                             <b>Distance:</b> <span data-bind="text: gpxjs_vars().get_distance_imp"></span><br>
