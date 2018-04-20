@@ -107,9 +107,9 @@ $(document).ready(function() {
         });
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timeSpeed,false)
-        vm.highchart().series[2].setData(timeDateTime,false)
-        vm.highchart().series[3].setData(timePace,false)
-        vm.highchart().series[4].setData(timeDist,false)
+        // vm.highchart().series[2].setData(timeDateTime,false)
+        vm.highchart().series[2].setData(timePace,false)
+        vm.highchart().series[3].setData(timeDist,false)
         // vm.highchart().series[5].setData(timeLatLon,false)
         vm.highchart().redraw();
     })
@@ -225,12 +225,6 @@ $(document).ready(function() {
                 }
             },
             {
-                type: 'datetime',
-                name: 'timeDateTime',
-                data: [null, null],
-                visible: false
-            },
-            {
                 name: 'timePace',
                 data: [null, null],
                 visible: false
@@ -239,13 +233,7 @@ $(document).ready(function() {
                 name: 'timeDist',
                 data: [null, null],
                 visible: false
-            },
-            {
-                name: 'timeLatLon',
-                data: [null, null],
-                visible: false
             }
-            //invisible_data
         ],
         credits: {
         	enabled: false
