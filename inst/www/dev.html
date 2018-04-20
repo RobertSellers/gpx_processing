@@ -126,25 +126,7 @@ $(document).ready(function() {
                 opposite: true
 
             }
-            // { // Tertiary yAxis
-            // gridLineWidth: 0,
-            // title: {
-            //     text: 'Sea-Level Pressure',
-            //     style: {
-            //         color: Highcharts.getOptions().colors[1]
-            //     }
-            // },
-            // labels: {
-            //     format: '{value} mb',
-            //     style: {
-            //         color: Highcharts.getOptions().colors[1]
-            //     }
-            // },
-            // opposite: true
-            // }
         ],
-            legend: {layout: 'vertical', align: 'right',verticalAlign: 'middle' },
-                chart: {type: 'spline' },
             tooltip: {
                 shared: true
                 // headerFormat: '<b>{series.name}</b><br>',
@@ -156,7 +138,7 @@ $(document).ready(function() {
                 name: "Elevation",
                 yAxis: 1,
                 data: [null,null],
-                dashStyle: 'shortdot',
+                fillOpacity: 0.3,
                 type: "spline",
                 tooltip: {
                     valueSuffix: ' ft'
@@ -166,6 +148,7 @@ $(document).ready(function() {
                 name: "Gradient",
                 data: [null,null],
                 type: "spline",
+                dashStyle: 'shortdot',
                 tooltip: {
                     valueSuffix: ' mph'
                 }
@@ -174,8 +157,13 @@ $(document).ready(function() {
                 rules: [{
                     condition: {maxWidth: 500},
                     chartOptions: {
-                        legend: {layout: 'horizontal',align: 'center',verticalAlign: 'bottom'
-                }}}]}
+                        credits: {
+            enabled: false
+          },
+          legend: {
+            enabled: false
+          }
+            }}]}
             });
         });
 
