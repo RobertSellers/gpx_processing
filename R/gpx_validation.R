@@ -22,7 +22,7 @@ gpx_df_construct <- function(gpxfile){
   # check http://lwlss.net/GarminReports/GarminFunctions.R
   
   # Parsing header info 
-  text_gpx <- threadr::read_lines(gpx_file, warn = FALSE)
+  text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
   attributes <- threadr::str_filter(head(text_gpx), "xmlns")
   values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
   values <- stringr::str_replace_all(values, "\"", "")
