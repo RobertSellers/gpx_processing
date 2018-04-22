@@ -1,5 +1,1 @@
 export(gpx_validation)
-import(stringr)
-import(XML)
-import(plotKML)
-import(threadr)

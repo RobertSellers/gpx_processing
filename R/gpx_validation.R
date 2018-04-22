@@ -20,6 +20,10 @@ gpx_validation <- function(gpxfile, ...){
 gpx_df_construct <- function(gpxfile){
   
   # check http://lwlss.net/GarminReports/GarminFunctions.R
+  library(XML)
+  library(threadr)
+  library(plotKML)
+  library(stringr)
   
   # Parsing header info 
   text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
