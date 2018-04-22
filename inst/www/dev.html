@@ -33,6 +33,22 @@
 <script src="js/utilities.js"></script>
 <script src="js/CSVExport.js"></script>
 
+<style type="text/css">
+    body { width: 800px; margin: 0 auto; }
+    .gpx { border: 2px #aaa solid; border-radius: 5px;
+      box-shadow: 0 0 3px 3px #ccc;
+      width: 800px; margin: 1em auto; }
+    .gpx header { padding: 0.5em; }
+    .gpx h3 { margin: 0; padding: 0; font-weight: bold; }
+    .gpx .start { font-size: smaller; color: #444; }
+    .gpx .map { border: 1px #888 solid; border-left: none; border-right: none;
+      width: 800px; height: 500px; margin: 0; }
+    .gpx footer { background: #f0f0f0; padding: 0.5em; }
+    .gpx ul.info { list-style: none; margin: 0; padding: 0; font-size: smaller; }
+    .gpx ul.info li { color: #666; padding: 2px; display: inline; }
+    .gpx ul.info li span { color: black; }
+</style>
+
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -41,6 +57,7 @@ $(document).ready(function() {
         session_tmp: ko.observable(),
         gpx_file_name: ko.observable(),
         leafletMap: ko.observable(),
+        leafletControl: ko.observable(),
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
@@ -372,6 +389,28 @@ $(document).ready(function() {
         }
     }
 
+    function initLeaflet(){
+
+        function _t(t) { return elt.getElementsByTagName(t)[0]; }
+        function _c(c) { return elt.getElementsByClassName(c)[0]; }
+
+        var map = L.map('plotdiv', {
+            zoom: 3,
+                center: new L.latLng([37.8, -96]),
+                layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'),
+                layers: [
+                L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                })
+                ]
+            });
+        var control = L.control.layers(null, null).addTo(map);
+        vm.leafletControl(control)
+        vm.leafletMap(map);
+    }
+
     function updateLeaflet(){
         //////////////////////////////////
         //Update Leaflet
@@ -381,54 +420,52 @@ $(document).ready(function() {
             }
         });
         //load gpx
+
+        var elt = document.getElementById('plotdiv')
+
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
         var gpxLayer = new L.GPX(gpx_file, {
-                async: true,
-                marker_options: {
-                startIconUrl: 'components/leaflet/icons/pin-icon-start.png',
-                endIconUrl: 'components/leaflet/icons/pin-icon-end.png',
-                shadowUrl: 'components/leaflet/icons/pin-shadow.png'
-            }
+            async: true,
+            marker_options: {
+            startIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
+            endIconUrl:   'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
+            shadowUrl:    'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
+          },
         }).on('loaded', function(e) {
             vm.leafletMap().fitBounds(e.target.getBounds());
-            t = e.target;
+            var gpx = e.target;
             vm.gpxjs_vars({
-                get_name: t.get_name(),//returns the name of the GPX track
-                get_distance_imp: t.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
-                get_start_time: t.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
-                get_start_date: t.get_start_time().toDateString(),
-                get_moving_time: msToTime(t.get_moving_time()),//returns the moving time, in milliseconds
-                get_total_time: msToTime(t.get_total_time()),//returns the total track time, in milliseconds
-                get_moving_pace_imp: t.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
-                get_moving_speed_imp: t.get_moving_speed_imp().toFixed(2)+' mph',
-                get_total_speed_imp: t.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
-                get_elevation_min_imp: t.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
-                get_elevation_max_imp: t.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
-                get_elevation_gain_imp: t.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
-                get_elevation_loss_imp: t.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
+                get_name: gpx.get_name(),//returns the name of the GPX track
+                get_distance_imp: gpx.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
+                get_start_time: gpx.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
+                get_start_date: gpx.get_start_time().toDateString(),
+                get_moving_time: msToTime(gpx.get_moving_time()),//returns the moving time, in milliseconds
+                get_total_time: msToTime(gpx.get_total_time()),//returns the total track time, in milliseconds
+                get_moving_pace_imp: gpx.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
+                get_moving_speed_imp: gpx.get_moving_speed_imp().toFixed(2)+' mph',
+                get_total_speed_imp: gpx.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
+                get_elevation_min_imp: gpx.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
+                get_elevation_max_imp: gpx.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
+                get_elevation_gain_imp: gpx.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
+                get_elevation_loss_imp: gpx.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
                 //full elevation, cadence  data
-                get_elevation_data_imp: t.get_elevation_data_imp(),
-                get_cadence_data_imp: t.get_cadence_data_imp()
+                get_elevation_data_imp: gpx.get_elevation_data_imp(),
+                get_cadence_data_imp: gpx.get_cadence_data_imp()
             });
+            vm.leafletControl().addOverlay(gpx, gpx.get_name());
+            _t('h3').textContent = gpx.get_name();
+            _c('start').textContent = gpx.get_start_time().toDateString() + ', '
+                + gpx.get_start_time().toLocaleTimeString();
+            _c('distance').textContent = gpx.get_distance_imp().toFixed(2);
+            _c('duration').textContent = gpx.get_duration_string(gpx.get_moving_time());
+            _c('pace').textContent     = gpx.get_duration_string(gpx.get_moving_pace_imp(), true);
+            _c('avghr').textContent    = gpx.get_average_hr();
+            _c('elevation-gain').textContent = gpx.to_ft(gpx.get_elevation_gain()).toFixed(0);
+            _c('elevation-loss').textContent = gpx.to_ft(gpx.get_elevation_loss()).toFixed(0);
+            _c('elevation-net').textContent  = gpx.to_ft(gpx.get_elevation_gain()
+            - gpx.get_elevation_loss()).toFixed(0);
         }).addTo(vm.leafletMap());
         map_lock('unlock');
-    }
-
-    function initLeaflet(){
-
-	var map = L.map('plotdiv', {
-		zoom: 3,
-            center: new L.latLng([37.8, -96]),
-            layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'),
-            layers: [
-            L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-                subdomains: 'abcd',
-                maxZoom: 19
-            })
-            ]
-        });
-        vm.leafletMap(map);
     }
 
     // Initialize charts
@@ -583,7 +620,18 @@ $(document).ready(function() {
     
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv" style="height:600px;"></div>
+        <div id="plotdiv" class="map" style="height:600px;"></div>
+        <footer>
+            <ul class="info">
+              <li>Distance:&nbsp;<span class="distance"></span>&nbsp;mi</li>
+              &mdash; <li>Duration:&nbsp;<span class="duration"></span></li>
+              &mdash; <li>Pace:&nbsp;<span class="pace"></span>/mi</li>
+              &mdash; <li>Avg&nbsp;HR:&nbsp;<span class="avghr"></span>&nbsp;bpm</li>
+              &mdash; <li>Elevation:&nbsp;+<span class="elevation-gain"></span>&nbsp;ft,
+                -<span class="elevation-loss"></span>&nbsp;ft
+                (net:&nbsp;<span class="elevation-net"></span>&nbsp;ft)</li>
+            </ul>
+          </footer>
       </article>
 
     </main>
