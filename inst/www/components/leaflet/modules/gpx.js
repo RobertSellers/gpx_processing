@@ -45,11 +45,11 @@ var _HOUR_IN_MILLIS = 60 * _MINUTE_IN_MILLIS;
 var _DAY_IN_MILLIS = 24 * _HOUR_IN_MILLIS;
 
 var _DEFAULT_MARKER_OPTS = {
-  startIconUrl: 'components/leaflet/icons/pin-icon-start.png',
-  endIconUrl: 'components/leaflet/icons/pin-icon-end.png',
-  shadowUrl: 'components/leaflet/icons/pin-shadow.png',
+  startIconUrl: '../icons/pin-icon-start.png',
+  endIconUrl: '../icons/pin-icon-end.png',
+  shadowUrl: '../icons/pin-shadow.png',
   wptIconUrls : {
-    '': 'components/leaflet/icons/pin-icon-wpt.png',
+    '': '../icons/pin-icon-wpt.png',
   },
   iconSize: [33, 50],
   shadowSize: [50, 50],
@@ -274,7 +274,7 @@ L.GPX = L.FeatureGroup.extend({
       var layers = _this._parse_gpx_data(gpx, options);
       if (!layers) return;
       _this.addLayer(layers);
-      _this.fire('loaded');
+      _this.fire('loaded', { layers: layers, element: gpx });
     }
     if (input.substr(0,1)==='<') { // direct XML has to start with a <
       var parser = new DOMParser();
@@ -322,12 +322,12 @@ L.GPX = L.FeatureGroup.extend({
     for (j = 0; j < tags.length; j++) {
       el = xml.getElementsByTagName(tags[j][0]);
       for (i = 0; i < el.length; i++) {
-        var coords = this._parse_trkseg(el[i], xml, options, tags[j][1]);
+        var coords = this._parse_trkseg(el[i], options, tags[j][1]);
         if (coords.length === 0) continue;
 
         // add track
         var l = new L.Polyline(coords, options.polyline_options);
-        this.fire('addline', { line: l })
+        this.fire('addline', { line: l, element: el[i] });
         layers.push(l);
 
         if (options.marker_options.startIcon || options.marker_options.startIconUrl) {
@@ -336,7 +336,7 @@ L.GPX = L.FeatureGroup.extend({
             clickable: options.marker_options.clickable,
             icon: options.marker_options.startIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.startIconUrl})
           });
-          this.fire('addpoint', { point: p, point_type: 'start' });
+          this.fire('addpoint', { point: p, point_type: 'start', element: el[i] });
           layers.push(p);
         }
 
@@ -346,7 +346,7 @@ L.GPX = L.FeatureGroup.extend({
             clickable: options.marker_options.clickable,
             icon: options.marker_options.endIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.endIconUrl})
           });
-          this.fire('addpoint', { point: p, point_type: 'end' });
+          this.fire('addpoint', { point: p, point_type: 'end', element: el[i] });
           layers.push(p);
         }
       }
@@ -413,7 +413,7 @@ L.GPX = L.FeatureGroup.extend({
           icon: symIcon
         });
         marker.bindPopup("<b>" + name + "</b>" + (desc.length > 0 ? '<br>' + desc : '')).openPopup();
-        this.fire('addpoint', { point: marker, point_type: 'waypoint' });
+        this.fire('addpoint', { point: marker, point_type: 'waypoint', element: el[i] });
         layers.push(marker);
       }
     }
@@ -425,7 +425,7 @@ L.GPX = L.FeatureGroup.extend({
     }
   },
 
-  _parse_trkseg: function(line, xml, options, tag) {
+  _parse_trkseg: function(line, options, tag) {
     var el = line.getElementsByTagName(tag);
     if (!el.length) return [];
     var coords = [];
