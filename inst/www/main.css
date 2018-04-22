@@ -403,20 +403,6 @@ a{
 
 /* vis heights */
 
-.gpx_metadata
-#container{
-  height: 450px;
-  min-height: 450px;
-  max-height: 450px;
-}
-
-.gpx_metadata{
-  font-size: 20px;
-  height: 403px !important;
-  width: 100%;
-	margin: 0 auto
-}
-
 #container {
 	width: 100%;
 	margin: 0 auto
@@ -427,4 +413,8 @@ a{
   padding: .8em .9em;
   color: #fff;
   background: #233e75;
+}
+
+#highcharts{
+  height: 400px;
 }
