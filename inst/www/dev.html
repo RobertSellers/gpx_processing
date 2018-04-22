@@ -197,7 +197,7 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                //do nothing
+                return '<b>DateTime: '+this.x +'</b><br/>'+ 'Elevation: '+ this.x + ' ft';
             }
         },
         plotOptions: {
