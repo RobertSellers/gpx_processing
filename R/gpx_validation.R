@@ -21,8 +21,19 @@ gpx_validation <- function(gpxfile, ...){
 gpx_df_construct <- function(gpxfile){
   
   # check http://lwlss.net/GarminReports/GarminFunctions.R
-  library(XML)
-
+  require(XML)
+  require(threadr)
+  
+  # Parsing header info 
+  text_gpx <- threadr::read_lines(gpx_file, warn = FALSE)
+  attributes <- threadr::str_filter(head(text_gpx), "xmlns")
+  values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
+  values <- stringr::str_replace_all(values, "\"", "")
+  variables <- stringr::str_split(attributes, "=")[[1]]
+  variables <- variables[-length(variables)]
+  variables <- stringr::str_replace(variables, ".* ", "")
+  list_attributes <- setNames(as.list(values), variables)
+  
   doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
 
   top <- xmlRoot(doc)
