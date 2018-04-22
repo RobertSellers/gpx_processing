@@ -123,6 +123,22 @@ $(document).ready(function() {
         vm.highchart().redraw();
     })
 
+    function dateTimeOutputString(val){
+        // var days = Math.floor(this.value / (3600*24));
+        var hrs   = Math.floor(val / 3600);
+        var mnts = Math.floor(val / 60);
+        if (val===0) {
+            return 0
+        }else{
+            var fifteens = (Math.round(mnts/15) * 15) % 60
+            if (fifteens==0){
+                return hrs + ":00"
+            }else{
+                return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
+                }
+            }
+    }
+
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
@@ -146,19 +162,8 @@ $(document).ready(function() {
             labels: {
             tickInterval: 900,
             formatter: function () {
-                // var days = Math.floor(this.value / (3600*24));
-                var hrs   = Math.floor(this.value / 3600);
-                var mnts = Math.floor(this.value / 60);
-                if (this.value===0) {
-                    return 0
-                }else{
-                    var fifteens = (Math.round(mnts/15) * 15) % 60
-                    if (fifteens==0){
-                        return hrs + ":00"
-                    }else{
-                        return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
-                    }
-                }}
+                dateTimeOutputString(this.value)
+                }
             },
         	crosshair: true,
         	title: {
@@ -188,7 +193,7 @@ $(document).ready(function() {
         		}
         	},
         	title: {
-        		text: 'Elevation in feet',
+        		text: 'Elevation (feet)',
         		style: {
         			color: elevationColor
         		}
@@ -197,7 +202,7 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                return '<b>DateTime: </b>'+this.x +'<br/>'+ '<b>Elevation: </b>'+ this.y + ' ft';
+                return '<b>Date/Time: </b>'+ dateTimeOutputString(this.x) +'<br/>'+ '<b>Elevation: </b>'+ this.y + "'";
             }
         },
         plotOptions: {
@@ -446,13 +451,6 @@ $(document).ready(function() {
                 get_cadence_data_imp: gpx.get_cadence_data_imp()
             });
             vm.leafletControl().addOverlay(gpx, gpx.get_name());
-            // _c('duration').textContent = gpx.get_duration_string(gpx.get_moving_time());
-            // _c('pace').textContent     = gpx.get_duration_string(gpx.get_moving_pace_imp(), true);
-            // _c('avghr').textContent    = gpx.get_average_hr();
-            // _c('elevation-gain').textContent = gpx.to_ft(gpx.get_elevation_gain()).toFixed(0);
-            // _c('elevation-loss').textContent = gpx.to_ft(gpx.get_elevation_loss()).toFixed(0);
-            // _c('elevation-net').textContent  = gpx.to_ft(gpx.get_elevation_gain()
-            // - gpx.get_elevation_loss()).toFixed(0);
         }).addTo(vm.leafletMap());
         map_lock('unlock');
     }
