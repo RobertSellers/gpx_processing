@@ -453,6 +453,8 @@ $(document).ready(function() {
                 get_cadence_data_imp: gpx.get_cadence_data_imp()
             });
             vm.leafletControl().addOverlay(gpx, gpx.get_name());
+            var mapid = elt.getAttribute('plotdiv');
+
             _t('h3').textContent = gpx.get_name();
             _c('start').textContent = gpx.get_start_time().toDateString() + ', '
                 + gpx.get_start_time().toLocaleTimeString();
@@ -617,23 +619,26 @@ $(document).ready(function() {
       
           </article>
       </article>
-    
+      <section id="demo" class="gpx" data-map-target="plotdiv"></section>
+      <header>
+        <h3>Loading...</h3>
+        <span class="start"></span>
+      </header>
       <article class="panel">
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
-        <footer>
-            <ul class="info">
-              <li>Distance:&nbsp;<span class="distance"></span>&nbsp;mi</li>
-              &mdash; <li>Duration:&nbsp;<span class="duration"></span></li>
-              &mdash; <li>Pace:&nbsp;<span class="pace"></span>/mi</li>
-              &mdash; <li>Avg&nbsp;HR:&nbsp;<span class="avghr"></span>&nbsp;bpm</li>
-              &mdash; <li>Elevation:&nbsp;+<span class="elevation-gain"></span>&nbsp;ft,
-                -<span class="elevation-loss"></span>&nbsp;ft
-                (net:&nbsp;<span class="elevation-net"></span>&nbsp;ft)</li>
-            </ul>
-          </footer>
       </article>
-
+      <footer>
+        <ul class="info">
+          <li>Distance:&nbsp;<span class="distance"></span>&nbsp;mi</li>
+          &mdash; <li>Duration:&nbsp;<span class="duration"></span></li>
+          &mdash; <li>Pace:&nbsp;<span class="pace"></span>/mi</li>
+          &mdash; <li>Avg&nbsp;HR:&nbsp;<span class="avghr"></span>&nbsp;bpm</li>
+          &mdash; <li>Elevation:&nbsp;+<span class="elevation-gain"></span>&nbsp;ft,
+            -<span class="elevation-loss"></span>&nbsp;ft
+            (net:&nbsp;<span class="elevation-net"></span>&nbsp;ft)</li>
+        </ul>
+      </footer>
     </main>
     </body>
 </html>
