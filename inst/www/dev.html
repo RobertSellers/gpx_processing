@@ -382,9 +382,14 @@ $(document).ready(function() {
         });
         //load gpx
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        var gpxLayer = new L.GPX(gpx_file, {async: true})
-
-        gpxLayer.on('loaded', function(e) {
+        var gpxLayer = new L.GPX(gpx_file, {
+                async: true,
+                marker_options: {
+                startIconUrl: 'components/leaflet/icons/pin-icon-start.png',
+                endIconUrl: 'components/leaflet/icons/pin-icon-end.png',
+                shadowUrl: 'components/leaflet/icons/pin-shadow.png'
+            }
+        }).on('loaded', function(e) {
             vm.leafletMap().fitBounds(e.target.getBounds());
             t = e.target;
             vm.gpxjs_vars({
