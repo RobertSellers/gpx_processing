@@ -409,15 +409,36 @@ $(document).ready(function() {
         map_lock('unlock');
     }
 
+    function initLeaflet(){
+
+	var map = L.map('plotdiv', {
+		zoom: 3,
+            center: new L.latLng([37.8, -96]),
+            layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'),
+            layers: [
+
+            L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+                subdomains: 'abcd',
+                maxZoom: 19
+            })
+            ]
+        });
+
+        // var map = L.map('plotdiv');
+        // L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+        //     maxZoom: 18,
+        //     subdomains:['mt0','mt1','mt2','mt3']
+        // }).addTo(map);
+
+        // map.setView([37.8, -96], 4); 
+        vm.leafletMap(map);
+    }
+
     // Initialize charts
-    var map = L.map('plotdiv');
-    L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
-        subdomains:['mt0','mt1','mt2','mt3']
-    }).addTo(map);
-    map.setView([37.8, -96], 4); 
-    vm.leafletMap(map);
-    vm.highchart()
+    initLeaflet()//leaflet
+    vm.highchart()//highchart
+
     $(".download").attr("disabled", true);
     $(".download").css("opacity", 0.2);
     $("#session_url").attr("disabled", "disabled");
