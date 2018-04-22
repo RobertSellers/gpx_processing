@@ -3,15 +3,38 @@ gpx_validation <- function(gpxfile, ...){
     stop('Uploaded data needs to be .zip file. ');
   }else{
     options(stringsAsFactors = FALSE)
-    require(plotKML)
+    library(plotKML)
     tryCatch({
       data <- readGPX(gpxfile, metadata = TRUE, bounds = TRUE, 
         waypoints = TRUE, tracks = TRUE, routes = TRUE)
+      
     }, error = function(e){
       stop(cat(paste("GPX load error.", e)))
     }, finally = {
-      df <- gpx_df_construct(gpxfile)
-      return (df)
+      library(stringr)
+      library(threadr)
+      # Parsing header info 
+      text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
+      attributes <- threadr::str_filter(head(text_gpx), "xmlns")
+      values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
+      values <- stringr::str_replace_all(values, "\"", "")
+      variables <- stringr::str_split(attributes, "=")[[1]]
+      variables <- variables[-length(variables)]
+      variables <- stringr::str_replace(variables, ".* ", "")
+      creator <- setNames(as.list(values), variables)$creator
+      whitelist <- c(
+          'GPSMAP 62stc', 
+          'GPSMAP 64s',
+          'GPSMAP 64st',
+          'eTrex 20', 
+          'Astro 320'
+        )
+      if (creator %in% whitelist){
+        df <- gpx_df_construct(gpxfile)
+        return (df)
+      }else{
+        stop('GPS device not supported.')
+      }
     })
   }
 }

@@ -63,8 +63,7 @@ $(document).ready(function() {
             get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
             elevation_net: null,
             //full elevation, cadence  data
-            get_elevation_data_imp: null,
-            get_cadence_data_imp: null
+            get_elevation_data_imp: null
         }),
         downloadCSV : function() {
             var data = this.rDataOutput();
@@ -447,8 +446,7 @@ $(document).ready(function() {
                 get_elevation_loss_imp: gpx.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
                 //full elevation, cadence  data
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
-                get_elevation_data_imp: gpx.get_elevation_data_imp(),
-                get_cadence_data_imp: gpx.get_cadence_data_imp()
+                get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
             vm.leafletControl().addOverlay(gpx, gpx.get_name());
         }).addTo(vm.leafletMap());
