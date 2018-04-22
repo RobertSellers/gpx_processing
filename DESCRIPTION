@@ -11,5 +11,6 @@ LazyData: true
 Imports:
     plotKML,
     XML,
-    stringr
+    stringr,
+    threadr
 Remotes: skgrange/threadr
