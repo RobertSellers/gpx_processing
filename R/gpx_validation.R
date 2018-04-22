@@ -22,7 +22,6 @@ gpx_df_construct <- function(gpxfile){
   
   # check http://lwlss.net/GarminReports/GarminFunctions.R
   require(XML)
-  require(threadr)
   
   # Parsing header info 
   text_gpx <- threadr::read_lines(gpx_file, warn = FALSE)
