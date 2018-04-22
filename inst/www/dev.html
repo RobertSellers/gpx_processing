@@ -46,7 +46,7 @@ $(document).ready(function() {
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
-            get_name: ' (Not Loaded)',//returns the name of the GPX track
+            get_name: null,//returns the name of the GPX track
             pace: null,
             get_distance_imp: null,//returns the total track distance in miles
             get_start_time: null,//returns a Javascript Date object representing the starting time
@@ -66,7 +66,6 @@ $(document).ready(function() {
             get_elevation_data_imp: null,
             get_cadence_data_imp: null
         }),
-        mapTitle: ko.observable('GPX Track' + this.get_name),
         downloadCSV : function() {
             var data = this.rDataOutput();
             var filename = this.gpx_file_name().slice(0, -4);
@@ -74,6 +73,10 @@ $(document).ready(function() {
             return exportData
         }
     };
+
+    vm.MapTitle = ko.computed(function(){
+        return 'GPX Track Map' + (vm.gpxjs_vars() || ' (not loaded...)')
+    })
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
@@ -592,7 +595,7 @@ $(document).ready(function() {
           </article>
       </article>
       <article class="panel gpx">
-        <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span>
+        <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span data-bind="text: gpxjs_vars().mapTitle" class="section-label-back"></span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
