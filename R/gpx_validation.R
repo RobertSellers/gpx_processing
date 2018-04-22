@@ -3,6 +3,7 @@ gpx_validation <- function(gpxfile, ...){
     stop('Uploaded data needs to be .zip file. ');
   }else{
     options(stringsAsFactors = FALSE)
+    require(plotKML)
     tryCatch({
       data <- readGPX(gpxfile, metadata = TRUE, bounds = TRUE, 
         waypoints = TRUE, tracks = TRUE, routes = TRUE)
