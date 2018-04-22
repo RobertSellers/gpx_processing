@@ -391,9 +391,6 @@ $(document).ready(function() {
 
     function initLeaflet(){
 
-        function _t(t) { return elt.getElementsByTagName(t)[0]; }
-        function _c(c) { return elt.getElementsByClassName(c)[0]; }
-
         var map = L.map('plotdiv', {
             zoom: 3,
                 center: new L.latLng([37.8, -96]),
@@ -421,8 +418,6 @@ $(document).ready(function() {
         });
         //load gpx
 
-        var elt = document.getElementById('plotdiv')
-
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
         var gpxLayer = new L.GPX(gpx_file, {
             async: true,
@@ -432,6 +427,11 @@ $(document).ready(function() {
             shadowUrl:    'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
           },
         }).on('loaded', function(e) {
+
+            var elt = document.getElementById('plotdiv')
+            function _t(t) { return elt.getElementsByTagName(t)[0]; }
+            function _c(c) { return elt.getElementsByClassName(c)[0]; }
+
             vm.leafletMap().fitBounds(e.target.getBounds());
             var gpx = e.target;
             vm.gpxjs_vars({
