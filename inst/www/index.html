@@ -123,6 +123,22 @@ $(document).ready(function() {
         vm.highchart().redraw();
     })
 
+    function dateTimeOutputString(val){
+        // var days = Math.floor(this.value / (3600*24));
+        var hrs   = Math.floor(val / 3600);
+        var mnts = Math.floor(val / 60);
+        if (val===0) {
+            return 0
+        }else{
+            var fifteens = (Math.round(mnts/15) * 15) % 60
+            if (fifteens==0){
+                return hrs + ":00"
+            }else{
+                return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
+                }
+            }
+    }
+
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
@@ -146,19 +162,8 @@ $(document).ready(function() {
             labels: {
             tickInterval: 900,
             formatter: function () {
-                // var days = Math.floor(this.value / (3600*24));
-                var hrs   = Math.floor(this.value / 3600);
-                var mnts = Math.floor(this.value / 60);
-                if (this.value===0) {
-                    return 0
-                }else{
-                    var fifteens = (Math.round(mnts/15) * 15) % 60
-                    if (fifteens==0){
-                        return hrs + ":00"
-                    }else{
-                        return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
-                    }
-                }}
+                dateTimeOutputString(this.value)
+                }
             },
         	crosshair: true,
         	title: {
@@ -188,7 +193,7 @@ $(document).ready(function() {
         		}
         	},
         	title: {
-        		text: 'Elevation in feet',
+        		text: 'Elevation (feet)',
         		style: {
         			color: elevationColor
         		}
@@ -197,7 +202,7 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                //do nothing
+                return '<b>Duration: </b>'+ dateTimeOutputString(this.x) +'<br/>'+ '<b>Elevation: </b>'+ this.y + "'";
             }
         },
         plotOptions: {
@@ -217,32 +222,33 @@ $(document).ready(function() {
         {
             name: "Elevation",
             color: elevationColor,
-        	yAxis: 1,
+            yAxis: 1,
+            lineWidth: 1,
         	data: [null, null],
         	type: "areaspline",
         	tooltip: {
         		valueSuffix: "'"
         	}
-            }, {
-                name: "Speed",
-                color: speedColor,
-                data: [null, null],
-                type: "spline",
-                // dashStyle: 'shortdot',
-                tooltip: {
-                    valueSuffix: ' mph'
-                }
-            },
-            {
-                name: 'timePace',
-                data: [null, null],
-                visible: false
-            },
-            {
-                name: 'timeDist',
-                data: [null, null],
-                visible: false
+        }, {
+            name: "Speed",
+            color: speedColor,
+            data: [null, null],
+            type: "spline",
+            // dashStyle: 'shortdot',
+            tooltip: {
+                valueSuffix: ' mph'
             }
+        },
+        {
+            name: 'timePace',
+            data: [null, null],
+            visible: false
+        },
+        {
+            name: 'timeDist',
+            data: [null, null],
+            visible: false
+        }
         ],
         credits: {
         	enabled: false
@@ -259,6 +265,7 @@ $(document).ready(function() {
         }
         });
     });
+
 
     /* ----- Navigation ----- */
 
@@ -381,18 +388,15 @@ $(document).ready(function() {
     }
 
     function initLeaflet(){
-
+        //////////////////////////////////
+        //Prime Leaflet Map
         var map = L.map('plotdiv', {
             zoom: 3,
                 center: new L.latLng([37.8, -96]),
-                layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}'),
-                layers: [
-                L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-                    subdomains: 'abcd',
-                    maxZoom: 19
+                layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+                    maxZoom: 20,
+                    subdomains:['mt0','mt1','mt2','mt3']
                 })
-                ]
             });
         var control = L.control.layers(null, null).addTo(map);
         vm.leafletControl(control)
@@ -447,13 +451,6 @@ $(document).ready(function() {
                 get_cadence_data_imp: gpx.get_cadence_data_imp()
             });
             vm.leafletControl().addOverlay(gpx, gpx.get_name());
-            // _c('duration').textContent = gpx.get_duration_string(gpx.get_moving_time());
-            // _c('pace').textContent     = gpx.get_duration_string(gpx.get_moving_pace_imp(), true);
-            // _c('avghr').textContent    = gpx.get_average_hr();
-            // _c('elevation-gain').textContent = gpx.to_ft(gpx.get_elevation_gain()).toFixed(0);
-            // _c('elevation-loss').textContent = gpx.to_ft(gpx.get_elevation_loss()).toFixed(0);
-            // _c('elevation-net').textContent  = gpx.to_ft(gpx.get_elevation_gain()
-            // - gpx.get_elevation_loss()).toFixed(0);
         }).addTo(vm.leafletMap());
         map_lock('unlock');
     }
