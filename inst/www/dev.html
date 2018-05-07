@@ -192,7 +192,7 @@ $(document).ready(function() {
         		}
         	},
         	title: {
-        		text: 'Elevation (feet)',
+        		text: 'Elevation (feet asl)',
         		style: {
         			color: elevationColor
         		}
@@ -201,7 +201,9 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                return '<b>Minutes: </b>'+ Math.round(this.x/60) +'<br/>'+ '<b>Elevation: </b>'+ this.y + "'";
+                return '<b>Minutes: </b>'+ Math.round(this.points[0].x/60) +'<br/>'+ 
+                '<b>Elevation: </b>'+ this.y + " feet"+'<br/>'+
+                '<b>Speed: </b>'+ this.points[1].x + " mph";
             }
         },
         plotOptions: {
