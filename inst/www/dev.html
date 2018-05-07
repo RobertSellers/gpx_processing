@@ -197,7 +197,7 @@ $(document).ready(function() {
                 var z = y % x;
                 return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
                 '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
-                '<b>Speed: </b>'+ Math.round(this.points[1].y,1) + " mph";
+                '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
             }
         },
         plotOptions: {

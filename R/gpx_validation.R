@@ -32,6 +32,7 @@ gpx_validation <- function(gpxfile, ...){
         df <- gpx_df_construct(gpxfile)
         return (df)
       }else{
+        library(R.oo)
         throw('GPS device not supported.')
       }
     })
