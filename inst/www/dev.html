@@ -450,22 +450,26 @@ $(document).ready(function() {
             shadowAnchor: [16, 47],
             clickable: false        
         });
-        // gpx_layer.addTo(vm.leafletMap());
-        var trackPoints = [
-            new L.LatLng(51.51032167, -0.187084072),
-            new L.LatLng(51.51019814, -0.187030437),
-            new L.LatLng(51.51013137, -0.187845822),
-            new L.LatLng(51.50457546, -0.185415744),
-            new L.LatLng(51.50476244, -0.181875224),
-            new L.LatLng(51.50457546, -0.179622177),
-            new L.LatLng(51.50409462, -0.175459380),
-            new L.LatLng(51.50368057, -0.174365042),
-            new L.LatLng(51.50299938, -0.174729820),
-            new L.LatLng(51.50213117, -0.174686903),
-            new L.LatLng(51.50199760, -0.177412030),
-            new L.LatLng(51.50179725, -0.180373197),
-            new L.LatLng(51.50143660, -0.180351735),
-         ];
+        var trackPoints = [];
+        for (let i = 0; i < vm.rDataOutput(); i++) {
+            trackPoints.push(new L.LatLng(vm.rDataOutput()[i].Latitude, vm.rDataOutput()[i].Longitude))
+        }
+
+        // var trackPoints = [
+        //     new L.LatLng(51.51032167, -0.187084072),
+        //     new L.LatLng(51.51019814, -0.187030437),
+        //     new L.LatLng(51.51013137, -0.187845822),
+        //     new L.LatLng(51.50457546, -0.185415744),
+        //     new L.LatLng(51.50476244, -0.181875224),
+        //     new L.LatLng(51.50457546, -0.179622177),
+        //     new L.LatLng(51.50409462, -0.175459380),
+        //     new L.LatLng(51.50368057, -0.174365042),
+        //     new L.LatLng(51.50299938, -0.174729820),
+        //     new L.LatLng(51.50213117, -0.174686903),
+        //     new L.LatLng(51.50199760, -0.177412030),
+        //     new L.LatLng(51.50179725, -0.180373197),
+        //     new L.LatLng(51.50143660, -0.180351735),
+        //  ];
          var trackOptions = {
                color: 'blue',
                weight: 6,
