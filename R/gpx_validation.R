@@ -1,4 +1,5 @@
 gpx_validation <- function(gpxfile, ...){
+  options(warn=-1)
   if(substring(tolower(gpxfile), nchar(gpxfile)-3) != ".gpx"){
     stop('Uploaded data needs to be .zip file. ');
   }else{
@@ -48,6 +49,7 @@ haversineDistance<-function(aLong, aLat, bLong, bLat){
 
 # GPX from XML to R
 construct_df <- function(file){
+  options(warn=0)
   library(XML)
   doc <- xmlParse(file,useInternalNodes=TRUE)
   top <- xmlRoot(doc)
