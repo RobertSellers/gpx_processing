@@ -74,7 +74,7 @@ parseData <- function(file){
 # http://lwlss.net/GarminReports/GarminFunctions.R
 gpx_df_construct <- function(gpxfile){
   
-  construct_df <- parseData(gpxfile)
+  df <- parseData(gpxfile)
 
   # Convert timestamp to number of seconds since start of run
   date <- substr(df$DateTime[1], 1, 10)
