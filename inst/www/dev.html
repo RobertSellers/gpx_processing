@@ -433,8 +433,7 @@ $(document).ready(function() {
             });
         })
         gpx_layer.addTo(vm.leafletMap());
-        var marker_start = L.marker([51.5, -0.09]).addTo(vm.leafletMap());
-        var marker_end = L.marker([51.5, -0.09]).addTo(vm.leafletMap());
+        L.marker([51.5, -0.09]).addTo(vm.leafletMap());
         map_lock('unlock');
     }
 
