@@ -393,8 +393,6 @@ $(document).ready(function() {
                     subdomains:['mt0','mt1','mt2','mt3']
                 })
             });
-        // var control = L.control.layers(null, null).addTo(map);
-        // vm.leafletControl(control)
         vm.leafletMap(map);
     }
 
@@ -444,7 +442,6 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
-            vm.leafletControl().addOverlay(gpx, gpx.get_name());
         }).addTo(vm.leafletMap());
         map_lock('unlock');
     }
