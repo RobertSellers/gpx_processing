@@ -193,9 +193,11 @@ $(document).ready(function() {
             shared: true,
             formatter: function () {
                 var x = this.points[0].x;
-                return '<b>Minutes/Seconds: </b>'+ dateTimeOutputString(x) +'<br/>'+ 
-                '<b>Elevation: </b>'+ this.y + " feet"+'<br/>'+
-                '<b>Speed: </b>'+ this.points[1].x + " mph";
+                var y = 60;
+                var z = y % x;
+                return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
+                '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
+                '<b>Speed: </b>'+ this.points[1].y + " mph";
             }
         },
         plotOptions: {
