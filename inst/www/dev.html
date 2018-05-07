@@ -201,7 +201,7 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                return '<b>Duration: </b>'+ dateTimeOutputString(this.x) +'<br/>'+ '<b>Elevation: </b>'+ this.y + "'";
+                return '<b>Minutes: </b>'+ Math.round(this.x/60) +'<br/>'+ '<b>Elevation: </b>'+ this.y + "'";
             }
         },
         plotOptions: {
