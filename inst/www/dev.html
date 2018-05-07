@@ -407,18 +407,10 @@ $(document).ready(function() {
         //load gpx
 
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        var gpxLayer = new L.GPX(gpx_file, {
-            async: true,
-            marker_options: {
-                startIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
-                endIconUrl:   'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
-                shadowUrl:    'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
-          },
-        }).on('loaded', function(e) {
-
-
-            vm.leafletMap().fitBounds(e.target.getBounds());
+        new L.GPX(gpx_file, {async: true})
+            .on('loaded', function(e) {
             var gpx = e.target;
+            vm.leafletMap().fitBounds(gpx.getBounds());
             
             vm.gpxjs_vars({
                 get_name: gpx.get_name(),//returns the name of the GPX track
