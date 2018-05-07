@@ -51,7 +51,7 @@ haversineDistance<-function(aLong, aLat, bLong, bLat){
 # GPX from XML to R
 parseData <- function(file){
   library(XML)
-  doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
+  doc <- xmlParse(file,useInternalNodes=TRUE)
   top <- xmlRoot(doc)
   # Identify .gpx version
   if (toString.XMLNode(top[[1]][[1]][[1]][[1]])=="Garmin International "){
