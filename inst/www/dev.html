@@ -44,8 +44,6 @@ $(document).ready(function() {
         leafletMap: ko.observable(),
         leafletControl: ko.observable(),
         rDataOutput: ko.observable(),
-        startMarker: ko.observable(),
-        endMarker: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
             get_name: null,//returns the name of the GPX track
@@ -401,24 +399,11 @@ $(document).ready(function() {
     function updateLeaflet(){
         //////////////////////////////////
         //Update Leaflet
-        // vm.leafletMap().eachLayer(function (layer) {
-        //     if (layer.hasOwnProperty('_gpx')){
-        //     vm.leafletMap().removeLayer(layer);
-        //     }
-        // });
-        for(i in vm.leafletMap()._layers) {
-            if(vm.leafletMap()._layers[i]._path != undefined) {
-                try {
-                    vm.leafletMap().removeLayer(vm.leafletMap()._layers[i]);
-                }
-                catch(e) {
-                    console.log("problem with " + e + vm.leafletMap()._layers[i]);
-                }
+        vm.leafletMap().eachLayer(function (layer) {
+            if (layer.hasOwnProperty('_gpx')){
+            vm.leafletMap().removeLayer(layer);
             }
-        }
-
-        vm.leafletMap().removeLayer(vm.startMarker());
-        vm.leafletMap().removeLayer(vm.endMarker());
+        });
         //load gpx
 
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
@@ -492,10 +477,8 @@ $(document).ready(function() {
              };
         var track = new L.Polyline(trackPoints, trackOptions)
         vm.leafletMap().addLayer(track);   
-        vm.startMarker(L.marker([vm.rDataOutput()[0].Latitude, vm.rDataOutput()[0].Longitude], {icon: startIcon}))//.addTo(vm.leafletMap());
-        vm.endMarker(L.marker([vm.rDataOutput()[vm.rDataOutput().length-1].Latitude, vm.rDataOutput()[vm.rDataOutput().length-1].Longitude], {icon: endIcon}))//.addTo(vm.leafletMap());
-        vm.startMarker().addTo(vm.leafletMap());
-        vm.endMarker().addTo(vm.leafletMap());
+        L.marker([vm.rDataOutput()[0].Latitude, vm.rDataOutput()[0].Longitude], {icon: startIcon}).addTo(vm.leafletMap());
+        L.marker([vm.rDataOutput()[vm.rDataOutput().length-1].Latitude, vm.rDataOutput()[vm.rDataOutput().length-1].Longitude], {icon: endIcon}).addTo(vm.leafletMap());
         vm.leafletMap().fitBounds(track.getBounds())
         map_lock('unlock');
     }
