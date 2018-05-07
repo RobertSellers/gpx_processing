@@ -407,7 +407,7 @@ $(document).ready(function() {
         //load gpx
 
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        new L.GPX(gpx_file, {async: true})
+        var gpx_layer = new L.GPX(gpx_file, {async: true})
             .on('loaded', function(e) {
             var gpx = e.target;
             vm.leafletMap().fitBounds(gpx.getBounds());
@@ -431,7 +431,8 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
-        }).addTo(vm.leafletMap());
+        })
+        gpx_layer.addTo(vm.leafletMap());
         map_lock('unlock');
     }
 
