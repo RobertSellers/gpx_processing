@@ -49,13 +49,14 @@ haversineDistance<-function(aLong, aLat, bLong, bLat){
 }
 
 # GPX from XML to R
-parseData <- function(file){
+construct_df <- function(file){
   library(XML)
   doc <- xmlParse(file,useInternalNodes=TRUE)
   top <- xmlRoot(doc)
   # Identify .gpx version
   if (toString.XMLNode(top[[1]][[1]][[1]][[1]])=="Garmin International "){
     if(xmlName(top[[2]])!="trk") stop('Incomplete .GPX file')
+    version <- "Garmin"
     title <- toString.XMLNode(top[[2]][[1]][[1]])
     description <- toString.XMLNode(top[[2]][[2]][[1]])
     data <- toString.XMLNode(top[[2]][[3]])
@@ -63,10 +64,29 @@ parseData <- function(file){
     stop('Geocache file detected. Cannot be parsed.');
   }
   df <- as.data.frame(xmlToDataFrame(data))
+  
   if('extensions' %in% colnames(df)) df$extensions<-NULL
   if('text' %in% colnames(df)) stop('Incomplete .GPX data')
   if(data=="NULL") data=toString.XMLNode(top[[2]][[2]])
   if(data=="NULL") data=toString.XMLNode(top[[2]][[1]])
+  
+  if(toString.XMLNode(top[[2]][[3]])=="NULL") {
+    if(toString.XMLNode(top[[2]][[2]])=="NULL") {
+      attribs=xmlSApply(top[[2]][[1]],xmlAttrs)
+    }else{
+      attribs=xmlSApply(top[[2]][[2]],xmlAttrs)
+    }
+  }else{
+    attribs=xmlSApply(top[[2]][[3]],xmlAttrs)
+  }
+  
+  df$lon=as.numeric(attribs[2,])
+  df$lat=as.numeric(attribs[1,])
+  
+  colnames(df)=c("Elevation","DateTime","Longitude","Latitude")
+  df$Elevation=as.numeric(df$Elevation)
+  df$DateTime=as.character(df$DateTime)
+  
   return (df)
 }
 
@@ -74,7 +94,8 @@ parseData <- function(file){
 # http://lwlss.net/GarminReports/GarminFunctions.R
 gpx_df_construct <- function(gpxfile){
   
-  df <- parseData(gpxfile)
+  # primary df function
+  df <- construct_df(gpxfile)
 
   # Convert timestamp to number of seconds since start of run
   date <- substr(df$DateTime[1], 1, 10)
