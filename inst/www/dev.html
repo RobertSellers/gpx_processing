@@ -82,7 +82,7 @@ $(document).ready(function() {
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
         //ELEVATION
-        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
         var timeElevation = timeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
@@ -122,21 +122,6 @@ $(document).ready(function() {
         vm.highchart().redraw();
     })
 
-    function dateTimeOutputString(val){
-        // var days = Math.floor(this.value / (3600*24));
-        var hrs   = Math.floor(val / 3600);
-        var mnts = Math.floor(val / 60);
-        if (val===0) {
-            return 0
-        }else{
-            var fifteens = (Math.round(mnts/15) * 15) % 60
-            if (fifteens==0){
-                return hrs + ":00"
-            }else{
-                return hrs + ":" + ((Math.round(mnts/15) * 15) % 60);
-                }
-            }
-    }
 
     vm.highchart= ko.computed(function(){
 
@@ -201,7 +186,10 @@ $(document).ready(function() {
         tooltip: {
             shared: true,
             formatter: function () {
-                return '<b>Minutes: </b>'+ Math.round(this.points[0].x/60) +'<br/>'+ 
+                var x = this.points[0].x;
+                var y = 60;
+                var z = y % x;
+                return '<b>Minutes/Seconds: </b>'+ Math.round(x/y) + ":" + z +'<br/>'+ 
                 '<b>Elevation: </b>'+ this.y + " feet"+'<br/>'+
                 '<b>Speed: </b>'+ this.points[1].x + " mph";
             }
