@@ -385,14 +385,21 @@ $(document).ready(function() {
     function initLeaflet(){
         //////////////////////////////////
         //Prime Leaflet Map
+        var center_coords = [37.8, -96];
         var map = L.map('plotdiv', {
             zoom: 3,
-                center: new L.latLng([37.8, -96]),
-                layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-                    maxZoom: 20,
-                    subdomains:['mt0','mt1','mt2','mt3']
-                })
-            });
+            center: new L.latLng(center_coords),
+            layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+                maxZoom: 20,
+                subdomains:['mt0','mt1','mt2','mt3']
+            })
+        });
+        
+        //minimap
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osm2 = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 13});
+        var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true }).addTo(map);
+
         vm.leafletMap(map);
     }
 
@@ -448,11 +455,16 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
+
+            // start/end markers and popups
             var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
             var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
             var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
-            L.marker(start, {icon: startIcon}).addTo(vm.leafletMap());
-            L.marker(end, {icon: endIcon}).addTo(vm.leafletMap());
+            
+            var start_marker = L.marker(start, {icon: startIcon})
+            start_marker.addTo(vm.leafletMap());
+            var end_marker = L.marker(end, {icon: endIcon});
+            end_marker.addTo(vm.leafletMap());
 
         }).addTo(vm.leafletMap());
 
@@ -616,11 +628,11 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;mi</li>
+            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
             &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-            &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span>/mi</li>
-            &mdash; <li>Elevation Gain:&nbsp;+<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
-                (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;')</li>
+            &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
+            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
+                (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
         </ul>
       </article>
     </main>
