@@ -197,7 +197,7 @@ $(document).ready(function() {
                 var z = y % x;
                 return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
                 '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
-                '<b>Speed: </b>'+ this.points[1].y + " mph";
+                '<b>Speed: </b>'+ Math.round(this.points[1].y,1) + " mph";
             }
         },
         plotOptions: {
@@ -410,15 +410,12 @@ $(document).ready(function() {
         var gpxLayer = new L.GPX(gpx_file, {
             async: true,
             marker_options: {
-            startIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
-            endIconUrl:   'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
-            shadowUrl:    'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
+                startIconUrl: 'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-start.png',
+                endIconUrl:   'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-icon-end.png',
+                shadowUrl:    'http://github.com/mpetazzoni/leaflet-gpx/raw/master/pin-shadow.png',
           },
         }).on('loaded', function(e) {
 
-            // var elt = document.getElementById('plotdiv')
-            // function _t(t) { return elt.getElementsByTagName(t)[0]; }
-            // function _c(c) { return elt.getElementsByClassName(c)[0]; }
 
             vm.leafletMap().fitBounds(e.target.getBounds());
             var gpx = e.target;
