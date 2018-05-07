@@ -73,6 +73,12 @@ $(document).ready(function() {
         }
     };
 
+    function dateTimeOutputString(x){
+        var y = 60;
+        var z = y % x;
+        return Math.round(x/y) + ":" + z;
+    }
+
     // vm.mapTitle = ko.computed(function(){
     //     var title = 'GPX Track Map' + vm.gpxjs_vars().get_name;
     //     return title
@@ -187,9 +193,7 @@ $(document).ready(function() {
             shared: true,
             formatter: function () {
                 var x = this.points[0].x;
-                var y = 60;
-                var z = y % x;
-                return '<b>Minutes/Seconds: </b>'+ Math.round(x/y) + ":" + z +'<br/>'+ 
+                return '<b>Minutes/Seconds: </b>'+ dateTimeOutputString(x) +'<br/>'+ 
                 '<b>Elevation: </b>'+ this.y + " feet"+'<br/>'+
                 '<b>Speed: </b>'+ this.points[1].x + " mph";
             }
