@@ -448,8 +448,9 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
+            var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
             var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
-            var end = [gpx._layers[Object.keys(gpx._layers)[gpx._layers[Object.keys(gpx._layers).length-1]]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[gpx._layers[Object.keys(gpx._layers).length-1]]._latlngs[0].lng]]
+            var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
             L.marker(start, {icon: startIcon}).addTo(vm.leafletMap());
             L.marker(end, {icon: endIcon}).addTo(vm.leafletMap());
 
