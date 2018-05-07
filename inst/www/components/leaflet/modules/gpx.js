@@ -330,25 +330,25 @@ L.GPX = L.FeatureGroup.extend({
         this.fire('addline', { line: l, element: el[i] });
         layers.push(l);
 
-        if (options.marker_options.startIcon || options.marker_options.startIconUrl) {
-          // add start pin
-          var p = new L.Marker(coords[0], {
-            clickable: options.marker_options.clickable,
-            icon: options.marker_options.startIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.startIconUrl})
-          });
-          this.fire('addpoint', { point: p, point_type: 'start', element: el[i] });
-          layers.push(p);
-        }
+        // if (options.marker_options.startIcon || options.marker_options.startIconUrl) {
+        //   // add start pin
+        //   var p = new L.Marker(coords[0], {
+        //     clickable: options.marker_options.clickable,
+        //     icon: options.marker_options.startIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.startIconUrl})
+        //   });
+        //   this.fire('addpoint', { point: p, point_type: 'start', element: el[i] });
+        //   layers.push(p);
+        // }
 
-        if (options.marker_options.endIcon || options.marker_options.endIconUrl) {
-          // add end pin
-          p = new L.Marker(coords[coords.length-1], {
-            clickable: options.marker_options.clickable,
-            icon: options.marker_options.endIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.endIconUrl})
-          });
-          this.fire('addpoint', { point: p, point_type: 'end', element: el[i] });
-          layers.push(p);
-        }
+        // if (options.marker_options.endIcon || options.marker_options.endIconUrl) {
+        //   // add end pin
+        //   p = new L.Marker(coords[coords.length-1], {
+        //     clickable: options.marker_options.clickable,
+        //     icon: options.marker_options.endIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.endIconUrl})
+        //   });
+        //   this.fire('addpoint', { point: p, point_type: 'end', element: el[i] });
+        //   layers.push(p);
+        // }
       }
     }
 
