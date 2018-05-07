@@ -343,7 +343,7 @@ $(document).ready(function() {
     function clearData(){
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
-        $(".download").attr("disabled", false);
+        $(".download").prop('disabled', true);
         $(".download").css("opacity", 0.2);
         vm.highchart().series[0].setData([null,null],false)
         vm.highchart().series[1].setData([null,null],false)
@@ -478,9 +478,9 @@ $(document).ready(function() {
     initLeaflet()//leaflet
     vm.highchart()//highchart
 
-    $(".download").attr("disabled", true);
+    $(".download").prop('disabled', true);
     $(".download").css("opacity", 0.2);
-    $("#session_url").attr("disabled", "disabled");
+    $("#session_url").prop('disabled', true);
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
@@ -509,8 +509,9 @@ $(document).ready(function() {
                 session.getObject(function(data)  {
                     vm.rDataOutput(data)
                     updateLeaflet()
-                    $("#session_url").removeAttr("disabled");
+                    $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
+                    $(".download").prop('disabled', false);
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#plotdiv').css("opacity", 1);
                     $('#highcharts').css("opacity", 1);

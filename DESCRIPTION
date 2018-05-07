@@ -12,6 +12,5 @@ Imports:
     plotKML,
     XML,
     stringr,
-    threadr,
-    R.oo
+    threadr
 Remotes: skgrange/threadr

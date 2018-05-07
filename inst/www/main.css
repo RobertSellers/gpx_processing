@@ -399,6 +399,7 @@ a{
 #warnings_panel{
   max-height: 58.59px;
   height: 58.59px;
+  overflow-y: scroll;
 }
 
 /* vis heights */
