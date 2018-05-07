@@ -400,8 +400,8 @@ $(document).ready(function() {
         //////////////////////////////////
         //Update Leaflet
         vm.leafletMap().eachLayer(function (layer) {
-            if (layer.hasOwnProperty('_gpx')){
-            vm.leafletMap().removeLayer(layer);
+            if (layer.hasOwnProperty('_gpx') || layer.hasOwnProperty('_path') || layer.hasOwnProperty('_svgSize')){
+                vm.leafletMap().removeLayer(layer);
             }
         });
         //load gpx
@@ -411,7 +411,7 @@ $(document).ready(function() {
             .on('loaded', function(e) {
             var gpx = e.target;
             // vm.leafletMap().fitBounds(gpx.getBounds());
-            //test
+
             vm.gpxjs_vars({
                 get_name: gpx.get_name(),//returns the name of the GPX track
                 pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true),
@@ -431,7 +431,8 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
-        })
+        }).addTo(vm.leafletMap());
+
         var startIcon = L.icon({
             iconUrl: './components/leaflet/modules/pin-icon-start.png',
             shadowUrl: './components/leaflet/modules/pin-shadow.png',
@@ -455,26 +456,12 @@ $(document).ready(function() {
             trackPoints.push(new L.LatLng(vm.rDataOutput()[i].Latitude, vm.rDataOutput()[i].Longitude))
         }
 
-        // var trackPoints = [
-        //     new L.LatLng(51.51032167, -0.187084072),
-        //     new L.LatLng(51.51019814, -0.187030437),
-        //     new L.LatLng(51.51013137, -0.187845822),
-        //     new L.LatLng(51.50457546, -0.185415744),
-        //     new L.LatLng(51.50476244, -0.181875224),
-        //     new L.LatLng(51.50457546, -0.179622177),
-        //     new L.LatLng(51.50409462, -0.175459380),
-        //     new L.LatLng(51.50368057, -0.174365042),
-        //     new L.LatLng(51.50299938, -0.174729820),
-        //     new L.LatLng(51.50213117, -0.174686903),
-        //     new L.LatLng(51.50199760, -0.177412030),
-        //     new L.LatLng(51.50179725, -0.180373197),
-        //     new L.LatLng(51.50143660, -0.180351735),
-        //  ];
-         var trackOptions = {
-               color: 'blue',
-               weight: 6,
-               opacity: 0.9
-             };
+        var trackOptions = {
+            color: 'blue',
+            weight: 3,
+            opacity: 0.9
+        };
+
         var track = new L.Polyline(trackPoints, trackOptions)
         vm.leafletMap().addLayer(track);   
         L.marker([vm.rDataOutput()[0].Latitude, vm.rDataOutput()[0].Longitude], {icon: startIcon}).addTo(vm.leafletMap());
