@@ -331,25 +331,32 @@ L.GPX = L.FeatureGroup.extend({
         this.fire('addline', { line: l, element: el[i] });
         layers.push(l);
 
-        if (options.marker_options.startIcon || options.marker_options.startIconUrl) {
           // add start pin
           var p = new L.Marker(coords[0], {
             clickable: options.marker_options.clickable,
-            icon: options.marker_options.startIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.startIconUrl})
+            icon: new L.GPXTrackIcon()
           });
           this.fire('addpoint', { point: p, point_type: 'start', element: el[i] });
           layers.push(p);
-        }
+          var icon1 = L.icon({
+            iconUrl: 'pin-icon-start.png',
+            iconSize: [20,20]
+          });
+          var icon2 = L.icon({
+            iconUrl: 'pin-icon-end.png',
+            iconSize: [20,20]
+          });
+          layers[1].setIcon(layers[1].options.icon = icon1)
 
-        if (options.marker_options.endIcon || options.marker_options.endIconUrl) {
           // add end pin
           p = new L.Marker(coords[coords.length-1], {
             clickable: options.marker_options.clickable,
-            icon: options.marker_options.endIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.endIconUrl})
+            icon: new L.GPXTrackIcon()
           });
           this.fire('addpoint', { point: p, point_type: 'end', element: el[i] });
           layers.push(p);
-        }
+
+          layers[2].setIcon(layers[1].options.icon = icon2)
       }
     }
 
