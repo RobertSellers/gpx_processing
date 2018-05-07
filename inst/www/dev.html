@@ -451,19 +451,19 @@ $(document).ready(function() {
             shadowAnchor: [16, 47],
             clickable: false        
         });
-        var trackPoints = [];
-        for (let i = 0; i < vm.rDataOutput().length; i++) {
-            trackPoints.push(new L.LatLng(vm.rDataOutput()[i].Latitude, vm.rDataOutput()[i].Longitude))
-        }
+        // var trackPoints = [];
+        // for (let i = 0; i < vm.rDataOutput().length; i++) {
+        //     trackPoints.push(new L.LatLng(vm.rDataOutput()[i].Latitude, vm.rDataOutput()[i].Longitude))
+        // }
 
-        var trackOptions = {
-            color: 'red',
-            weight: 3,
-            opacity: 0.9
-        };
+        // var trackOptions = {
+        //     color: 'red',
+        //     weight: 3,
+        //     opacity: 0.9
+        // };
 
         var track = new L.Polyline(trackPoints, trackOptions)
-        vm.leafletMap().addLayer(track);   
+        // vm.leafletMap().addLayer(track);   
         L.marker([vm.rDataOutput()[0].Latitude, vm.rDataOutput()[0].Longitude], {icon: startIcon}).addTo(vm.leafletMap());
         L.marker([vm.rDataOutput()[vm.rDataOutput().length-1].Latitude, vm.rDataOutput()[vm.rDataOutput().length-1].Longitude], {icon: endIcon}).addTo(vm.leafletMap());
         vm.leafletMap().fitBounds(track.getBounds())

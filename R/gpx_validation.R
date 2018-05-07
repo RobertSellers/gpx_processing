@@ -32,7 +32,7 @@ gpx_validation <- function(gpxfile, ...){
         df <- gpx_df_construct(gpxfile)
         return (df)
       }else{
-        stop('GPS device not supported.')
+        throw('GPS device not supported.')
       }
     })
   }
@@ -133,32 +133,33 @@ gpx_df_construct <- function(gpxfile){
   dist <- splinefun(df$Seconds,df$Dist)
 
   # Do finite centred differencing to give smoothest rate/gradient estimates
-  df$Speed <- rep(0,length(df$Seconds))
-  df$Gradient <- rep(0,length(df$Seconds))
-  for(x in 2:(length(df$Seconds)-1)){
-    Dt <- df[x+1,"Seconds"]-df[x-1,"Seconds"]
-    Dd <- df[x+1,"Dist"]-df[x-1,"Dist"]
+  df$Speed <- rep(0, length(df$Seconds))
+  df$Gradient <- rep(0, length(df$Seconds))
+  for(x in 2:(length(df$Seconds) - 1)){
+    Dt <- df[x+1,"Seconds"]-df[x - 1,"Seconds"]
+    Dd <- df[x+1,"Dist"]-df[x - 1,"Dist"]
     df[x,"Speed"] <- Dd/Dt # m/s
-    df[x,"Gradient"] <- (df[x+1,"Elevation"]-df[x-1,"Elevation"])/Dd # m/m
+    df[x,"Gradient"] <- (df[x + 1,"Elevation"] - df[x - 1,"Elevation"]) / Dd # m/m
   }
 
-  df[1,"Speed"] <- df[2,"Speed"]
-  df[length(df$Seconds),"Speed"] <- df[length(df$Seconds)-1,"Speed"]
-  df[1,"Gradient"] <- df[2,"Gradient"]
-  df[length(df$Seconds),"Gradient"] <- df[length(df$Seconds)-1,"Gradient"]
+  df[1, "Speed"] <- df[2, "Speed"]
+  df[length(df$Seconds), "Speed"] <- df[length(df$Seconds) - 1,"Speed"]
+  df[1, "Gradient"] <- df[2, "Gradient"]
+  df[length(df$Seconds), "Gradient"] <- df[length(df$Seconds) - 1,"Gradient"]
 
   # Smooth speed as it is unrealistically noisy
   df$Speed <- smooth(df$Speed)
 
   # Fit a spline function to rate
-  speed <- splinefun(df$Seconds,df$Speed)
-  pace<-function(t) sapply(1/speed(t),max,0)
-  ppace<-function(t) 1000*pace(t)/60
+  speed <- splinefun(df$Seconds, df$Speed)
+  pace<-function(t) sapply(1 / speed(t), max, 0)
+  ppace<-function(t) 1000 * pace(t) / 60
 
   # Update dataframe with speed and pace
   df$Speed <- speed(df$Seconds)
   df$Pace <- pace(df$Seconds)
 
+  # convert to mph
   df$speedMPH  <-  2.23694 * df$Speed
   return(df)
 }
