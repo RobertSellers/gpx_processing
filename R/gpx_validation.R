@@ -11,8 +11,8 @@ gpx_validation <- function(gpxfile, ...){
     }, error = function(e){
       stop(cat(paste("GPX load error.", e)))
     }, finally = {
-      library(stringr)
-      library(threadr)
+      #library(stringr)
+      #library(threadr)
       # Parsing header info 
       text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
       attributes <- threadr::str_filter(head(text_gpx), "xmlns")
