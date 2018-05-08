@@ -141,17 +141,11 @@ $(document).ready(function() {
                 polar: false
             },
             title: {
-                text:vm.gpxjs_vars()
-                    
-                
-                
-                
+                text:vm.gpxjs_vars().get_name   
             },
             subtitle: {
-                text: '',
-                style: {
-                    display: 'none'
-                }
+                text: vm.gpxjs_vars().get_start_date 
+                
             },
             xAxis: {
                 labels: {
