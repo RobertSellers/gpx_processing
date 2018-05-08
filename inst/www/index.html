@@ -28,7 +28,9 @@
 <!-- Leaflet -->
 <script src="components/leaflet/leaflet.js"></script>
 <script src="components/leaflet/modules/gpx.js"></script>
+<script src="components/leaflet/modules/Control.MiniMap.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
+<link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
 
 <!-- Custom Scripts -->
 <script src="js/utilities.js"></script>
@@ -42,7 +44,7 @@ $(document).ready(function() {
         session_tmp: ko.observable(),
         gpx_file_name: ko.observable(),
         leafletMap: ko.observable(),
-        leafletControl: ko.observable(),
+        leafletMinimap: ko.observable(),
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
@@ -197,7 +199,7 @@ $(document).ready(function() {
                 var z = y % x;
                 return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
                 '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
-                '<b>Speed: </b>'+ Math.round(this.points[1].y,1) + " mph";
+                '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
             }
         },
         plotOptions: {
@@ -343,8 +345,7 @@ $(document).ready(function() {
     function clearData(){
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
-        $(".download").attr("disabled", false);
-        $("#session_url").attr("disabled", false);
+        $(".download").prop('disabled', true);
         $(".download").css("opacity", 0.2);
         vm.highchart().series[0].setData([null,null],false)
         vm.highchart().series[1].setData([null,null],false)
@@ -352,7 +353,7 @@ $(document).ready(function() {
         vm.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
                 vm.leafletMap().removeLayer(layer);
-                vm.leafletMap().setView([37.8, -96], 4);
+                // vm.leafletMap().setView(new L.LatLng(39.8283, -98.5795),3);
             }
         });
         map_lock('lock')
@@ -360,24 +361,17 @@ $(document).ready(function() {
 
     function map_lock(toggle){
         if (toggle=='unlock'){
-            // vm.leafletMap().L.Map('map', { zoomControl:false });
-            vm.leafletMap().dragging.enable();
-            vm.leafletMap().zoomControl.disable();
-            vm.leafletMap().touchZoom.enable();
-            vm.leafletMap().doubleClickZoom.enable();
-            vm.leafletMap().scrollWheelZoom.enable();
-            vm.leafletMap().boxZoom.enable();
-            vm.leafletMap().keyboard.enable();
+            vm.leafletMap()._handlers.forEach(function(handler) {
+                handler.enable();
+            });
+            vm.leafletMinimap()._restore()
         if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
             document.getElementById('plotdiv').style.cursor='grab';
         }if (toggle=='lock'){
-            vm.leafletMap().dragging.disable();
-            vm.leafletMap().zoomControl.enable();
-            vm.leafletMap().touchZoom.disable();
-            vm.leafletMap().doubleClickZoom.disable();
-            vm.leafletMap().scrollWheelZoom.disable();
-            vm.leafletMap().boxZoom.disable();
-            vm.leafletMap().keyboard.disable();
+            vm.leafletMinimap()._minimize()
+            vm.leafletMap()._handlers.forEach(function(handler) {
+                handler.disable();
+            });
         if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
             document.getElementById('plotdiv').style.cursor='default';
         }
@@ -386,33 +380,45 @@ $(document).ready(function() {
     function initLeaflet(){
         //////////////////////////////////
         //Prime Leaflet Map
-        var map = L.map('plotdiv', {
-            zoom: 3,
-                center: new L.latLng([37.8, -96]),
-                layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-                    maxZoom: 20,
-                    subdomains:['mt0','mt1','mt2','mt3']
-                })
+        var map = new L.map('plotdiv')
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data &copy; OpenStreetMap contributors';
+        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
+        var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+        
+        var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: '&copy; ' + mapLink + ', ' + wholink,
+            // minZoom: 5, // can't have min or minimap breaks
+            maxZoom: 19});
+
+        map.addLayer(esri);
+        map.setView(new L.LatLng(39.8283, -98.5795),3)
+		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
+		var miniMap = new L.Control.MiniMap(osm2, {
+             toggleDisplay: true,
+             minimized: true
             });
+        vm.leafletMinimap(miniMap);
+        vm.leafletMinimap().addTo(map);
         vm.leafletMap(map);
+        vm.leafletMinimap()._minimize()
     }
 
     function updateLeaflet(){
         //////////////////////////////////
         //Update Leaflet
         vm.leafletMap().eachLayer(function (layer) {
-            if (layer.hasOwnProperty('_gpx')){
-            vm.leafletMap().removeLayer(layer);
+            if (layer.hasOwnProperty('_gpx') || layer.hasOwnProperty('_path') || layer.hasOwnProperty('_latlng')){
+                vm.leafletMap().removeLayer(layer);
             }
         });
-        //load gpx
 
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        new L.GPX(gpx_file, {async: true})
+        var gpx_layer = new L.GPX(gpx_file, {async: true})
             .on('loaded', function(e) {
             var gpx = e.target;
-            vm.leafletMap().fitBounds(gpx.getBounds());
-            
+             vm.leafletMap().fitBounds(gpx.getBounds());
+
             vm.gpxjs_vars({
                 get_name: gpx.get_name(),//returns the name of the GPX track
                 pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
@@ -432,17 +438,46 @@ $(document).ready(function() {
                 elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
                 get_elevation_data_imp: gpx.get_elevation_data_imp()
             });
+
+            var circleMarkerStyle_start = {
+                radius: 8,
+                fillColor: "#00ff00",
+                color: "#000",
+                weight: 1, 
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+
+            var circleMarkerStyle_end = {
+                radius: 8,
+                fillColor: "#ff7800",
+                color: "#000",
+                weight: 1, 
+                opacity: 1,
+                fillOpacity: 0.8
+            };
+
+            // start/end markers and popups
+            var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
+            var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
+            var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
+            
+            var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+            start_marker.addTo(vm.leafletMap());
+            var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+            end_marker.addTo(vm.leafletMap());
+
         }).addTo(vm.leafletMap());
         map_lock('unlock');
     }
 
-    // Initialize charts 
+    // Initialize charts
     initLeaflet()//leaflet
     vm.highchart()//highchart
 
-    $(".download").attr("disabled", true);
+    $(".download").prop('disabled', true);
     $(".download").css("opacity", 0.2);
-    $("#session_url").attr("disabled", "disabled");
+    $("#session_url").prop('disabled', true);
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
@@ -471,8 +506,9 @@ $(document).ready(function() {
                 session.getObject(function(data)  {
                     vm.rDataOutput(data)
                     updateLeaflet()
-                    $("#session_url").removeAttr("disabled");
+                    $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
+                    $(".download").prop('disabled', false);
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#plotdiv').css("opacity", 1);
                     $('#highcharts').css("opacity", 1);
@@ -580,7 +616,7 @@ $(document).ready(function() {
             <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
             &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
             &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
-            &mdash; <li>Elevation Gain:&nbsp;+<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
+            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
                 (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
         </ul>
       </article>
