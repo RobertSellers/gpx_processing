@@ -389,11 +389,13 @@ a{
 .alert-danger {
   text-shadow: 0 1px 0 rgba(255,255,255,0.2);
   color: tomato;
+  font-size: 12px;
 }
 
 .alert-success {
   text-shadow: 0 1px 0 rgba(255,255,255,0.2);
   color: #468847;
+  font-size: 12px;
 }
 
 #warnings_panel{
