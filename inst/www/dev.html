@@ -361,14 +361,6 @@ $(document).ready(function() {
 
     function map_lock(toggle){
         if (toggle=='unlock'){
-            // vm.leafletMap().L.Map('map', { zoomControl:false });
-            // vm.leafletMap().dragging.enable();
-            // vm.leafletMap().zoomControl.disable();
-            // vm.leafletMap().touchZoom.enable();
-            // vm.leafletMap().doubleClickZoom.enable();
-            // vm.leafletMap().scrollWheelZoom.enable();
-            // vm.leafletMap().boxZoom.enable();
-            // vm.leafletMap().keyboard.enable();
             map._handlers.forEach(function(handler) {
                 handler.enable();
             });
@@ -376,13 +368,6 @@ $(document).ready(function() {
         if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
             document.getElementById('plotdiv').style.cursor='grab';
         }if (toggle=='lock'){
-            // vm.leafletMap().dragging.disable();
-            // vm.leafletMap().zoomControl.enable();
-            // vm.leafletMap().touchZoom.disable();
-            // vm.leafletMap().doubleClickZoom.disable();
-            // vm.leafletMap().scrollWheelZoom.disable();
-            // vm.leafletMap().boxZoom.disable();
-            // vm.leafletMap().keyboard.disable();
             vm.leafletMinimap()._minimize()
             vm.leafletMap().forEach(function(handler) {
                 handler.disable();
