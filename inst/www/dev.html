@@ -387,22 +387,28 @@ $(document).ready(function() {
     function initLeaflet(){
         //////////////////////////////////
         //Prime Leaflet Map
-        var map = L.map('plotdiv', {
-            zoom: 3,
-            // center: new L.latLng([37.8, -96]),
-            layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-                maxZoom: 20,
-                subdomains:['mt0','mt1','mt2','mt3']
-            })
+        var map = new L.map('plotdiv')
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        var osmAttrib='Map data &copy; OpenStreetMap contributors';
+        map.addLayer(osm);
+        map.setView(new L.LatLng(39.8283, -98.5795),6);
+		var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18, attribution: osmAttrib});
+        // , {
+            // zoom: 3,
+            // // center: new L.latLng([37.8, -96]),
+            // layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+            //     maxZoom: 20,
+            //     subdomains:['mt0','mt1','mt2','mt3']
+            // })
 
-        }).setView([39.8283,-98.5795], 6);
+        // }).setView([39.8283,-98.5795], 6);
 
         
         //minimap
-        var tileURL='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
-        var osm2 = new L.TileLayer(tileURL, {minZoom: 0, maxZoom: 13});
-        var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true }).addTo(map);
-
+        // var tileURL='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
+		var osm2 = new L.TileLayer(osmUrl, {minZoom: 0, maxZoom: 13, attribution: osmAttrib });
+		var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true }).addTo(map);
         vm.leafletMap(map);
     }
 
