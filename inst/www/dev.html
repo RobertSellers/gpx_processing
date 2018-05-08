@@ -392,20 +392,7 @@ $(document).ready(function() {
         var osmAttrib='Map data &copy; OpenStreetMap contributors';
         var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18, attribution: osmAttrib});
         map.addLayer(osm);
-        map.setView(new L.LatLng(39.8283, -98.5795),3);
-        // , {
-            // zoom: 3,
-            // // center: new L.latLng([37.8, -96]),
-            // layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
-            //     maxZoom: 20,
-            //     subdomains:['mt0','mt1','mt2','mt3']
-            // })
-
-        // }).setView([39.8283,-98.5795], 6);
-
-        
-        //minimap
-        // var tileURL='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
+        map.setView(new L.LatLng(39.8283, -98.5795),3)
 		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 18, attribution: osmAttrib });
 		var miniMap = new L.Control.MiniMap(osm2, {
              toggleDisplay: true
@@ -421,25 +408,7 @@ $(document).ready(function() {
                 vm.leafletMap().removeLayer(layer);
             }
         });
-        //load gpx
-        // var startIcon = L.icon({
-        //     iconUrl: './components/leaflet/modules/pin-icon-start.png',
-        //     shadowUrl: './components/leaflet/modules/pin-shadow.png',
-        //     iconSize: [33, 50],
-        //     shadowSize: [50, 50],
-        //     iconAnchor: [16, 45],
-        //     shadowAnchor: [16, 47],
-        //     clickable: false        
-        // });
-        // var endIcon = L.icon({
-        //     iconUrl: './components/leaflet/modules/pin-icon-end.png',
-        //     shadowUrl: './components/leaflet/modules/pin-shadow.png',
-        //     iconSize: [33, 50],
-        //     shadowSize: [50, 50],
-        //     iconAnchor: [16, 45],
-        //     shadowAnchor: [16, 47],
-        //     clickable: false        
-        // });
+
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
         var gpx_layer = new L.GPX(gpx_file, {async: true})
             .on('loaded', function(e) {
@@ -477,7 +446,7 @@ $(document).ready(function() {
 
             var circleMarkerStyle_end = {
                 radius: 8,
-                fillColor: "#00ff00",
+                fillColor: "#ff7800",
                 color: "#000",
                 weight: 1, 
                 opacity: 1,
