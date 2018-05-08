@@ -353,7 +353,7 @@ $(document).ready(function() {
         vm.leafletMap().eachLayer(function (layer) {
             if (layer.hasOwnProperty('_gpx')){
                 vm.leafletMap().removeLayer(layer);
-                vm.leafletMap().setView([37.8, -96], 4);
+                // vm.leafletMap().setView(new L.LatLng(39.8283, -98.5795),3);
             }
         });
         map_lock('lock')
@@ -369,6 +369,7 @@ $(document).ready(function() {
             document.getElementById('plotdiv').style.cursor='grab';
         }if (toggle=='lock'){
             vm.leafletMinimap()._minimize()
+            // vm.leafletMap().
             vm.leafletMap()._handlers.forEach(function(handler) {
                 handler.disable();
             });
