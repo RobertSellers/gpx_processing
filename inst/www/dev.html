@@ -351,10 +351,9 @@ $(document).ready(function() {
         vm.highchart().series[1].setData([null,null],false)
         vm.highchart().redraw();
         vm.leafletMap().eachLayer(function (layer) {
-            // if (layer.hasOwnProperty('_gpx')){
+            if (!layer.hasOwnProperty('_tiles')){
                 vm.leafletMap().removeLayer(layer);
-                // vm.leafletMap().setView(new L.LatLng(39.8283, -98.5795),3);
-            // }
+            }
         });
         map_lock('lock')
     }
