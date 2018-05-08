@@ -369,7 +369,6 @@ $(document).ready(function() {
             document.getElementById('plotdiv').style.cursor='grab';
         }if (toggle=='lock'){
             vm.leafletMinimap()._minimize()
-            // vm.leafletMap().
             vm.leafletMap()._handlers.forEach(function(handler) {
                 handler.disable();
             });
@@ -388,15 +387,16 @@ $(document).ready(function() {
         var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
         
         var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; '+mapLink+', '+wholink,
-            minZoom: 5, 
+            attribution: '&copy; ' + mapLink + ', ' + wholink,
+            // minZoom: 5, 
             maxZoom: 18});
 
         map.addLayer(esri);
         map.setView(new L.LatLng(39.8283, -98.5795),3)
 		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 18, attribution: osmAttrib });
 		var miniMap = new L.Control.MiniMap(osm2, {
-             toggleDisplay: true
+             toggleDisplay: true,
+             minimized: true
             });
         vm.leafletMinimap(miniMap);
         vm.leafletMinimap().addTo(map);
