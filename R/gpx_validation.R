@@ -29,7 +29,7 @@ gpx_validation <- function(gpxfile, ...){
   }
 }
 
-check_whitelist <- function(){
+#check_whitelist <- function(){
   # whitelist <- c(
   #     'GPSMAP 62stc', 
   #     'GPSMAP 64s',
@@ -47,7 +47,7 @@ check_whitelist <- function(){
   #   variables <- stringr::str_replace(variables, ".* ", "")
   #   creator <- setNames(as.list(values), variables)$creator
 
-}
+#}
 
 
 # Haversine formula for calculating distances from lat/long
