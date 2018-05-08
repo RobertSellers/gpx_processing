@@ -92,7 +92,7 @@ $(document).ready(function() {
         var dateTimeRange = vm.rDataOutput().map(a=> a.DateTime)
         //ELEVATION
         var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
-        var timeElevation = timeRange.map(function(v,i) {
+        var timeElevation = dateTimeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
         //SPEED
