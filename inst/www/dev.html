@@ -44,7 +44,7 @@ $(document).ready(function() {
         session_tmp: ko.observable(),
         gpx_file_name: ko.observable(),
         leafletMap: ko.observable(),
-        leafletControl: ko.observable(),
+        leafletMinimap: ko.observable(),
         rDataOutput: ko.observable(),
         //gpx.js output data
         gpxjs_vars: ko.observable({
@@ -397,12 +397,15 @@ $(document).ready(function() {
             attribution: '&copy; '+mapLink+', '+wholink,
             minZoom: 5, 
             maxZoom: 18});
+
         map.addLayer(esri);
         map.setView(new L.LatLng(39.8283, -98.5795),3)
 		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 18, attribution: osmAttrib });
 		var miniMap = new L.Control.MiniMap(osm2, {
              toggleDisplay: true
-            }).addTo(map);
+            });
+        vm.leafletMinimap(miniMap);
+        vm.leafletMinimap().addTo(map);
         vm.leafletMap(map);
     }
 
