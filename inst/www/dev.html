@@ -154,6 +154,11 @@ $(document).ready(function() {
                     // dateTimeOutputString(this.value)
                     }
                 },
+                dateTimeLabelFormats: { // don't display the dummy year
+                    second: '%H:%M:%S',
+                    minute: '%H:%M',
+                    hour: '%H:%M'   
+                },
                 crosshair: true,
                 title: {
                     text: 'Duration (hh:mm)'
