@@ -5,7 +5,7 @@ gpx_validation <- function(gpxfile, ...){
   }else{
     options(stringsAsFactors = FALSE)
     tryCatch({
-      plotKML::data <- readGPX(gpxfile, metadata = TRUE, bounds = TRUE, 
+      data <- plotKML::readGPX(gpxfile, metadata = TRUE, bounds = TRUE, 
         waypoints = TRUE, tracks = TRUE, routes = TRUE)
       
     }, error = function(e){
