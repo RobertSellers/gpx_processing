@@ -389,11 +389,10 @@ $(document).ready(function() {
         //Prime Leaflet Map
         var map = new L.map('plotdiv')
         var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib='Map data &copy; OpenStreetMap contributors';
+        var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18, attribution: osmAttrib});
         map.addLayer(osm);
         map.setView(new L.LatLng(39.8283, -98.5795),6);
-		var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18, attribution: osmAttrib});
         // , {
             // zoom: 3,
             // // center: new L.latLng([37.8, -96]),
