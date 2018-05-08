@@ -37,7 +37,7 @@ gpx_validation <- function(gpxfile, ...){
           stop(cat('GPS device not supported.'))
       })
     }
-  })
+  }
 }
 
 # Haversine formula for calculating distances from lat/long
