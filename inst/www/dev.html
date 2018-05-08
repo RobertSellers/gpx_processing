@@ -72,9 +72,6 @@ $(document).ready(function() {
             var filename = this.gpx_file_name().slice(0, -4);
             var exportData = new CSVExport(data, filename);
             return exportData
-        },
-        leafletDisable : function(){
-            return 'return false;'
         }
     };
 
@@ -359,11 +356,11 @@ $(document).ready(function() {
                 vm.leafletMap().setView([37.8, -96], 4);
             }
         });
-        // map_lock('lock')
+        map_lock('lock')
     }
 
-    // function map_lock(toggle){
-    //     if (toggle=='unlock'){
+    function map_lock(toggle){
+        if (toggle=='unlock'){
             // vm.leafletMap().L.Map('map', { zoomControl:false });
             // vm.leafletMap().dragging.enable();
             // vm.leafletMap().zoomControl.disable();
@@ -372,13 +369,13 @@ $(document).ready(function() {
             // vm.leafletMap().scrollWheelZoom.enable();
             // vm.leafletMap().boxZoom.enable();
             // vm.leafletMap().keyboard.enable();
-        //     vm.leafletMap()._handlers.forEach(function(handler) {
-        //         handler.enable();
-        //     });
-        //     vm.leafletMinimap()._restore()
-        // if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
-        //     document.getElementById('plotdiv').style.cursor='grab';
-        // }if (toggle=='lock'){
+            map._handlers.forEach(function(handler) {
+                handler.enable();
+            });
+            vm.leafletMinimap()._restore()
+        if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
+            document.getElementById('plotdiv').style.cursor='grab';
+        }if (toggle=='lock'){
             // vm.leafletMap().dragging.disable();
             // vm.leafletMap().zoomControl.enable();
             // vm.leafletMap().touchZoom.disable();
@@ -386,14 +383,14 @@ $(document).ready(function() {
             // vm.leafletMap().scrollWheelZoom.disable();
             // vm.leafletMap().boxZoom.disable();
             // vm.leafletMap().keyboard.disable();
-    //         vm.leafletMinimap()._minimize()
-    //         vm.leafletMap().forEach(function(handler) {
-    //             handler.disable();
-    //         });
-    //     if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
-    //         document.getElementById('plotdiv').style.cursor='default';
-    //     }
-    // }
+            vm.leafletMinimap()._minimize()
+            vm.leafletMap().forEach(function(handler) {
+                handler.disable();
+            });
+        if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
+            document.getElementById('plotdiv').style.cursor='default';
+        }
+    }
 
     function initLeaflet(){
         //////////////////////////////////
@@ -485,7 +482,7 @@ $(document).ready(function() {
             end_marker.addTo(vm.leafletMap());
 
         }).addTo(vm.leafletMap());
-        // map_lock('unlock');
+        map_lock('unlock');
     }
 
     // Initialize charts
@@ -497,7 +494,7 @@ $(document).ready(function() {
     $("#session_url").prop('disabled', true);
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
-    // map_lock('lock');
+    map_lock('lock');
 
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
@@ -628,7 +625,7 @@ $(document).ready(function() {
       <article class="panel gpx">
         <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv" class="map" data-bind="onclick=leafletDisable()" style="height:600px;"></div>
+        <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
             <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
             &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
