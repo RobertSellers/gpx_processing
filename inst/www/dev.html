@@ -84,7 +84,7 @@ $(document).ready(function() {
     vm.mapTitle = ko.computed(function(){
         var title = 'GPX Track Map' + vm.gpxjs_vars().get_name;
         return title
-    })
+    });
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
@@ -145,7 +145,7 @@ $(document).ready(function() {
                     return vm.gpxjs_vars();
                     // dateTimeOutputString(this.value)
                     }
-                }
+                
                 
                 
             },
