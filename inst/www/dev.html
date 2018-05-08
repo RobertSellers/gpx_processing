@@ -201,7 +201,7 @@ $(document).ready(function() {
                     var z = y % x;
                     var date = new Date(this.points[0].key);
                     return '<b>Time: </b>'+ date.getHours()+':'+date.getMinutes()+":"+date.getSeconds() + '<br/>'+
-                    '<b>Date: </b>'+ date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate();  +'<br/>'+ 
+                    '<b>Date: </b>'+ date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()  +'<br/>'+ 
                     '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
