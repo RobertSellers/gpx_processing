@@ -389,16 +389,18 @@ $(document).ready(function() {
         //Prime Leaflet Map
         var map = L.map('plotdiv', {
             zoom: 3,
-            center: new L.latLng([37.8, -96]),
+            // center: new L.latLng([37.8, -96]),
             layers: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
                 maxZoom: 20,
                 subdomains:['mt0','mt1','mt2','mt3']
             })
-        });
+
+        }).setView([39.8283,-98.5795], 12);
+
         
         //minimap
         var tileURL='http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}';
-        var osm2 = new L.TileLayer(tileURL, {minZoom: 2, maxZoom: 13});
+        var osm2 = new L.esri.basemapLayer("Topographic", {minZoom: 0, maxZoom: 13});
         var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true }).addTo(map);
 
         vm.leafletMap(map);
