@@ -125,7 +125,7 @@ $(document).ready(function() {
             var val = lonArray[i]+","+latArray[i]
             return [v, val];
         });
-        vm.highchart().series[0].setData(timeElevation,false)
+        vm.highchart().series[0].setData(datetimeElevation,false)
         vm.highchart().series[1].setData(timeSpeed,false)
         // vm.highchart().series[2].setData(timeDateTime,false)
         vm.highchart().series[2].setData(timePace,false)
