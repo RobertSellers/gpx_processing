@@ -35,7 +35,7 @@ gpx_validation <- function(gpxfile, ...){
           }
         }, error = function(e){
           stop(cat('GPS device not supported.'))
-      })
+      }))
     }
   }
 }
