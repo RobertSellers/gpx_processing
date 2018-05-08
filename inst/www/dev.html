@@ -203,7 +203,15 @@ $(document).ready(function() {
                     var y = 60;
                     var z = y % x;
                     var date = new Date(this.points[0].key);
-                    var padded_minutes = ("0" + date.getMinutes()).substr(-1,1)
+                    var padded_minutes = date.getMinutes()
+                    var padded_seconds = date.getSeconds()
+                    if (padded_minutes.toString().length == 1) {
+                        padded_minutes = "0" + padded_minutes;
+                    }
+                    if (padded_seconds.toString().length == 1) {
+                        padded_seconds = "0" + padded_seconds;
+                    }
+                                var padded_minutes = ("0" + date.getMinutes()).substr(-1,1)
                     var padded_seconds = ("0" + date.getSeconds()).substr(-1,1)
                     return '<b>Time: </b>'+ date.getHours()+':'+ padded_minutes+":" + padded_seconds + '<br/>'+
                     '<b>Date: </b>'+ date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()  +'<br/>'+ 
@@ -213,6 +221,7 @@ $(document).ready(function() {
             },
             plotOptions: {
                 series: {
+                    turboThreshold: 10000, //largest series tested is 8012
                     label: {
                         connectorAllowed: false
                     },
