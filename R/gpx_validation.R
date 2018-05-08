@@ -1,5 +1,5 @@
 gpx_validation <- function(gpxfile, ...){
-  # options(warn=-1)
+
   if(substring(tolower(gpxfile), nchar(gpxfile)-3) != ".gpx"){
     stop('Uploaded data needs to be .zip file. ');
   }else{
@@ -21,7 +21,6 @@ gpx_validation <- function(gpxfile, ...){
         )
       # Parsing header info 
       tryCatch({
-
         text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
         attributes <- threadr::str_filter(head(text_gpx), "xmlns")
         values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
@@ -33,7 +32,7 @@ gpx_validation <- function(gpxfile, ...){
         if (creator %in% whitelist){
           df <- gpx_df_construct(gpxfile)
           return (df)
-        }
+          }
         }, error = function(e){
           stop(cat('GPS device not supported.'))
       })
