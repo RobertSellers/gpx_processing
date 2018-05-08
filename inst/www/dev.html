@@ -127,6 +127,7 @@ $(document).ready(function() {
         vm.highchart().yAxis[1].isDirty = true;
         vm.highchart().xAxis[0].isDirty = true;
         vm.highchart().redraw();
+        vm.highchart().setTitle({text: vm.gpxjs_vars().get_name });
     })
 
 
@@ -141,7 +142,7 @@ $(document).ready(function() {
                 polar: false
             },
             title: {
-                text:vm.gpxjs_vars().get_name 
+                text:'n/a'
             },
             subtitle: {
                 text: '',
