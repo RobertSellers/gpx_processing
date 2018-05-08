@@ -137,129 +137,129 @@ $(document).ready(function() {
         var speedColor = "#000000"
 
         return new Highcharts.chart('container', {
-        chart: {
-            zoomType: 'x',
-			polar: false
-        },
-        title: {
-        	text: 'Visualize GPX'
-        },
-        subtitle: {
-        	text: '',
-        	style: {
-        		display: 'none'
-        	}
-        },
-        xAxis: {
-            labels: {
-            tickInterval: 900,
-            formatter: function () {
-                dateTimeOutputString(this.value)
+            chart: {
+                zoomType: 'x',
+                polar: false
+            },
+            title: {
+                text: 'Visualize GPX'
+            },
+            subtitle: {
+                text: '',
+                style: {
+                    display: 'none'
                 }
             },
-        	crosshair: true,
-        	title: {
-        		text: 'Duration (hh:mm)'
-        	}
-        },
-        yAxis: [{ // Primary yAxis
-            gridLineWidth: 0,
-        	title: {
-        		text: 'Speed (mph)',
-        		style: {
-        			color: speedColor
-        		}
-        	},
-        	labels: {
-        		format: '{value}',
-        		style: {
-        			color: speedColor
-        		}
-        	},
-        	opposite: true
-        }, { // Secondary yAxis
-            labels: {
-        		format: "{value}'",
-        		style: {
-        			color: elevationColor
-        		}
-        	},
-        	title: {
-        		text: 'Elevation (feet asl)',
-        		style: {
-        			color: elevationColor
-        		}
-        	}
-        }],
-        tooltip: {
-            shared: true,
-            formatter: function () {
-                var x = this.points[0].x;
-                var y = 60;
-                var z = y % x;
-                return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
-                '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
-                '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
-            }
-        },
-        plotOptions: {
-        	series: {
-        		label: {
-        			connectorAllowed: false
+            xAxis: {
+                labels: {
+                tickInterval: 900,
+                formatter: function () {
+                    dateTimeOutputString(this.value)
+                    }
                 },
-                cursor: "pointer",
-                events: {
-                    click: function(event) {
-                        //do nothing
+                crosshair: true,
+                title: {
+                    text: 'Duration (hh:mm)'
+                }
+            },
+            yAxis: [{ // Primary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Speed (mph)',
+                    style: {
+                        color: speedColor
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: speedColor
+                    }
+                },
+                opposite: true
+            }, { // Secondary yAxis
+                labels: {
+                    format: "{value}'",
+                    style: {
+                        color: elevationColor
+                    }
+                },
+                title: {
+                    text: 'Elevation (feet asl)',
+                    style: {
+                        color: elevationColor
                     }
                 }
-            },
-        },
-        series: [
-        {
-            name: "Elevation",
-            color: elevationColor,
-            yAxis: 1,
-            lineWidth: 1,
-        	data: [null, null],
-        	type: "areaspline",
-        	tooltip: {
-        		valueSuffix: "'"
-        	}
-        }, {
-            name: "Speed",
-            color: speedColor,
-            data: [null, null],
-            type: "spline",
-            // dashStyle: 'shortdot',
+            }],
             tooltip: {
-                valueSuffix: ' mph'
+                shared: true,
+                formatter: function () {
+                    var x = this.points[0].x;
+                    var y = 60;
+                    var z = y % x;
+                    return '<b>Minutes: </b>'+ Math.round(x/y)  +'<br/>'+ 
+                    '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
+                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
+                }
+            },
+            plotOptions: {
+                series: {
+                    label: {
+                        connectorAllowed: false
+                    },
+                    cursor: "pointer",
+                    events: {
+                        click: function(event) {
+                            //do nothing
+                        }
+                    }
+                },
+            },
+            series: [
+            {
+                name: "Elevation",
+                color: elevationColor,
+                yAxis: 1,
+                lineWidth: 1,
+                data: [null, null],
+                type: "areaspline",
+                tooltip: {
+                    valueSuffix: "'"
+                }
+            }, {
+                name: "Speed",
+                color: speedColor,
+                data: [null, null],
+                type: "spline",
+                // dashStyle: 'shortdot',
+                tooltip: {
+                    valueSuffix: ' mph'
+                }
+            },
+            {
+                name: 'timePace',
+                data: [null, null],
+                visible: false
+            },
+            {
+                name: 'timeDist',
+                data: [null, null],
+                visible: false
             }
-        },
-        {
-            name: 'timePace',
-            data: [null, null],
-            visible: false
-        },
-        {
-            name: 'timeDist',
-            data: [null, null],
-            visible: false
-        }
-        ],
-        credits: {
-        	enabled: false
-        },
-        legend: {
-        	enabled: false
-        },
-        responsive: {
-        	rules: [{
-        		condition: {
-        			maxWidth: 500
-        		}
-        	}]
-        }
+            ],
+            credits: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    }
+                }]
+            }
         });
     });
 
@@ -351,10 +351,10 @@ $(document).ready(function() {
         vm.highchart().series[1].setData([null,null],false)
         vm.highchart().redraw();
         vm.leafletMap().eachLayer(function (layer) {
-            if (layer.hasOwnProperty('_gpx')){
+            // if (layer.hasOwnProperty('_gpx')){
                 vm.leafletMap().removeLayer(layer);
                 // vm.leafletMap().setView(new L.LatLng(39.8283, -98.5795),3);
-            }
+            // }
         });
         map_lock('lock')
     }
