@@ -389,11 +389,11 @@ $(document).ready(function() {
         var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
             attribution: '&copy; ' + mapLink + ', ' + wholink,
             // minZoom: 5, // can't have min or minimap breaks
-            maxZoom: 20});
+            maxZoom: 19});
 
         map.addLayer(esri);
         map.setView(new L.LatLng(39.8283, -98.5795),3)
-		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 20, attribution: osmAttrib });
+		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
 		var miniMap = new L.Control.MiniMap(osm2, {
              toggleDisplay: true,
              minimized: true
