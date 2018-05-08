@@ -81,10 +81,10 @@ $(document).ready(function() {
         return Math.round(x/y) + ":" + z;
     }
 
-    // vm.mapTitle = ko.computed(function(){
-    //     var title = 'GPX Track Map' + vm.gpxjs_vars().get_name;
-    //     return title
-    // })
+    vm.mapTitle = ko.computed(function(){
+        var title = 'GPX Track Map' + vm.gpxjs_vars().get_name;
+        return title
+    })
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
@@ -141,7 +141,13 @@ $(document).ready(function() {
                 polar: false
             },
             title: {
-                text: 'Visualize GPX'
+                text: function () {
+                    return vm.gpxjs_vars();
+                    // dateTimeOutputString(this.value)
+                    }
+                }
+                
+                
             },
             subtitle: {
                 text: '',
