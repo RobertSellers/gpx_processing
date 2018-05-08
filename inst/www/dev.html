@@ -123,6 +123,9 @@ $(document).ready(function() {
         // vm.highchart().series[2].setData(timePace,false)
         // vm.highchart().series[3].setData(timeDist,false)
         // vm.highchart().series[5].setData(timeLatLon,false)
+        vm.highchart().yAxis[0].isDirty = true;
+        vm.highchart().yAxis[1].isDirty = true;
+        vm.highchart().xAxis[0].isDirty = true;
         vm.highchart().redraw();
     })
 
