@@ -95,41 +95,33 @@ $(document).ready(function() {
         var timeElevation = timeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
-        var datetimeElevation = dateTimeRange.map(function(v,i) {
-            return [v, elevationArray[i]];
-        });
         //SPEED
         var speedArray = vm.rDataOutput().map(a => a.speedMPH) //CONFIRM!
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
-        //DATES
-        var datetimeArray = vm.rDataOutput().map(a => a.DateTime)
-        var timeDateTime = dateTimeRange.map(function(v,i) {
-            return [v, datetimeArray[i]];
-        });
         //PACE
-        var paceArray = vm.rDataOutput().map(a => a.Pace)
-        var timePace = dateTimeRange.map(function(v,i) {
-            return [v, paceArray[i]];
-        });
+        // var paceArray = vm.rDataOutput().map(a => a.Pace)
+        // var timePace = dateTimeRange.map(function(v,i) {
+        //     return [v, paceArray[i]];
+        // });
         //DISTANCE
-        var distanceArray = vm.rDataOutput().map(a => a.Dist)
-        var timeDist = dateTimeRange.map(function(v,i) {
-            return [v, distanceArray[i]];
-        });
+        // var distanceArray = vm.rDataOutput().map(a => a.Dist)
+        // var timeDist = dateTimeRange.map(function(v,i) {
+        //     return [v, distanceArray[i]];
+        // });
         //LAT LONG
-        var latArray = vm.rDataOutput().map(a => a.Latitude)
-        var lonArray = vm.rDataOutput().map(a => a.Longitude)
-        var timeLatLon = dateTimeRange.map(function(v,i) {
-            var val = lonArray[i]+","+latArray[i]
-            return [v, val];
-        });
+        // var latArray = vm.rDataOutput().map(a => a.Latitude)
+        // var lonArray = vm.rDataOutput().map(a => a.Longitude)
+        // var timeLatLon = dateTimeRange.map(function(v,i) {
+        //     var val = lonArray[i]+","+latArray[i]
+        //     return [v, val];
+        // });
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timeSpeed,false)
         // vm.highchart().series[2].setData(timeDateTime,false)
-        vm.highchart().series[2].setData(timePace,false)
-        vm.highchart().series[3].setData(timeDist,false)
+        // vm.highchart().series[2].setData(timePace,false)
+        // vm.highchart().series[3].setData(timeDist,false)
         // vm.highchart().series[5].setData(timeLatLon,false)
         vm.highchart().redraw();
     })
@@ -156,9 +148,10 @@ $(document).ready(function() {
             },
             xAxis: {
                 labels: {
+                type: 'datetime',
                 tickInterval: 900,
                 formatter: function () {
-                    dateTimeOutputString(this.value)
+                    // dateTimeOutputString(this.value)
                     }
                 },
                 crosshair: true,
