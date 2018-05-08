@@ -21,8 +21,7 @@ gpx_validation <- function(gpxfile, ...){
         )
       # Parsing header info 
       tryCatch({
-        data <- readGPX(gpxfile, metadata = TRUE, bounds = TRUE, 
-          waypoints = TRUE, tracks = TRUE, routes = TRUE)
+
         text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
         attributes <- threadr::str_filter(head(text_gpx), "xmlns")
         values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
@@ -35,10 +34,11 @@ gpx_validation <- function(gpxfile, ...){
           df <- gpx_df_construct(gpxfile)
           return (df)
         }
-      }, error = function(e){
-        stop(cat('GPS device not supported.'))
-    })
-  }
+        }, error = function(e){
+          stop(cat('GPS device not supported.'))
+      })
+    }
+  })
 }
 
 # Haversine formula for calculating distances from lat/long
