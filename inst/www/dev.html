@@ -390,9 +390,13 @@ $(document).ready(function() {
         var map = new L.map('plotdiv')
         var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
         var osmAttrib='Map data &copy; OpenStreetMap contributors';
+        var google = new L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',{
+                maxZoom: 20,
+                subdomains:['mt0','mt1','mt2','mt3']
+            })
         var osm = new L.TileLayer(osmUrl, {minZoom: 5, maxZoom: 18, attribution: osmAttrib});
-        map.addLayer(osm);
-        map.setView(new L.LatLng(39.8283, -98.5795),6);
+        map.addLayer(google);
+        map.setView(new L.LatLng(39.8283, -98.5795), 3);
         // , {
             // zoom: 3,
             // // center: new L.latLng([37.8, -96]),
