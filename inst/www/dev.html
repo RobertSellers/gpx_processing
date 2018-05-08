@@ -211,8 +211,6 @@ $(document).ready(function() {
                     if (padded_seconds.toString().length == 1) {
                         padded_seconds = "0" + padded_seconds;
                     }
-                                var padded_minutes = ("0" + date.getMinutes()).substr(-1,1)
-                    var padded_seconds = ("0" + date.getSeconds()).substr(-1,1)
                     return '<b>Time: </b>'+ date.getHours()+':'+ padded_minutes+":" + padded_seconds + '<br/>'+
                     '<b>Date: </b>'+ date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()  +'<br/>'+ 
                     '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
