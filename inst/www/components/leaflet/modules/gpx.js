@@ -44,31 +44,26 @@ var _MINUTE_IN_MILLIS = 60 * _SECOND_IN_MILLIS;
 var _HOUR_IN_MILLIS = 60 * _MINUTE_IN_MILLIS;
 var _DAY_IN_MILLIS = 24 * _HOUR_IN_MILLIS;
 
-var _DEFAULT_MARKER_OPTS = {
-  startIconUrl: 'pin-icon-start.png',
-  endIconUrl: 'pin-icon-end.png',
-  shadowUrl: 'pin-shadow.png',
-  wptIconUrls : {
-    '': 'pin-icon-wpt.png',
-  },
-  iconSize: [33, 50],
-  shadowSize: [50, 50],
-  iconAnchor: [16, 45],
-  shadowAnchor: [16, 47],
-  clickable: false
-};
+
 var _DEFAULT_POLYLINE_OPTS = {
-  color: 'blue'
-};
+    color: 'blue',
+    min: 150,
+    max: 350,
+    palette: {
+      0.0: '#008800',
+      0.5: '#ffff00',
+      1.0: '#ff0000'
+    },
+    weight: 5,
+    outlineColor: '#000000',
+    outlineWidth: 1
+  };
 var _DEFAULT_GPX_OPTS = {
   parseElements: ['track', 'route', 'waypoint']
 };
 L.GPX = L.FeatureGroup.extend({
   initialize: function(gpx, options) {
     options.max_point_interval = options.max_point_interval || _MAX_POINT_INTERVAL_MS;
-    options.marker_options = this._merge_objs(
-      _DEFAULT_MARKER_OPTS,
-      options.marker_options || {});
     options.polyline_options = this._merge_objs(
       _DEFAULT_POLYLINE_OPTS,
       options.polyline_options || {});
@@ -77,9 +72,6 @@ L.GPX = L.FeatureGroup.extend({
       options.gpx_options || {});
 
     L.Util.setOptions(this, options);
-
-    // Base icon class for track pins.
-    L.GPXTrackIcon = L.Icon.extend({ options: options.marker_options });
 
     this._gpx = gpx;
     this._layers = {};
@@ -326,98 +318,16 @@ L.GPX = L.FeatureGroup.extend({
         if (coords.length === 0) continue;
 
         // add track
-        var l = new L.Hotline(coords, options.polyline_options);
+        var l = new L.Hotline(coords, options.polyline_options,);
         // var l = new L.Polyline(coords, options.polyline_options);
         this.fire('addline', { line: l, element: el[i] });
         layers.push(l);
-
-        // if (options.marker_options.startIcon || options.marker_options.startIconUrl) {
-        //   // add start pin
-        //   var p = new L.Marker(coords[0], {
-        //     clickable: options.marker_options.clickable,
-        //     icon: options.marker_options.startIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.startIconUrl})
-        //   });
-        //   this.fire('addpoint', { point: p, point_type: 'start', element: el[i] });
-        //   layers.push(p);
-        // }
-
-        // if (options.marker_options.endIcon || options.marker_options.endIconUrl) {
-        //   // add end pin
-        //   p = new L.Marker(coords[coords.length-1], {
-        //     clickable: options.marker_options.clickable,
-        //     icon: options.marker_options.endIcon || new L.GPXTrackIcon({iconUrl: options.marker_options.endIconUrl})
-        //   });
-        //   this.fire('addpoint', { point: p, point_type: 'end', element: el[i] });
-        //   layers.push(p);
-        // }
       }
     }
 
     this._info.hr.avg = Math.round(this._info.hr._total / this._info.hr._points.length);
     this._info.cad.avg = Math.round(this._info.cad._total / this._info.cad._points.length);
     this._info.atemp.avg = Math.round(this._info.atemp._total / this._info.atemp._points.length);
-
-    // parse waypoints and add markers for each of them
-    if (parseElements.indexOf('waypoint') > -1) {
-      el = xml.getElementsByTagName('wpt');
-      for (i = 0; i < el.length; i++) {
-        var ll = new L.LatLng(
-            el[i].getAttribute('lat'),
-            el[i].getAttribute('lon'));
-
-        var nameEl = el[i].getElementsByTagName('name');
-        var name = '';
-        if (nameEl.length > 0) {
-          name = nameEl[0].textContent;
-        }
-
-        var descEl = el[i].getElementsByTagName('desc');
-        var desc = '';
-        if (descEl.length > 0) {
-          desc = descEl[0].textContent;
-        }
-
-        var symEl = el[i].getElementsByTagName('sym');
-        var symKey = '';
-        if (symEl.length > 0) {
-          symKey = symEl[0].textContent;
-        }
-
-        /*
-         * Add waypoint marker based on the waypoint symbol key.
-         *
-         * First look for a configured icon for that symKey. If not found, look
-         * for a configured icon URL for that symKey and build an icon from it.
-         * Otherwise, fall back to the default icon if one was configured, or
-         * finally to the default icon URL.
-         */
-        var wptIcons = options.marker_options.wptIcons;
-        var wptIconUrls = options.marker_options.wptIconUrls;
-        var symIcon;
-        if (wptIcons && wptIcons[symKey]) {
-          symIcon = wptIcons[symKey];
-        } else if (wptIconUrls && wptIconUrls[symKey]) {
-          symIcon = new L.GPXTrackIcon({iconUrl: wptIconUrls[symKey]});
-        } else if (wptIcons && wptIcons['']) {
-          symIcon = wptIcons[''];
-        } else if (wptIconUrls && wptIconUrls['']) {
-          symIcon = new L.GPXTrackIcon({iconUrl: wptIconUrls['']});
-        } else {
-          console.log('No icon or icon URL configured for symbol type "' + symKey
-            + '", and no fallback configured; ignoring waypoint.');
-          continue;
-        }
-
-        var marker = new L.Marker(ll, {
-          clickable: true,
-          title: name,
-          icon: symIcon
-        });
-        marker.bindPopup("<b>" + name + "</b>" + (desc.length > 0 ? '<br>' + desc : '')).openPopup();
-        this.fire('addpoint', { point: marker, point_type: 'waypoint', element: el[i] });
-        layers.push(marker);
-      }
-    }
 
     if (layers.length > 1) {
        return new L.FeatureGroup(layers);
