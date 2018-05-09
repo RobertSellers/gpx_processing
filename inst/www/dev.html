@@ -82,7 +82,7 @@ $(document).ready(function() {
         return Math.round(x/y) + ":" + z;
     }
 
-    vm.computeMultiple.subscribe(function(){
+    vm.rDataOutput.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var dateTimeRange = vm.rDataOutput().map(a=> a.DateTime)
