@@ -82,13 +82,13 @@ $(document).ready(function() {
         return Math.round(x/y) + ":" + z;
     }
 
-    ko.computed(function(){
+    vm.computeMultiple = ko.computed(function(){
         this.rDataOutput();
         this.gpxjs_vars();
-        this.isUpdated = true;
+        return this.gpxjs_vars().get_name
     });
 
-    vm.isUpdated.subscribe(function(){
+    vm.computeMultiple.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var dateTimeRange = vm.rDataOutput().map(a=> a.DateTime)
@@ -130,7 +130,7 @@ $(document).ready(function() {
         vm.highchart().xAxis[0].isDirty = true;
         vm.highchart().redraw();
         vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
-        vm.isUpdated(false)
+        // vm.computeMultiple(false)
     })
 
 
