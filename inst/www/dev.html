@@ -73,10 +73,10 @@ $(document).ready(function() {
             var exportData = new CSVExport(data, filename);
             return exportData
         },
-        mapTitle : ko.computed(function(){
-            var title = 'GPX Track Map' + this.gpxjs_vars().get_name;
-            return title
-        })
+        // mapTitle : ko.computed(function(){
+        //     var title = 'GPX Track Map' + this.gpxjs_vars().get_name;
+        //     return title
+        // })
     };
 
     function dateTimeOutputString(x){
