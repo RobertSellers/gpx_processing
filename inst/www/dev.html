@@ -83,9 +83,9 @@ $(document).ready(function() {
     }
 
     vm.computeMultiple = ko.computed(function(){
-        this.rDataOutput();
-        this.gpxjs_vars();
-        return this.gpxjs_vars().get_name
+        vm.rDataOutput();
+        vm.gpxjs_vars();
+        return vm.gpxjs_vars().get_name
     });
 
     vm.computeMultiple.subscribe(function(){
