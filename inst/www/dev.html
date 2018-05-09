@@ -29,6 +29,7 @@
 <script src="components/leaflet/leaflet.js"></script>
 <script src="components/leaflet/modules/gpx.js"></script>
 <script src="components/leaflet/modules/Control.MiniMap.js"></script>
+<script src="components/leaflet/modules/leaflet.hotline.min.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
 <link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
 
@@ -474,11 +475,12 @@ $(document).ready(function() {
                     color: "#000",
                     weight: 1, 
                     opacity: 1,
-                    fillOpacity: 0.8
+                    fillOpacity: 0.0
                 };
 
                 // start/end markers and popups
-                if (gpx._layers[Object.keys(gpx._layers)[0]].hasOwnProperty('_layers')){
+                var base = gpx._layers[Object.keys(gpx._layers)[0]];
+                if (base.hasOwnProperty('_layers')){
                     var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
                     for (var key in base) {
                         var lat_lngs = base[key]._latlngs;
@@ -491,7 +493,6 @@ $(document).ready(function() {
                         end_marker.addTo(vm.leafletMap());
                     }
                 }else{
-                    var base = gpx._layers[Object.keys(gpx._layers)[0]];
                     var lat_lngs = base._latlngs;
                     var nL = lat_lngs.length-1
                     var start = [lat_lngs[0].lat, lat_lngs[0].lng]
@@ -502,7 +503,8 @@ $(document).ready(function() {
                     end_marker.addTo(vm.leafletMap());
                 }
                 
-        }).addTo(vm.leafletMap());
+        });
+        gpx_layer.addTo(vm.leafletMap());
         map_lock('unlock');
     }
 
