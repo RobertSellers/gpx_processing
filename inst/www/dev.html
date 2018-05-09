@@ -516,8 +516,8 @@ $(document).ready(function() {
                 session.getObject(function(data)  {
                     vm.rDataOutput(data)
                     updateLeaflet()
-                    vm.highchart().redraw();
                     vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
+                    vm.highchart().redraw();
                     $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
                     $(".download").prop('disabled', false);
