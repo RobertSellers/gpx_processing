@@ -471,9 +471,22 @@ $(document).ready(function() {
                 };
 
                 // start/end markers and popups
-                for (var key in gpx._layers[Object.keys(gpx._layers)[0]]._layers) {
+                if (gpx._layers[Object.keys(gpx._layers)[0]].hasOwnProperty('_layers')){
+                    var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
+                    for (var key in base) {
+                        var nL = lat_lngs.length-1
+                        var lat_lngs = base[key]._latlngs;
+                        var start = [lat_lngs[0].lat, lat_lngs[0].lng]
+                        var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
+                        var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+                        start_marker.addTo(vm.leafletMap());
+                        var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+                        end_marker.addTo(vm.leafletMap());
+                    }
+                }else{
+                    var base = gpx._layers[Object.keys(gpx._layers)[0]];
                     var nL = lat_lngs.length-1
-                    var lat_lngs = gpx._layers[Object.keys(gpx._layers)[0]]._layers[key]._latlngs;
+                    var lat_lngs = base._latlngs;
                     var start = [lat_lngs[0].lat, lat_lngs[0].lng]
                     var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
                     var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
