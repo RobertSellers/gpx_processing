@@ -82,12 +82,6 @@ $(document).ready(function() {
         return Math.round(x/y) + ":" + z;
     }
 
-    vm.computeMultiple = ko.computed(function(){
-        vm.rDataOutput();
-        vm.gpxjs_vars();
-        return vm.gpxjs_vars().get_name
-    });
-
     vm.computeMultiple.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
@@ -128,9 +122,6 @@ $(document).ready(function() {
         vm.highchart().yAxis[0].isDirty = true;
         vm.highchart().yAxis[1].isDirty = true;
         vm.highchart().xAxis[0].isDirty = true;
-        vm.highchart().redraw();
-        vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
-        // vm.computeMultiple(false)
     })
 
 
@@ -525,6 +516,8 @@ $(document).ready(function() {
                 session.getObject(function(data)  {
                     vm.rDataOutput(data)
                     updateLeaflet()
+                    vm.highchart().redraw();
+                    vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
                     $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
                     $(".download").prop('disabled', false);
