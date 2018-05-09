@@ -85,11 +85,6 @@ $(document).ready(function() {
         return Math.round(x/y) + ":" + z;
     }
 
-    vm.mapTitle = ko.computed(function(){
-        var title = 'GPX Track Map' + vm.gpxjs_vars().get_name;
-        return title
-    });
-
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
