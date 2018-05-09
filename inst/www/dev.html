@@ -474,8 +474,8 @@ $(document).ready(function() {
                 if (gpx._layers[Object.keys(gpx._layers)[0]].hasOwnProperty('_layers')){
                     var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
                     for (var key in base) {
-                        var nL = lat_lngs.length-1
                         var lat_lngs = base[key]._latlngs;
+                        var nL = lat_lngs.length-1
                         var start = [lat_lngs[0].lat, lat_lngs[0].lng]
                         var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
                         var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
@@ -485,8 +485,8 @@ $(document).ready(function() {
                     }
                 }else{
                     var base = gpx._layers[Object.keys(gpx._layers)[0]];
-                    var nL = lat_lngs.length-1
                     var lat_lngs = base._latlngs;
+                    var nL = lat_lngs.length-1
                     var start = [lat_lngs[0].lat, lat_lngs[0].lng]
                     var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
                     var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
