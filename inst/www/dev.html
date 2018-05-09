@@ -426,57 +426,61 @@ $(document).ready(function() {
         var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
         var gpx_layer = new L.GPX(gpx_file, {async: true})
             .on('loaded', function(e) {
-            var gpx = e.target;
-             vm.leafletMap().fitBounds(gpx.getBounds());
+                var gpx = e.target;
+                vm.leafletMap().fitBounds(gpx.getBounds());
 
-            vm.gpxjs_vars({
-                get_name: gpx.get_name(),//returns the name of the GPX track
-                pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
-                get_distance_imp: gpx.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
-                get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
-                get_start_date: gpx.get_start_time().toDateString(),
-                get_moving_time: msToTime(gpx.get_moving_time()),//returns the moving time, in milliseconds
-                get_total_time: msToTime(gpx.get_total_time()),//returns the total track time, in milliseconds
-                get_moving_pace_imp: gpx.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
-                get_moving_speed_imp: gpx.get_moving_speed_imp().toFixed(2)+' mph',
-                get_total_speed_imp: gpx.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
-                get_elevation_min_imp: gpx.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
-                get_elevation_max_imp: gpx.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
-                get_elevation_gain_imp: "+" + gpx.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
-                get_elevation_loss_imp: gpx.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
-                //full elevation, cadence  data
-                elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
-                get_elevation_data_imp: gpx.get_elevation_data_imp()
-            });
+                vm.gpxjs_vars({
+                    get_name: gpx.get_name(),//returns the name of the GPX track
+                    pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
+                    get_distance_imp: gpx.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
+                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
+                    get_start_date: gpx.get_start_time().toDateString(),
+                    get_moving_time: msToTime(gpx.get_moving_time()),//returns the moving time, in milliseconds
+                    get_total_time: msToTime(gpx.get_total_time()),//returns the total track time, in milliseconds
+                    get_moving_pace_imp: gpx.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
+                    get_moving_speed_imp: gpx.get_moving_speed_imp().toFixed(2)+' mph',
+                    get_total_speed_imp: gpx.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
+                    get_elevation_min_imp: gpx.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
+                    get_elevation_max_imp: gpx.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
+                    get_elevation_gain_imp: "+" + gpx.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
+                    get_elevation_loss_imp: gpx.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
+                    //full elevation, cadence  data
+                    elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
+                    get_elevation_data_imp: gpx.get_elevation_data_imp()
+                });
+                
+                //update highchart
+                vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
+                vm.highchart().redraw();
 
-            var circleMarkerStyle_start = {
-                radius: 8,
-                fillColor: "#00ff00",
-                color: "#000",
-                weight: 1, 
-                opacity: 1,
-                fillOpacity: 0.8
-            };
+                var circleMarkerStyle_start = {
+                    radius: 8,
+                    fillColor: "#00ff00",
+                    color: "#000",
+                    weight: 1, 
+                    opacity: 1,
+                    fillOpacity: 0.8
+                };
 
-            var circleMarkerStyle_end = {
-                radius: 8,
-                fillColor: "#ff7800",
-                color: "#000",
-                weight: 1, 
-                opacity: 1,
-                fillOpacity: 0.8
-            };
+                var circleMarkerStyle_end = {
+                    radius: 8,
+                    fillColor: "#ff7800",
+                    color: "#000",
+                    weight: 1, 
+                    opacity: 1,
+                    fillOpacity: 0.8
+                };
 
-            // start/end markers and popups
-            var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
-            var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
-            var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
-            
-            var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-            start_marker.addTo(vm.leafletMap());
-            var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-            end_marker.addTo(vm.leafletMap());
-
+                // start/end markers and popups
+                var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
+                var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
+                var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
+                
+                var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+                start_marker.addTo(vm.leafletMap());
+                var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+                end_marker.addTo(vm.leafletMap());
+                
         }).addTo(vm.leafletMap());
         map_lock('unlock');
     }
@@ -516,8 +520,6 @@ $(document).ready(function() {
                 session.getObject(function(data)  {
                     vm.rDataOutput(data)
                     updateLeaflet()
-                    vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
-                    vm.highchart().redraw();
                     $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
                     $(".download").prop('disabled', false);
