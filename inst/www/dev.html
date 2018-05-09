@@ -27,9 +27,9 @@
 
 <!-- Leaflet -->
 <script src="components/leaflet/leaflet.js"></script>
+<script src="components/leaflet/modules/leaflet.hotline.min.js"></script>
 <script src="components/leaflet/modules/gpx.js"></script>
 <script src="components/leaflet/modules/Control.MiniMap.js"></script>
-<script src="components/leaflet/modules/leaflet.hotline.min.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
 <link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
 
@@ -461,7 +461,7 @@ $(document).ready(function() {
                 vm.highchart().redraw();
 
                 var circleMarkerStyle_start = {
-                    radius: 4,
+                    radius: 6,
                     fillColor: "#00ff00",
                     color: "#000",
                     weight: 2, 
@@ -470,7 +470,7 @@ $(document).ready(function() {
                 };
 
                 var circleMarkerStyle_end = {
-                    radius: 4,
+                    radius: 6,
                     fillColor: "#ff0000",
                     color: "#ff0000",
                     weight: 2, 
