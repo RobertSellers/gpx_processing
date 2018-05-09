@@ -217,6 +217,13 @@ $(document).ready(function() {
                     label: {
                         connectorAllowed: false
                     },
+                    fillColor: {
+                        linearGradient: [0, 0, 0, 300],
+                        stops: [
+                            [0, Highcharts.getOptions().colors[2]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
+                        ]
+                    },
                     cursor: "pointer",
                     events: {
                         click: function(event) {
