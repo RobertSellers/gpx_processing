@@ -46,7 +46,7 @@ var _DAY_IN_MILLIS = 24 * _HOUR_IN_MILLIS;
 
 
 var _DEFAULT_POLYLINE_OPTS = {
-    // color: 'blue',
+    /// color: 'blue',
     min: 150,
     max: 350,
     palette: {
