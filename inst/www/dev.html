@@ -207,7 +207,6 @@ $(document).ready(function() {
                         padded_seconds = "0" + padded_seconds;
                     }
                     return '<b>Time: </b>'+ date.getHours()+':'+ padded_minutes+":" + padded_seconds + '<br/>'+
-                    '<b>Date: </b>'+ date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()  +'<br/>'+ 
                     '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
@@ -472,14 +471,16 @@ $(document).ready(function() {
                 };
 
                 // start/end markers and popups
-                var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
-                var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
-                var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
-                
-                var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                start_marker.addTo(vm.leafletMap());
-                var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                end_marker.addTo(vm.leafletMap());
+                for (var key in gpx._layers[Object.keys(gpx._layers)[0]]._layers) {
+                    var nL = gpx._layers[Object.keys(gpx._layers)[0]]._latlngs.length-1;
+                    var start = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[0].lng]
+                    var end = [gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lat,gpx._layers[Object.keys(gpx._layers)[0]]._latlngs[nL].lng]
+                    
+                    var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+                    start_marker.addTo(vm.leafletMap());
+                    var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+                    end_marker.addTo(vm.leafletMap());
+                }
                 
         }).addTo(vm.leafletMap());
         map_lock('unlock');
