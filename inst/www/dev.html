@@ -193,7 +193,7 @@ $(document).ready(function() {
                 polar: false
             },
             title: {
-                text:''
+                text:'n/a'
             },
             subtitle: {
                 text: '',
@@ -526,8 +526,8 @@ $(document).ready(function() {
                 //update highchart
                 vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
                 Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;}))
-                vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
-                vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.speedMPH;})) });
+                vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
+                vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.speedMPH;})) });
                 vm.highchart().redraw();
 
                 var circleMarkerStyle_start = {
