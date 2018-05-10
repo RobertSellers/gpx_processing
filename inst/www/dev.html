@@ -213,8 +213,10 @@ $(document).ready(function() {
                     text: 'Time (hh:mm)'
                 }
             },
-            yAxis: [{ // Primary yAxis
+            yAxis: [{
+                 // Primary yAxis
                 gridLineWidth: 0,
+                min: 0,
                 title: {
                     text: 'Speed (mph)',
                     style: {
@@ -235,6 +237,7 @@ $(document).ready(function() {
                         color: elevationColor
                     }
                 },
+                min: 0,
                 title: {
                     text: 'Elevation (feet asl)',
                     style: {
