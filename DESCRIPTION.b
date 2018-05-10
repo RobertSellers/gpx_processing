@@ -10,4 +10,7 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     plotKML,
-    XML
+    XML,
+    stringr,
+    threadr
+Remotes: skgrange/threadr
