@@ -301,17 +301,20 @@ $(document).ready(function() {
                     valueSuffix: ' mph'
                 },
                 color: {
+                    formatter: function(){
+                        //debug
+                    },
                     linearGradient: {
                     x1: 0,
                     y1: 0,
                     x2: 0,
                     y2: 1
                 },
-                stops: [
-                    [0, 'red'],
-                    [0.5, 'green'],
-                    [1, 'blue']
-                ]
+                    stops: [
+                        [0, 'red'],
+                        [0.5, 'green'],
+                        [1, 'blue']
+                    ]
                 }
             },
             {
