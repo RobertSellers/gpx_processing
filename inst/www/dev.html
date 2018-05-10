@@ -525,9 +525,7 @@ $(document).ready(function() {
                 
                 //update highchart
                 vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
-                Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;}))
-                vm.highchart().yAxis[1].setExtremes(null,null)
-                vm.highchart().yAxis[0].setExtremes(null,null)
+                vm.highchart().xAxis[0].setExtremes(null,null)
                 vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
                 vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.speedMPH;})) });
                 vm.highchart().redraw();
