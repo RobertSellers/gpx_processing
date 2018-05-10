@@ -125,26 +125,6 @@ $(document).ready(function() {
         vm.highchart().xAxis[0].isDirty = true;
     })
 
-    function getFormattedDate(date) {
-        // var date = new Date();
-
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        var hour = date.getHours();
-        var min = date.getMinutes();
-        var sec = date.getSeconds();
-
-        month = (month < 10 ? "0" : "") + month;
-        day = (day < 10 ? "0" : "") + day;
-        hour = (hour < 10 ? "0" : "") + hour;
-        min = (min < 10 ? "0" : "") + min;
-        sec = (sec < 10 ? "0" : "") + sec;
-
-        var str = date.getFullYear() + "-" + month + "-" + day + "_" +  hour + ":" + min + ":" + sec;
-
-        return str;
-    }
-
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
@@ -225,9 +205,7 @@ $(document).ready(function() {
                 labels: {
                     type: 'datetime',
                     dateTimeLabelFormats: {
-                        // second: '%H:%M:%S',
                         minute: '%H:%M'
-                        // hour: '%H:%M'   
                     }
                 },
                 crosshair: true
@@ -267,7 +245,7 @@ $(document).ready(function() {
             tooltip: {
                 shared: true,
                 formatter: function () {
-                    return '<b>Time: </b>'+ getFormattedDate(new Date(this.points[0].x)) + '<br/>'+
+                    return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
