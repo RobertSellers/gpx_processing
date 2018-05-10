@@ -129,7 +129,7 @@ $(document).ready(function() {
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
-        var speedColor = "#000000"
+        var speedColor = "#7798BF"
 
         Highcharts.setOptions({
             chart: {
@@ -297,29 +297,29 @@ $(document).ready(function() {
                 }
             }, {
                 name: "Speed",
-                // color: speedColor,
+                 color: speedColor,
                 data: [null, null],
                 type: "spline",
                 // dashStyle: 'shortdot',
                 tooltip: {
                     valueSuffix: ' mph'
-                },
-                color: {
-                    formatter: function(){
-                        //debug
-                    },
-                    linearGradient: {
-                    x1: 1,
-                    y1: 0,
-                    x2: 0,
-                    y2: 0
-                },
-                    stops: [
-                        [0, 'green'],
-                        [0.5, 'yellow'],
-                        [1, 'red']
-                    ]
                 }
+                // color: {
+                //     formatter: function(){
+                //         //debug
+                //     },
+                //     linearGradient: {
+                //     x1: 1,
+                //     y1: 0,
+                //     x2: 0,
+                //     y2: 0
+                // },
+                //     stops: [
+                //         [0, 'green'],
+                //         [0.5, 'yellow'],
+                //         [1, 'red']
+                //     ]
+                // }
             },
             {
                 name: 'timePace',
