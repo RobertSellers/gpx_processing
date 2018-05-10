@@ -204,29 +204,17 @@ $(document).ready(function() {
             xAxis: {
                 type: 'datetime',
                 labels: {
-                    // type: 'datetime',
-                    // labels: {
-                        // format: '{value:%Y-%b-%e}',
-                    // },
-                    // tickInterval: 900,
-                    formatter: function () {
-                        // dateTimeOutputString(this.value)
-                        }
-                    // },
-                    // dateTimeLabelFormats: { // don't display the dummy year
-                    //     second: '%H:%M:%S',
-                    //     minute: '%H:%M',
-                    //     hour: '%H:%M'   
-                    // },
-                    // crosshair: true,
-                    // title: {
-                    //     text: 'Duration (hh:mm)'
-                    //     }
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        second: '%H:%M:%S',
+                        minute: '%H:%M',
+                        hour: '%H:%M'   
+                    }
                 },
-                crosshair: true,
-                title: {
-                    text: 'Duration (hh:mm)'
-                }
+                crosshair: true
+                // title: {
+                //     text: 'Duration (hh:mm)'
+                // }
             },
             yAxis: [{ // Primary yAxis
                 gridLineWidth: 0,
