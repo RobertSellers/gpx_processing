@@ -121,6 +121,7 @@ $(document).ready(function() {
 
         var elevationColor = "#76a912"
         var speedColor = "#7798BF"
+        var paceColor = "red"
 
         Highcharts.setOptions({
             chart: {
@@ -237,6 +238,21 @@ $(document).ready(function() {
                         color: elevationColor
                     }
                 }
+            }, { // Tertiary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Pace',
+                    style: {
+                        color: paceColor
+                    }
+                },
+                labels: {
+                    format: '{value} m/mi',
+                    style: {
+                        color: paceColor
+                    }
+                },
+                opposite: true
             }],
             tooltip: {
                 shared: true,
