@@ -569,10 +569,10 @@ $(document).ready(function() {
                     var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
                     //New Circle Makers
                     var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                    var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                    //Add Markers to Map
                     start_marker.addTo(vm.leafletMap());
+                    var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
                     end_marker.addTo(vm.leafletMap());
+                    
                 }
                 
         });
