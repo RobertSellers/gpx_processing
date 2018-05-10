@@ -207,7 +207,8 @@ $(document).ready(function() {
                     type: 'datetime',
                     dateTimeLabelFormats: {
                         minute: '%H:%M'
-                    }
+                    },
+                    color: "black"
                 },
                 crosshair: true,
                 title: {
@@ -233,7 +234,7 @@ $(document).ready(function() {
                 opposite: true
             }, { // Secondary yAxis
                 labels: {
-                    format: "{value}'",
+                    format: "{value}",
                     style: {
                         color: elevationColor
                     }
