@@ -524,6 +524,7 @@ $(document).ready(function() {
                 
                 //update highchart
                 vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
+                // vm.highchart().yAxis[0].update({ max: maxValue });
                 vm.highchart().redraw();
 
                 var circleMarkerStyle_start = {
