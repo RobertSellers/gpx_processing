@@ -510,8 +510,16 @@ $(document).ready(function() {
         var gpx_layer = new L.GPX(gpx_file, {async: true})
             .on('loaded', function(e) {
                 var gpx = e.target;
-                vm.leafletMap().fitBounds(gpx.getBounds());
+                
+                // REMOVE ALL LAYERS EXCEPT FIRST.  TBD
+                var keys_tb_removed = Object.keys(e.layers._layers).slice(1, Object.keys(e.layers._layers).length);
+                for (key in keys_tb_removed){
+                    delete e.layers._layers[key]
+                }
 
+
+                vm.leafletMap().fitBounds(gpx.getBounds());
+                
                 vm.gpxjs_vars({
                     get_name: gpx.get_name(),//returns the name of the GPX track
                     pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
