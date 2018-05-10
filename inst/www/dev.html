@@ -86,7 +86,7 @@ $(document).ready(function() {
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
         var timeRange = vm.rDataOutput().map(a => a.Seconds)
-        var dateTimeRange = vm.rDataOutput().map(a=> Date.UTC(a.DateTime))
+        var dateTimeRange = vm.rDataOutput().map(a=> new Date(a.DateTime).toUTCString())
         //ELEVATION
         var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
         var timeElevation = dateTimeRange.map(function(v,i) {
