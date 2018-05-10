@@ -112,7 +112,7 @@ $(document).ready(function() {
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
-        var speedColor = "#7798BF"
+        var speedColor = "yellow"
         var gradientColor = "red"
 
         Highcharts.setOptions({
@@ -289,7 +289,6 @@ $(document).ready(function() {
                 name: "Elevation",
                 color: elevationColor,
                 yAxis: 1,
-                // lineWidth: 1,
                 data: [null, null],
                 type: "areaspline",
                 tooltip: {
@@ -300,7 +299,6 @@ $(document).ready(function() {
                  color: speedColor,
                 data: [null, null],
                 type: "spline",
-                // dashStyle: 'shortdot',
                 tooltip: {
                     valueSuffix: ' m/s'
                 }
@@ -326,7 +324,7 @@ $(document).ready(function() {
                 color: gradientColor,
                 yAxis: 2,
                 data: [null, null],
-                dashStyle: 'shortdot',
+                // dashStyle: 'shortdot',
                 type: "spline",
                 tooltip: {
                     valuePrefix: "∇"
