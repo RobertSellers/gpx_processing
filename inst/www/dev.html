@@ -293,12 +293,19 @@ $(document).ready(function() {
                 }
             }, {
                 name: "Speed",
-                color: speedColor,
+                // color: speedColor,
                 data: [null, null],
                 type: "spline",
                 // dashStyle: 'shortdot',
                 tooltip: {
                     valueSuffix: ' mph'
+                },
+                color: {
+                    linearGradient: [0, 0, 0, 60],
+                    stops: [
+                        [0, 'rgb(255, 255, 255)'],
+                        [1, 'rgb(100, 100, 155)']
+                    ]
                 }
             },
             {
@@ -544,9 +551,11 @@ $(document).ready(function() {
                     var nL = lat_lngs.length-1
                     var start = [lat_lngs[0].lat, lat_lngs[0].lng]
                     var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
+                    //New Circle Makers
                     var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                    start_marker.addTo(vm.leafletMap());
                     var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+                    //Add Markers to Map
+                    start_marker.addTo(vm.leafletMap());
                     end_marker.addTo(vm.leafletMap());
                 }
                 
@@ -685,7 +694,7 @@ $(document).ready(function() {
                     <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
                         <div id="container"></div>
                     </div>
-                    <div class="tab-panel" id="Readme" role="tabpanel" aria-hidden="true">TBD
+                    <div class="tab-panel" id="Readme" role="tabpanel" aria-hidden="true">Created By Robert Sellers / Azimuth1
                     </div>
               </div>
             </div>
