@@ -185,12 +185,6 @@ $(document).ready(function() {
                     display: 'none'
                 }
             },
-            plotLines: [{
-                color: 'purple',
-                dashStyle: 'longtdot',
-                width: 1,
-                value: 0 // Need to set this probably as a var.
-            }],
             xAxis: {
                 type: 'datetime',
                 labels: {
@@ -245,7 +239,7 @@ $(document).ready(function() {
                     }
                 },
                 labels: {
-                    format: '∇ {value}',
+                    format: '{value}',
                     style: {
                         color: gradientColor
                     }
@@ -257,6 +251,7 @@ $(document).ready(function() {
                 formatter: function () {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
+                    '<b>Gradient (∇): </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
             },
