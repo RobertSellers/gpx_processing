@@ -99,31 +99,22 @@ $(document).ready(function() {
             return [v, speedArray[i]];
         });
         //PACE
-        // var paceArray = vm.rDataOutput().map(a => a.Pace)
-        // var timePace = dateTimeRange.map(function(v,i) {
-        //     return [v, paceArray[i]];
-        // });
+        var paceArray = vm.rDataOutput().map(a => a.Pace)
+        var timePace = dateTimeRange.map(function(v,i) {
+            return [v, paceArray[i]];
+        });
         //DISTANCE
-        // var distanceArray = vm.rDataOutput().map(a => a.Dist)
-        // var timeDist = dateTimeRange.map(function(v,i) {
-        //     return [v, distanceArray[i]];
-        // });
-        //LAT LONG
-        // var latArray = vm.rDataOutput().map(a => a.Latitude)
-        // var lonArray = vm.rDataOutput().map(a => a.Longitude)
-        // var timeLatLon = dateTimeRange.map(function(v,i) {
-        //     var val = lonArray[i]+","+latArray[i]
-        //     return [v, val];
-        // });
+        var distanceArray = vm.rDataOutput().map(a => a.Dist)
+        var timeDist = dateTimeRange.map(function(v,i) {
+            return [v, distanceArray[i]];
+        });
+
         vm.highchart().series[0].setData(timeElevation,false)
         vm.highchart().series[1].setData(timeSpeed,false)
-        // vm.highchart().series[2].setData(timeDateTime,false)
-        // vm.highchart().series[2].setData(timePace,false)
-        // vm.highchart().series[3].setData(timeDist,false)
-        // vm.highchart().series[5].setData(timeLatLon,false)
-        vm.highchart().yAxis[0].isDirty = true;
-        vm.highchart().yAxis[1].isDirty = true;
-        vm.highchart().xAxis[0].isDirty = true;
+        vm.highchart().series[2].setData(timePace,false)
+        // vm.highchart().yAxis[0].isDirty = true;
+        // vm.highchart().yAxis[1].isDirty = true;
+        // vm.highchart().xAxis[0].isDirty = true;
     })
 
     vm.highchart= ko.computed(function(){
@@ -274,7 +265,7 @@ $(document).ready(function() {
                         linearGradient: [0, 0, 0, 300],
                         stops: [
                             [0, Highcharts.getOptions().colors[2]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.5).get('rgba')]
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
                         ]
                     },
                     cursor: "pointer",
@@ -323,14 +314,19 @@ $(document).ready(function() {
                 // }
             },
             {
-                name: 'timePace',
+                name: 'Pace',
                 data: [null, null],
                 visible: false
             },
             {
-                name: 'timeDist',
+                name: "Pace",
+                color: paceColor,
+                yAxis: 2,
                 data: [null, null],
-                visible: false
+                type: "areaspline",
+                tooltip: {
+                    valueSuffix: "m/mi"
+                }
             }
             ],
             credits: {
@@ -443,6 +439,7 @@ $(document).ready(function() {
         $(".download").css("opacity", 0.2);
         vm.highchart().series[0].setData([null,null],false)
         vm.highchart().series[1].setData([null,null],false)
+        vm.highchart().series[2].setData([null,null],false)
         vm.highchart().redraw();
         vm.leafletMap().eachLayer(function (layer) {
             if (!layer.hasOwnProperty('_tiles')){
