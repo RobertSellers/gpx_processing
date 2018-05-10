@@ -217,7 +217,7 @@ $(document).ready(function() {
                 // }
             },
             yAxis: [{ // Primary yAxis
-                gridLineWidth: 0,
+                // gridLineWidth: 0,
                 title: {
                     text: 'Speed (mph)',
                     style: {
@@ -248,19 +248,19 @@ $(document).ready(function() {
             tooltip: {
                 shared: true,
                 formatter: function () {
-                    var x = this.points[0].x;
+                    // var x = this.points[0].x;
                     var y = 60;
-                    var z = y % x;
-                    var date = new Date(this.points[0].key);
-                    var padded_minutes = date.getMinutes()
-                    var padded_seconds = date.getSeconds()
-                    if (padded_minutes.toString().length == 1) {
-                        padded_minutes = "0" + padded_minutes;
-                    }
-                    if (padded_seconds.toString().length == 1) {
-                        padded_seconds = "0" + padded_seconds;
-                    }
-                    return '<b>Time: </b>'+ date.getHours()+':'+ padded_minutes+":" + padded_seconds + '<br/>'+
+                    // var z = y % x;
+                    // var date = new Date(this.points[0].key);
+                    // var padded_minutes = date.getMinutes()
+                    // var padded_seconds = date.getSeconds()
+                    // if (padded_minutes.toString().length == 1) {
+                    //     padded_minutes = "0" + padded_minutes;
+                    // }
+                    // if (padded_seconds.toString().length == 1) {
+                    //     padded_seconds = "0" + padded_seconds;
+                    // }
+                    return '<b>Time: </b>'+ this.points[0].x + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
@@ -270,16 +270,16 @@ $(document).ready(function() {
                     marker: {
                         radius: 2
                     },
-                    lineWidth: 1,
+                    // lineWidth: 1,
                     turboThreshold: 0, //largest series tested is 8012
-                    label: {
-                        connectorAllowed: false
-                    },
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
+                    // label: {
+                    //     connectorAllowed: false
+                    // },
+                    // states: {
+                    //     hover: {
+                    //         lineWidth: 1
+                    //     }
+                    // },
                     fillColor: {
                         linearGradient: [0, 0, 0, 300],
                         stops: [
@@ -287,7 +287,7 @@ $(document).ready(function() {
                             [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.5).get('rgba')]
                         ]
                     },
-                    cursor: "pointer",
+                    // cursor: "pointer",
                     events: {
                         click: function(event) {
                             //do nothing
