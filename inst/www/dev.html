@@ -112,7 +112,7 @@ $(document).ready(function() {
     vm.highchart= ko.computed(function(){
 
         var elevationColor = "#76a912"
-        var speedColor = "yellow"
+        var speedColor = "red"
         var gradientColor = "purple"
 
         Highcharts.setOptions({
@@ -129,7 +129,7 @@ $(document).ready(function() {
                 font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
             }
         },
-            xAxis: {
+        xAxis: {
             gridLineWidth: 1,
             lineColor: '#000',
             tickColor: '#000',
