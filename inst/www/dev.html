@@ -185,6 +185,12 @@ $(document).ready(function() {
                     display: 'none'
                 }
             },
+            plotLines: [{
+                color: 'purple',
+                dashStyle: 'longtdot',
+                width: 1,
+                value: 0 // Need to set this probably as a var.
+            }],
             xAxis: {
                 type: 'datetime',
                 labels: {
