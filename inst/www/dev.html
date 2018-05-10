@@ -130,62 +130,63 @@ $(document).ready(function() {
 
         var elevationColor = "#76a912"
         var speedColor = "#000000"
+
         Highcharts.setOptions({
-    chart: {
-        style: {
-            fontFamily: 'monospace',
-            color: "#f00"
-        }
+            chart: {
+                style: {
+                    fontFamily: 'monospace',
+                    color: "#f00"
+                }
 
-    },
-    title: {
-      style: {
-         color: '#F00',
-         font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-      }
-   },
-    xAxis: {
-      gridLineWidth: 1,
-      lineColor: '#000',
-      tickColor: '#000',
-      labels: {
-         style: {
-            color: '#F00',
-            font: '11px Trebuchet MS, Verdana, sans-serif'
-         }
-      },
-      title: {
-         style: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontSize: '12px',
-            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+            },
+            title: {
+            style: {
+                color: '#F00',
+                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+            }
+        },
+            xAxis: {
+            gridLineWidth: 1,
+            lineColor: '#000',
+            tickColor: '#000',
+            labels: {
+                style: {
+                    color: '#F00',
+                    font: '11px Trebuchet MS, Verdana, sans-serif'
+                }
+            },
+            title: {
+                style: {
+                    color: '#333',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
 
-         }            
-      }
-   },
-   yAxis: {
-      minorTickInterval: 'auto',
-      lineColor: '#000',
-      lineWidth: 1,
-      tickWidth: 1,
-      tickColor: '#000',
-      labels: {
-         style: {
-            color: '#F00',
-            font: '11px Trebuchet MS, Verdana, sans-serif'
-         }
-      },
-      title: {
-         style: {
-            color: '#333',
-            fontWeight: 'bold',
-            fontSize: '12px',
-            fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-         }            
-      }
-   },
-});
+                }            
+            }
+        },
+        yAxis: {
+            minorTickInterval: 'auto',
+            lineColor: '#000',
+            lineWidth: 1,
+            tickWidth: 1,
+            tickColor: '#000',
+            labels: {
+                style: {
+                    color: '#F00',
+                    font: '11px Trebuchet MS, Verdana, sans-serif'
+                }
+            },
+            title: {
+                style: {
+                    color: '#333',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+                }            
+            }
+        },
+        });
         return new Highcharts.chart('container', {
             chart: {
                 zoomType: 'x',
@@ -295,7 +296,7 @@ $(document).ready(function() {
                         linearGradient: [0, 0, 0, 300],
                         stops: [
                             [0, Highcharts.getOptions().colors[2]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0).get('rgba')]
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.5).get('rgba')]
                         ]
                     },
                     cursor: "pointer",
