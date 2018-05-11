@@ -59,8 +59,6 @@ $(document).ready(function() {
             get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
             get_moving_speed_imp: null,
             get_total_speed_imp: null,//returns the average total speed in miles per hour
-            get_elevation_min_imp: null,// returns the lowest elevation, in feet
-            get_elevation_max_imp: null,// returns the highest elevation, in feet
             get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
             get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
             elevation_net: null,
@@ -249,8 +247,8 @@ $(document).ready(function() {
                 formatter: function () {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
-                    '<b>Gradient (∇): </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
-                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
+                    '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
+                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
                 }
             },
             plotOptions: {
@@ -511,21 +509,18 @@ $(document).ready(function() {
                 var gpx = e.target;
                 vm.leafletMap().fitBounds(gpx.getBounds());
                 vm.gpxjs_vars({
-                    pace: gpx.get_duration_string(gpx.get_moving_pace(), true)+ '/m',
-                    get_distance: gpx.get_distance().toFixed(2) + ' m',//returns the total track distance
-                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
-                    get_start_date: gpx.get_start_time().toDateString(),
-                    get_moving_time: msToTime(gpx.get_moving_time()),//returns the moving time, in milliseconds
-                    get_total_time: msToTime(gpx.get_total_time()),//returns the total track time, in milliseconds
-                    get_moving_pace: gpx.get_moving_pace(),//returns the average moving pace in milliseconds per hour
-                    get_moving_speed: gpx.get_moving_speed().toFixed(2)+' mph',
-                    get_total_speed: gpx.get_total_speed().toFixed(2) + ' mph',//returns the average total speed in miles per hour
-                    get_elevation_min: gpx.get_elevation_min().toFixed(2) + "'",// returns the lowest elevation, in feet
-                    get_elevation_max: gpx.get_elevation_max().toFixed(2) + "'",// returns the highest elevation, in feet
-                    get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
-                    get_elevation_loss: gpx.get_elevation_loss().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
-                    //full elevation, cadence  data
-                    elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
+                    pace: gpx.get_duration_string(gpx.get_moving_pace(), true),
+                    get_distance: gpx.get_distance().toFixed(2),
+                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
+                    get_duration: gpx.get_duration_string(gpx.get_moving_time()),
+                    get_moving_time: msToTime(gpx.get_moving_time()),
+                    get_total_time: msToTime(gpx.get_total_time()),
+                    get_moving_pace: gpx.get_moving_pace(),
+                    get_moving_speed: gpx.get_moving_speed().toFixed(2),
+                    get_total_speed: gpx.get_total_speed().toFixed(2),
+                    get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2),
+                    get_elevation_loss: "-" + gpx.get_elevation_loss().toFixed(2),
+                    elevation_net: gpx.get_elevation_gain() - gpx.get_elevation_loss(),
                     get_elevation_data: gpx.get_elevation_data()
                 });
                 
@@ -731,12 +726,13 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
-            &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-            &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
-            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
-                (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
-        </ul>
+            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;km</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_moving_time"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().pace"></span>/km</li>
+            &mdash; <li>Elevation:&nbsp;<span data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;m,
+              <span data-bind="text: gpxjs_vars().get_elevation_loss"></span>&nbsp;m
+              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;m)</li>
+          </ul>
       </article>
     </main>
     </body>
