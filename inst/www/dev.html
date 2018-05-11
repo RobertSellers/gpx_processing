@@ -474,8 +474,8 @@ $(document).ready(function() {
         //////////////////////////////////
         //Prime Leaflet Map
         var map = new L.map('plotdiv')
-        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib='Map data &copy; OpenStreetMap contributors';
+        var minimaplink='http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+        var attrib='&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>';
         var mapLink = '<a href="http://www.esri.com/">Esri</a>';
         var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
         
@@ -486,11 +486,13 @@ $(document).ready(function() {
 
         map.addLayer(esri);
         map.setView(new L.LatLng(39.8283, -98.5795),3)
-		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
-		var miniMap = new L.Control.MiniMap(osm2, {
+		var osm2 = new L.TileLayer(minimaplink, {minZoom: 3, maxZoom: 19, attribution: attrib });
+		var miniMap = new L.Control.MiniMap(
+            osm2, {
              toggleDisplay: true,
              minimized: true
             });
+        minimap..scrollWheelZoom.disable()
         vm.leafletMinimap(miniMap);
         vm.leafletMinimap().addTo(map);
         vm.leafletMap(map);
@@ -511,13 +513,6 @@ $(document).ready(function() {
             .on('loaded', function(e) {
                 var gpx = e.target;
                 vm.leafletMap().fitBounds(gpx.getBounds());
-                // REMOVE ALL LAYERS EXCEPT FIRST.  TBD
-                // if(e.layers.hasOwnProperty('_layers')){
-                //     var keys_tb_removed = Object.keys(e.layers._layers).slice(1, Object.keys(e.layers._layers).length);
-                //     for (key in keys_tb_removed){
-                //         delete e.layers._layers[key]
-                //     }
-                // }
                 vm.gpxjs_vars({
                     get_name: gpx.get_name(),//returns the name of the GPX track
                     pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
