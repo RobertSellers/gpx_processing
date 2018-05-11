@@ -321,8 +321,7 @@ L.GPX = L.FeatureGroup.extend({
 
     for (j = 0; j < tags.length; j++) {
       el = xml.getElementsByTagName(tags[j][0]);
-      // for (i = 0; i < el.length; i++) {
-        for (i = 0; i < 1; i++) { // Revision -- only update the first track
+      for (i = 0; i < el.length; i++) {
         var coords = this._parse_trkseg(el[i], options, tags[j][1]);
         if (coords.length === 0) continue;
 
@@ -332,6 +331,7 @@ L.GPX = L.FeatureGroup.extend({
 
         this.fire('addline', { line: l, element: el[i] });
         layers.push(l);
+        break; //Robert edit: Added to leave after the first track
       }
     }
 
