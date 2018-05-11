@@ -492,9 +492,9 @@ $(document).ready(function() {
              toggleDisplay: true,
              minimized: true
             });
-        miniMap.scrollWheelZoom.disable()
         vm.leafletMinimap(miniMap);
         vm.leafletMinimap().addTo(map);
+        vm.leafletMinimap().scrollWheelZoom.disable()
         vm.leafletMap(map);
         vm.leafletMinimap()._minimize()
     }
