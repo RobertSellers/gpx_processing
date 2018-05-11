@@ -50,22 +50,22 @@ $(document).ready(function() {
         //gpx.js output data
         gpxjs_vars: ko.observable({
             pace: null,
-            get_distance: null,//returns the total track distance in miles
+            get_distance_imp: null,//returns the total track distance in miles
             get_start_time: null,//returns a Javascript Date object representing the starting time
             get_time_zone: null,
             get_start_date: null,
             get_moving_time: null,//returns the moving time, in milliseconds
             get_total_time: null,//returns the total track time, in milliseconds
-            get_moving_pace: null,//returns the average moving pace in milliseconds per hour
-            get_moving_speed: null,
-            get_total_speed: null,//returns the average total speed in miles per hour
-            get_elevation_min: null,// returns the lowest elevation, in feet
-            get_elevation_max: null,// returns the highest elevation, in feet
-            get_elevation_gain: null,// returns the cumulative eleva`tion gain, in feet
-            get_elevation_loss: null,//returns the cumulative elevation loss, in feet
+            get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
+            get_moving_speed_imp: null,
+            get_total_speed_imp: null,//returns the average total speed in miles per hour
+            get_elevation_min_imp: null,// returns the lowest elevation, in feet
+            get_elevation_max_imp: null,// returns the highest elevation, in feet
+            get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
+            get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
             elevation_net: null,
             //full elevation, cadence  data
-            get_elevation_data: null
+            get_elevation_data_imp: null
         }),
         downloadCSV : function() {
             var data = this.rDataOutput();
@@ -711,13 +711,7 @@ $(document).ready(function() {
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
-                <li class="tab" role="presentation"><a href="#Stats" role="tab" aria-controls="Stats">Stats</a>
-                    <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;</li>
-                    &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-                    &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
-                    &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;
-                    (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
-                </li>
+                <li class="tab" role="presentation"><a href="#Readme" role="tab" aria-controls="Readme">Readme</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
               </ul>
       
@@ -737,10 +731,10 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;</li>
+            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
             &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
             &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
-            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;
+            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
                 (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
         </ul>
       </article>
