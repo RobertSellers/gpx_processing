@@ -47,10 +47,8 @@ $(document).ready(function() {
         leafletMap: ko.observable(),
         leafletMinimap: ko.observable(),
         rDataOutput: ko.observable(),
-        isUpdated: false,
         //gpx.js output data
         gpxjs_vars: ko.observable({
-            get_name: null,//returns the name of the GPX track
             pace: null,
             get_distance_imp: null,//returns the total track distance in miles
             get_start_time: null,//returns a Javascript Date object representing the starting time
@@ -61,8 +59,6 @@ $(document).ready(function() {
             get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
             get_moving_speed_imp: null,
             get_total_speed_imp: null,//returns the average total speed in miles per hour
-            get_elevation_min_imp: null,// returns the lowest elevation, in feet
-            get_elevation_max_imp: null,// returns the highest elevation, in feet
             get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
             get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
             elevation_net: null,
@@ -177,7 +173,7 @@ $(document).ready(function() {
                 polar: false
             },
             title: {
-                text:'n/a'
+                text:'GPX Not Loaded'
             },
             subtitle: {
                 text: '',
@@ -239,7 +235,7 @@ $(document).ready(function() {
                     }
                 },
                 labels: {
-                    format: '∇ {value}',
+                    format: '{value}',
                     style: {
                         color: gradientColor
                     }
@@ -251,7 +247,8 @@ $(document).ready(function() {
                 formatter: function () {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
-                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
+                    '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
+                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
                 }
             },
             plotOptions: {
@@ -324,7 +321,7 @@ $(document).ready(function() {
                 color: gradientColor,
                 yAxis: 2,
                 data: [null, null],
-                // dashStyle: 'shortdot',
+                dashStyle: 'shortdot',
                 type: "spline",
                 tooltip: {
                     valuePrefix: "∇"
@@ -473,9 +470,8 @@ $(document).ready(function() {
         //////////////////////////////////
         //Prime Leaflet Map
         var map = new L.map('plotdiv')
-        var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        var osmAttrib='Map data &copy; OpenStreetMap contributors';
-        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
+		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+		var osmAttrib='Map data &copy; OpenStreetMap contributors';        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
         var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
         
         var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -486,12 +482,14 @@ $(document).ready(function() {
         map.addLayer(esri);
         map.setView(new L.LatLng(39.8283, -98.5795),3)
 		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
-		var miniMap = new L.Control.MiniMap(osm2, {
+		var miniMap = new L.Control.MiniMap(
+            osm2, {
              toggleDisplay: true,
              minimized: true
             });
         vm.leafletMinimap(miniMap);
         vm.leafletMinimap().addTo(map);
+        // vm.leafletMinimap().scrollWheelZoom.disable()
         vm.leafletMap(map);
         vm.leafletMinimap()._minimize()
     }
@@ -510,29 +508,24 @@ $(document).ready(function() {
             .on('loaded', function(e) {
                 var gpx = e.target;
                 vm.leafletMap().fitBounds(gpx.getBounds());
-
                 vm.gpxjs_vars({
-                    get_name: gpx.get_name(),//returns the name of the GPX track
-                    pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true)+ '/mi',
-                    get_distance_imp: gpx.get_distance_imp().toFixed(2) + ' mi',//returns the total track distance in miles
-                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),//returns a Javascript Date object representing the starting time
-                    get_start_date: gpx.get_start_time().toDateString(),
-                    get_moving_time: msToTime(gpx.get_moving_time()),//returns the moving time, in milliseconds
-                    get_total_time: msToTime(gpx.get_total_time()),//returns the total track time, in milliseconds
-                    get_moving_pace_imp: gpx.get_moving_pace_imp(),//returns the average moving pace in milliseconds per hour
-                    get_moving_speed_imp: gpx.get_moving_speed_imp().toFixed(2)+' mph',
-                    get_total_speed_imp: gpx.get_total_speed_imp().toFixed(2) + ' mph',//returns the average total speed in miles per hour
-                    get_elevation_min_imp: gpx.get_elevation_min_imp().toFixed(2) + "'",// returns the lowest elevation, in feet
-                    get_elevation_max_imp: gpx.get_elevation_max_imp().toFixed(2) + "'",// returns the highest elevation, in feet
-                    get_elevation_gain_imp: "+" + gpx.get_elevation_gain_imp().toFixed(2) + "'",// returns the cumulative elevation gain, in feet
-                    get_elevation_loss_imp: gpx.get_elevation_loss_imp().toFixed(2) + "'",//returns the cumulative elevation loss, in feet
-                    //full elevation, cadence  data
-                    elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0) +"'",
-                    get_elevation_data_imp: gpx.get_elevation_data_imp()
+                    pace: gpx.get_duration_string(gpx.get_moving_pace(), true),
+                    get_distance: gpx.get_distance().toFixed(2),
+                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
+                    get_duration: gpx.get_duration_string(gpx.get_moving_time()),
+                    get_moving_time: msToTime(gpx.get_moving_time()),
+                    get_total_time: msToTime(gpx.get_total_time()),
+                    get_moving_pace: gpx.get_moving_pace(),
+                    get_moving_speed: gpx.get_moving_speed().toFixed(2),
+                    get_total_speed: gpx.get_total_speed().toFixed(2),
+                    get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2),
+                    get_elevation_loss: "-" + gpx.get_elevation_loss().toFixed(2),
+                    elevation_net: gpx.get_elevation_gain() - gpx.get_elevation_loss(),
+                    get_elevation_data: gpx.get_elevation_data()
                 });
                 
                 //update highchart
-                vm.highchart().setTitle({text: vm.gpxjs_vars().get_name});
+                vm.highchart().setTitle({text: vm.gpx_file_name()});
                 if( vm.highchart().resetZoomButton ) {
                     vm.highchart().zoomOut();
                 }
@@ -553,10 +546,10 @@ $(document).ready(function() {
                 var circleMarkerStyle_end = {
                     radius: 6,
                     fillColor: "#ff0000",
-                    color: "#ff0000",
+                    color: "#000",
                     weight: 2, 
                     opacity: 1,
-                    fillOpacity: 0.0
+                    fillOpacity: 0.8
                 };
 
                 // start/end markers and popups
@@ -733,12 +726,13 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map" style="height:600px;"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span class="distance" data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;</li>
-            &mdash; <li>Moving Time:&nbsp;<span class="duration" data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-            &mdash; <li>Pace:&nbsp;<span class="pace" data-bind="text: gpxjs_vars().pace"></span></li>
-            &mdash; <li>Elevation Gain:&nbsp;<span class="elevation-gain" data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;
-                (net:&nbsp;<span class="elevation-net" data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;)</li>
-        </ul>
+            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;km</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_moving_time"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().pace"></span>/km</li>
+            &mdash; <li>Elevation:&nbsp;<span data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;m,
+              <span data-bind="text: gpxjs_vars().get_elevation_loss"></span>&nbsp;m
+              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;m)</li>
+          </ul>
       </article>
     </main>
     </body>
