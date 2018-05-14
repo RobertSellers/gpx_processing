@@ -34,7 +34,7 @@ var vm = {
         var speedColor = "red"
         var gradientColor = "purple"
     
-        var options = {
+        return {
             chart: {
                 zoomType: 'x',
                 polar: false,
@@ -228,7 +228,5 @@ var vm = {
                 }]
             }
         };
-        // return new Highcharts.chart(options)
-        return highchartOptions;
     })
 }
