@@ -29,7 +29,11 @@ var vm = {
                 zoomType: 'x',
                 polar: false,
 				fontFamily: 'monospace',
-				color: "#f00",
+                color: "#f00",
+                borderRadius: 5,
+                borderColor: '#aaa',
+                borderWidth: 2,
+
 				renderTo: 'container'
             },
             title: {

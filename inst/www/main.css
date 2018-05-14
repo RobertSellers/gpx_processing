@@ -426,5 +426,6 @@ a{
 .map {
   height:600px;
   width: 100%;
-  border: 2px solid orange;
+  border-radius: 5px;
+  border: 2px #aaa solid;
 }
