@@ -5,7 +5,7 @@ var vm = {
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
     highchart: ko.observable(),
-    get_pace: ko.observable(),
+    get_pace_imp: ko.observable(),
     get_duration: ko.observable(),
     get_distance_imp: ko.observable(),
     get_moving_pace_imp: ko.observable(),
