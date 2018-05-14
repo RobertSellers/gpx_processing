@@ -34,325 +34,17 @@
 <link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
 
 <!-- Custom Scripts -->
-<script src="js/utilities.js"></script>
-<script src="js/CSVExport.js"></script>
+<script type='text/javascript' src="js/utilities.js"></script>
+<script type='text/javascript' src="js/CSVExport.js"></script>
+<script type='text/javascript' src="js/leaflet_helpers.js"></script>
+<script type='text/javascript' src='viewModel.js'></script>
 
 <script type="text/javascript">
 
 $(document).ready(function() {
 
-    var vm = {
-        session_tmp: ko.observable(),
-        gpx_file_name: ko.observable(),
-        leafletMap: ko.observable(),
-        leafletMinimap: ko.observable(),
-        rDataOutput: ko.observable(),
-        //gpx.js output data
-        gpxjs_vars: ko.observable({
-            pace: null,
-            get_distance_imp: null,//returns the total track distance in miles
-            get_start_time: null,//returns a Javascript Date object representing the starting time
-            get_time_zone: null,
-            get_start_date: null,
-            get_moving_time: null,//returns the moving time, in milliseconds
-            get_total_time: null,//returns the total track time, in milliseconds
-            get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
-            get_moving_speed_imp: null,
-            get_total_speed_imp: null,//returns the average total speed in miles per hour
-            get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
-            get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
-            elevation_net: null,
-            //full elevation, cadence  data
-            get_elevation_data_imp: null
-        }),
-        downloadCSV : function() {
-            var data = this.rDataOutput();
-            var filename = this.gpx_file_name().slice(0, -4);
-            var exportData = new CSVExport(data, filename);
-            return exportData
-        }
-    };
-
-    function dateTimeOutputString(x){
-        var y = 60;
-        var z = y % x;
-        return Math.round(x/y) + ":" + z;
-    }
-
-    vm.rDataOutput.subscribe(function(){
-        //Update Highchart
-        var timeRange = vm.rDataOutput().map(a => a.Seconds)
-        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
-        //ELEVATION
-        // var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
-        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
-        var timeElevation = dateTimeRange.map(function(v,i) {
-            return [v, elevationArray[i]];
-        });
-        //SPEED
-        var speedArray = vm.rDataOutput().map(a => a.Speed)
-        var timeSpeed = dateTimeRange.map(function(v,i) {
-            return [v, speedArray[i]];
-        });
-        //Gradient
-        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
-        var timeGradient = dateTimeRange.map(function(v,i) {
-            return [v, gradientArray[i]];
-        });
-
-        vm.highchart().series[0].setData(timeElevation,false)
-        vm.highchart().series[1].setData(timeSpeed,false)
-        vm.highchart().series[2].setData(timeGradient,false)
-    })
-
-    vm.highchart= ko.computed(function(){
-
-        var elevationColor = "#76a912"
-        var speedColor = "red"
-        var gradientColor = "purple"
-
-        Highcharts.setOptions({
-            chart: {
-                style: {
-                    fontFamily: 'monospace',
-                    color: "#f00"
-                }
-
-            },
-            title: {
-            style: {
-                color: '#F00',
-                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-            }
-        },
-        xAxis: {
-            gridLineWidth: 1,
-            lineColor: '#000',
-            tickColor: '#000',
-            labels: {
-                style: {
-                    color: '#F00',
-                    font: '11px Trebuchet MS, Verdana, sans-serif'
-                }
-            },
-            title: {
-                style: {
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: '12px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-                }            
-            }
-        },
-        yAxis: {
-            minorTickInterval: 'auto',
-            lineColor: '#000',
-            lineWidth: 1,
-            tickWidth: 1,
-            tickColor: '#000',
-            labels: {
-                style: {
-                    color: '#F00',
-                    font: '11px Trebuchet MS, Verdana, sans-serif'
-                }
-            },
-            title: {
-                style: {
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: '12px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-                }            
-            }
-        },
-        });
-        return new Highcharts.chart('container', {
-            chart: {
-                zoomType: 'x',
-                polar: false
-            },
-            title: {
-                text:'GPX Not Loaded'
-            },
-            subtitle: {
-                text: '',
-                style: {
-                    display: 'none'
-                }
-            },
-            xAxis: {
-                type: 'datetime',
-                labels: {
-                    type: 'datetime',
-                    dateTimeLabelFormats: {
-                        minute: '%H:%M'
-                    },
-                    color: "black"
-                },
-                crosshair: true,
-                title: {
-                    text: 'Time (hh:mm)'
-                }
-            },
-            yAxis: [{
-                 // Primary yAxis
-                gridLineWidth: 0,
-                min: 0,
-                title: {
-                    text: 'Speed (m/s)',
-                    style: {
-                        color: speedColor
-                    }
-                },
-                labels: {
-                    format: '{value}',
-                    style: {
-                        color: speedColor
-                    }
-                },
-                opposite: true
-            }, { // Secondary yAxis
-                labels: {
-                    format: "{value}",
-                    style: {
-                        color: elevationColor
-                    }
-                },
-                min: 0,
-                title: {
-                    text: 'Elevation (meters ASL)',
-                    style: {
-                        color: elevationColor
-                    }
-                }
-            }, { // Tertiary yAxis
-                gridLineWidth: 0,
-                title: {
-                    text: 'Gradient',
-                    style: {
-                        color: gradientColor
-                    }
-                },
-                labels: {
-                    format: '{value}',
-                    style: {
-                        color: gradientColor
-                    }
-                },
-                opposite: true
-            }],
-            tooltip: {
-                shared: true,
-                formatter: function () {
-                    return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
-                    '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
-                    '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
-                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
-                }
-            },
-            plotOptions: {
-                series: {
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    turboThreshold: 0, //largest series tested is 8012
-                    label: {
-                        connectorAllowed: false
-                    },
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    fillColor: {
-                        linearGradient: [0, 0, 0, 300],
-                        stops: [
-                            [0, Highcharts.getOptions().colors[2]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
-                        ]
-                    },
-                    cursor: "pointer",
-                    events: {
-                        click: function(event) {
-                            //do nothing
-                        }
-                    }
-                },
-            },
-            series: [
-            {
-                name: "Elevation",
-                color: elevationColor,
-                yAxis: 1,
-                data: [null, null],
-                type: "areaspline",
-                tooltip: {
-                    valueSuffix: "'"
-                }
-            }, {
-                name: "Speed",
-                 color: speedColor,
-                data: [null, null],
-                type: "spline",
-                tooltip: {
-                    valueSuffix: ' m/s'
-                }
-                // color: {
-                //     formatter: function(){
-                //         //debug
-                //     },
-                //     linearGradient: {
-                //     x1: 1,
-                //     y1: 0,
-                //     x2: 0,
-                //     y2: 0
-                // },
-                //     stops: [
-                //         [0, 'green'],
-                //         [0.5, 'yellow'],
-                //         [1, 'red']
-                //     ]
-                // }
-            },
-            {
-                name: "Gradient",
-                color: gradientColor,
-                yAxis: 2,
-                data: [null, null],
-                dashStyle: 'shortdot',
-                type: "spline",
-                tooltip: {
-                    valuePrefix: "∇"
-                }
-            }
-            ],
-            credits: {
-                enabled: false
-            },
-            legend: {
-                layout: 'vertical',
-                align: 'left',
-                verticalAlign: 'top',
-                x: 70,
-                y: 40,
-                floating: true,
-                borderWidth: 1,
-                backgroundColor: '#FFFFFF',
-                shadow: true
-            },
-            responsive: {
-                rules: [{
-                    condition: {
-                        maxWidth: 500
-                    }
-                }]
-            }
-        });
-    });
-
-
+    /* ----- Apply ViewModel ----- */
+    ko.applyBindings(vm);
     /* ----- Navigation ----- */
 
     $('.nav').find('a').attr('tabindex', -1);
@@ -448,152 +140,42 @@ $(document).ready(function() {
         map_lock('lock')
     }
 
-    function map_lock(toggle){
-        if (toggle=='unlock'){
-            vm.leafletMap()._handlers.forEach(function(handler) {
-                handler.enable();
-            });
-            vm.leafletMinimap()._restore()
-        if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
-            document.getElementById('plotdiv').style.cursor='grab';
-        }if (toggle=='lock'){
-            vm.leafletMinimap()._minimize()
-            vm.leafletMap()._handlers.forEach(function(handler) {
-                handler.disable();
-            });
-        if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
-            document.getElementById('plotdiv').style.cursor='default';
-        }
-    }
-
-    function initLeaflet(){
-        //////////////////////////////////
-        //Prime Leaflet Map
-        var map = new L.map('plotdiv')
-		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		var osmAttrib='Map data &copy; OpenStreetMap contributors';        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
-        var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-        
-        var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; ' + mapLink + ', ' + wholink,
-            // minZoom: 5, // can't have min or minimap breaks
-            maxZoom: 19});
-
-        map.addLayer(esri);
-        map.setView(new L.LatLng(39.8283, -98.5795),3)
-		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
-		var miniMap = new L.Control.MiniMap(
-            osm2, {
-             toggleDisplay: true,
-             minimized: true
-            });
-        vm.leafletMinimap(miniMap);
-        vm.leafletMinimap().addTo(map);
-        // vm.leafletMinimap().scrollWheelZoom.disable()
-        vm.leafletMap(map);
-        vm.leafletMinimap()._minimize()
-    }
-
-    function updateLeaflet(){
-        //////////////////////////////////
-        //Update Leaflet
-        vm.leafletMap().eachLayer(function (layer) {
-            if (layer.hasOwnProperty('_gpx') || layer.hasOwnProperty('_path') || layer.hasOwnProperty('_latlng')){
-                vm.leafletMap().removeLayer(layer);
-            }
-        });
-
-        var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        var gpx_layer = new L.GPX(gpx_file, {async: true})
-            .on('loaded', function(e) {
-                var gpx = e.target;
-                vm.leafletMap().fitBounds(gpx.getBounds());
-                vm.gpxjs_vars({
-                    pace: gpx.get_duration_string(gpx.get_moving_pace(), true),
-                    get_distance: gpx.get_distance().toFixed(2),
-                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
-                    get_duration: gpx.get_duration_string(gpx.get_moving_time()),
-                    get_moving_time: msToTime(gpx.get_moving_time()),
-                    get_total_time: msToTime(gpx.get_total_time()),
-                    get_moving_pace: gpx.get_moving_pace(),
-                    get_moving_speed: gpx.get_moving_speed().toFixed(2),
-                    get_total_speed: gpx.get_total_speed().toFixed(2),
-                    get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2),
-                    get_elevation_loss: "-" + gpx.get_elevation_loss().toFixed(2),
-                    elevation_net: gpx.get_elevation_gain() - gpx.get_elevation_loss(),
-                    get_elevation_data: gpx.get_elevation_data()
-                });
-                
-                //update highchart
-                vm.highchart().setTitle({text: vm.gpx_file_name()});
-                if( vm.highchart().resetZoomButton ) {
-                    vm.highchart().zoomOut();
-                }
-                vm.highchart().xAxis[0].setExtremes(null,null)
-                vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
-                vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Speed;})) });
-                vm.highchart().redraw();
-
-                var circleMarkerStyle_start = {
-                    radius: 6,
-                    fillColor: "#00ff00",
-                    color: "#000",
-                    weight: 2, 
-                    opacity: 1,
-                    fillOpacity: 0.8
-                };
-
-                var circleMarkerStyle_end = {
-                    radius: 6,
-                    fillColor: "#ff0000",
-                    color: "#000",
-                    weight: 2, 
-                    opacity: 1,
-                    fillOpacity: 0.8
-                };
-
-                // start/end markers and popups
-                var base = gpx._layers[Object.keys(gpx._layers)[0]];
-                if (base.hasOwnProperty('_layers')){
-                    var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
-                    for (var key in base) {
-                        var lat_lngs = base[key]._latlngs;
-                        var nL = lat_lngs.length-1
-                        var start = [lat_lngs[0].lat, lat_lngs[0].lng]
-                        var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
-                        var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                        start_marker.addTo(vm.leafletMap());
-                        var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                        end_marker.addTo(vm.leafletMap());
-                    }
-                }else{
-                    var lat_lngs = base._latlngs;
-                    var nL = lat_lngs.length-1
-                    var start = [lat_lngs[0].lat, lat_lngs[0].lng]
-                    var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
-                    //New Circle Makers
-                    var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                    start_marker.addTo(vm.leafletMap());
-                    var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                    end_marker.addTo(vm.leafletMap());
-                    
-                }
-                
-        });
-        gpx_layer.addTo(vm.leafletMap());
-        map_lock('unlock');
-    }
-
     // Initialize charts
     initLeaflet()//leaflet
-    vm.highchart()//highchart
-
+    vm.highchart(Highcharts.chart(vm.highchartOptions()))
+    
     $(".download").prop('disabled', true);
     $(".download").css("opacity", 0.2);
     $("#session_url").prop('disabled', true);
     $('#plotdiv').css("opacity", 0.2);
     $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
+
+    vm.rDataOutput.subscribe(function(){
+        //Update Highchart
+        var timeRange = vm.rDataOutput().map(a => a.Seconds)
+        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
+        //ELEVATION
+        // var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var timeElevation = dateTimeRange.map(function(v,i) {
+            return [v, elevationArray[i]];
+        });
+        //SPEED
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var timeSpeed = dateTimeRange.map(function(v,i) {
+            return [v, speedArray[i]];
+        });
+        //Gradient
+        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
+        var timeGradient = dateTimeRange.map(function(v,i) {
+            return [v, gradientArray[i]];
+        });
+
+        vm.highchart().series[0].setData(timeElevation,false)
+        vm.highchart().series[1].setData(timeSpeed,false)
+        vm.highchart().series[2].setData(timeGradient,false)
+    })
 
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
@@ -637,8 +219,6 @@ $(document).ready(function() {
             });
         }
     });
-
-    ko.applyBindings(vm);
 
 });
 
