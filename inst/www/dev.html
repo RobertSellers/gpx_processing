@@ -34,8 +34,9 @@
 <link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
 
 <!-- Custom Scripts -->
-<script src="js/utilities.js"></script>
-<script src="js/CSVExport.js"></script>
+<script type='text/javascript' src="js/utilities.js"></script>
+<script type='text/javascript' src="js/CSVExport.js"></script>
+<script type='text/javascript' src="js/leaflet_helpers.js"></script>
 <script type='text/javascript' src='viewModel.js'></script>
 
 <script type="text/javascript">
@@ -137,142 +138,6 @@ $(document).ready(function() {
             }
         });
         map_lock('lock')
-    }
-
-    function map_lock(toggle){
-        if (toggle=='unlock'){
-            vm.leafletMap()._handlers.forEach(function(handler) {
-                handler.enable();
-            });
-            vm.leafletMinimap()._restore()
-        if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
-            document.getElementById('plotdiv').style.cursor='grab';
-        }if (toggle=='lock'){
-            vm.leafletMinimap()._minimize()
-            vm.leafletMap()._handlers.forEach(function(handler) {
-                handler.disable();
-            });
-        if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
-            document.getElementById('plotdiv').style.cursor='default';
-        }
-    }
-
-    function initLeaflet(){
-        //////////////////////////////////
-        //Prime Leaflet Map
-        var map = new L.map('plotdiv')
-		var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-		var osmAttrib='Map data &copy; OpenStreetMap contributors';        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
-        var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
-        
-        var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: '&copy; ' + mapLink + ', ' + wholink,
-            // minZoom: 5, // can't have min or minimap breaks
-            maxZoom: 19});
-
-        map.addLayer(esri);
-        map.setView(new L.LatLng(39.8283, -98.5795),3)
-		var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
-		var miniMap = new L.Control.MiniMap(
-            osm2, {
-             toggleDisplay: true,
-             minimized: true
-            });
-        vm.leafletMinimap(miniMap);
-        vm.leafletMinimap().addTo(map);
-        // vm.leafletMinimap().scrollWheelZoom.disable()
-        vm.leafletMap(map);
-        vm.leafletMinimap()._minimize()
-    }
-
-    function updateLeaflet(){
-        //////////////////////////////////
-        //Update Leaflet
-        vm.leafletMap().eachLayer(function (layer) {
-            if (layer.hasOwnProperty('_gpx') || layer.hasOwnProperty('_path') || layer.hasOwnProperty('_latlng')){
-                vm.leafletMap().removeLayer(layer);
-            }
-        });
-
-        var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
-        var gpx_layer = new L.GPX(gpx_file, {async: true})
-            .on('loaded', function(e) {
-                var gpx = e.target;
-                vm.leafletMap().fitBounds(gpx.getBounds());
-                vm.gpxjs_vars({
-                    pace: gpx.get_duration_string(gpx.get_moving_pace(), true),
-                    get_distance: gpx.get_distance().toFixed(2),
-                    get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
-                    get_duration: gpx.get_duration_string(gpx.get_moving_time()),
-                    get_moving_time: msToTime(gpx.get_moving_time()),
-                    get_total_time: msToTime(gpx.get_total_time()),
-                    get_moving_pace: gpx.get_moving_pace(),
-                    get_moving_speed: gpx.get_moving_speed().toFixed(2),
-                    get_total_speed: gpx.get_total_speed().toFixed(2),
-                    get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2),
-                    get_elevation_loss: "-" + gpx.get_elevation_loss().toFixed(2),
-                    elevation_net: gpx.get_elevation_gain() - gpx.get_elevation_loss(),
-                    get_elevation_data: gpx.get_elevation_data()
-                });
-                
-                //update highchart
-                vm.highchart().setTitle({text: vm.gpx_file_name()});
-                if( vm.highchart().resetZoomButton ) {
-                    vm.highchart().zoomOut();
-                }
-                vm.highchart().xAxis[0].setExtremes(null,null)
-                vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
-                vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Speed;})) });
-                vm.highchart().redraw();
-
-                var circleMarkerStyle_start = {
-                    radius: 6,
-                    fillColor: "#00ff00",
-                    color: "#000",
-                    weight: 2, 
-                    opacity: 1,
-                    fillOpacity: 0.8
-                };
-
-                var circleMarkerStyle_end = {
-                    radius: 6,
-                    fillColor: "#ff0000",
-                    color: "#000",
-                    weight: 2, 
-                    opacity: 1,
-                    fillOpacity: 0.8
-                };
-
-                // start/end markers and popups
-                var base = gpx._layers[Object.keys(gpx._layers)[0]];
-                if (base.hasOwnProperty('_layers')){
-                    var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
-                    for (var key in base) {
-                        var lat_lngs = base[key]._latlngs;
-                        var nL = lat_lngs.length-1
-                        var start = [lat_lngs[0].lat, lat_lngs[0].lng]
-                        var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
-                        var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                        start_marker.addTo(vm.leafletMap());
-                        var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                        end_marker.addTo(vm.leafletMap());
-                    }
-                }else{
-                    var lat_lngs = base._latlngs;
-                    var nL = lat_lngs.length-1
-                    var start = [lat_lngs[0].lat, lat_lngs[0].lng]
-                    var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
-                    //New Circle Makers
-                    var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
-                    start_marker.addTo(vm.leafletMap());
-                    var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
-                    end_marker.addTo(vm.leafletMap());
-                    
-                }
-                
-        });
-        gpx_layer.addTo(vm.leafletMap());
-        map_lock('unlock');
     }
 
     // Initialize charts
