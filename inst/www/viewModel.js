@@ -84,7 +84,7 @@ var vm = {
                 gridLineWidth: 0,
                 min: 0,
                 title: {
-                    text: 'Speed (m/s)',
+                    text: 'Speed (mph)',
                     style: {
                         color: speedColor,
 						fontWeight: 'bold',
@@ -109,7 +109,7 @@ var vm = {
                 },
                 min: 0,
                 title: {
-                    text: 'Elevation (meters ASL)',
+                    text: 'Elevation (feet ASL)',
                     style: {
                         color: elevationColor
                     }
@@ -134,8 +134,8 @@ var vm = {
                 shared: true,
                 formatter: function () {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
-                    '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
-                    '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
+                    '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
+                    '<b>Gradient: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
                 }
             },
