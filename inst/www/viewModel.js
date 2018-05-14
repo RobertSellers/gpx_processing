@@ -115,7 +115,6 @@ var vm = {
                     }
                 }
             }, { // Tertiary yAxis
-                gridLineWidth: 0,
                 title: {
                     text: 'Gradient',
                     style: {
