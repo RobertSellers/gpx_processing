@@ -124,20 +124,29 @@ $(document).ready(function() {
     }
 
     function clearData(){
+        //Toggle DOM elements
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
         $(".download").prop('disabled', true);
         $(".download").css("opacity", 0.2);
-        vm.highchart().series[0].setData([null,null],false)
-        vm.highchart().series[1].setData([null,null],false)
-        vm.highchart().series[2].setData([null,null],false)
+        //Clear highcharts data
+        vm.highchart().series[0].setData([null,null], false)
+        vm.highchart().series[1].setData([null,null], false)
+        vm.highchart().series[2].setData([null,null], false)
         vm.highchart().redraw();
+        //Clear leaflet data
         vm.leafletMap().eachLayer(function (layer) {
             if (!layer.hasOwnProperty('_tiles')){
                 vm.leafletMap().removeLayer(layer);
             }
         });
-        map_lock('lock')
+        //Clear gpx.js variables
+        vm.get_duration(null);
+        vm.get_pace_imp(null);
+        vm.get_distance_imp(null);
+        vm.get_elevation_gain_imp(null);
+        vm.get_elevation_loss_imp(null);
+        vm.elevation_net(null);
     }
 
     // Initialize charts
@@ -153,10 +162,8 @@ $(document).ready(function() {
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
-        var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
-        // var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var timeElevation = dateTimeRange.map(function(v,i) {
             return [v, elevationArray[i]];
@@ -190,7 +197,7 @@ $(document).ready(function() {
             //Upload and validate the data
             //////////////////////////////
 
-        vm.gpx_file_name($("#gpxfile")[0].files[0].name)
+            vm.gpx_file_name($("#gpxfile")[0].files[0].name)
 
             var req = ocpu.call("gpx_validation", {
                 gpxfile : $("#gpxfile")[0].files[0]
@@ -304,14 +311,14 @@ $(document).ready(function() {
       <article class="panel gpx">
         <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
-        <div id="plotdiv" class="map" style="height:600px;"></div>
+        <div id="plotdiv" class="map"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;km</li>
-            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().pace"></span>/km</li>
-            &mdash; <li>Elevation:&nbsp;<span data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;m,
-              <span data-bind="text: gpxjs_vars().get_elevation_loss"></span>&nbsp;m
-              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;m)</li>
+            <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: vm.get_pace_imp()"></span>/mi</li>
+            &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
+              -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
+              (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
           </ul>
       </article>
     </main>
