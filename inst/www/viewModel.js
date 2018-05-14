@@ -27,278 +27,235 @@ var vm = {
         var filename = this.gpx_file_name().slice(0, -4);
         var exportData = new CSVExport(data, filename);
         return exportData
-    }
-};
-
-vm.rDataOutput.subscribe(function(){
-    //Update Highchart
-    var timeRange = vm.rDataOutput().map(a => a.Seconds)
-    var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
-    //ELEVATION
-    // var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
-    var elevationArray = vm.rDataOutput().map(a => a.Elevation)
-    var timeElevation = dateTimeRange.map(function(v,i) {
-        return [v, elevationArray[i]];
-    });
-    //SPEED
-    var speedArray = vm.rDataOutput().map(a => a.Speed)
-    var timeSpeed = dateTimeRange.map(function(v,i) {
-        return [v, speedArray[i]];
-    });
-    //Gradient
-    var gradientArray = vm.rDataOutput().map(a => a.Gradient)
-    var timeGradient = dateTimeRange.map(function(v,i) {
-        return [v, gradientArray[i]];
-    });
-
-    vm.highchart().series[0].setData(timeElevation,false)
-    vm.highchart().series[1].setData(timeSpeed,false)
-    vm.highchart().series[2].setData(timeGradient,false)
-})
-
-vm.highchart= ko.computed(function(){
-
-    var elevationColor = "#76a912"
-    var speedColor = "red"
-    var gradientColor = "purple"
-
-    Highcharts.setOptions({
-        chart: {
-            style: {
-                fontFamily: 'monospace',
-                color: "#f00"
-            }
-
-        },
-        title: {
-        style: {
-            color: '#F00',
-            font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-        }
     },
-    xAxis: {
-        gridLineWidth: 1,
-        lineColor: '#000',
-        tickColor: '#000',
-        labels: {
+    highchart : ko.computed(function(){
+
+        var elevationColor = "#76a912"
+        var speedColor = "red"
+        var gradientColor = "purple"
+    
+        Highcharts.setOptions({
+            chart: {
+                style: {
+                    fontFamily: 'monospace',
+                    color: "#f00"
+                }
+    
+            },
+            title: {
             style: {
                 color: '#F00',
-                font: '11px Trebuchet MS, Verdana, sans-serif'
-            }
-        },
-        title: {
-            style: {
-                color: 'black',
-                fontWeight: 'bold',
-                fontSize: '12px',
-                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-
-            }            
-        }
-    },
-    yAxis: {
-        minorTickInterval: 'auto',
-        lineColor: '#000',
-        lineWidth: 1,
-        tickWidth: 1,
-        tickColor: '#000',
-        labels: {
-            style: {
-                color: '#F00',
-                font: '11px Trebuchet MS, Verdana, sans-serif'
-            }
-        },
-        title: {
-            style: {
-                color: 'black',
-                fontWeight: 'bold',
-                fontSize: '12px',
-                fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-            }            
-        }
-    },
-    });
-    return new Highcharts.chart('container', {
-        chart: {
-            zoomType: 'x',
-            polar: false
-        },
-        title: {
-            text:'GPX Not Loaded'
-        },
-        subtitle: {
-            text: '',
-            style: {
-                display: 'none'
+                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
             }
         },
         xAxis: {
-            type: 'datetime',
+            gridLineWidth: 1,
+            lineColor: '#000',
+            tickColor: '#000',
             labels: {
+                style: {
+                    color: '#F00',
+                    font: '11px Trebuchet MS, Verdana, sans-serif'
+                }
+            },
+            title: {
+                style: {
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+    
+                }            
+            }
+        },
+        yAxis: {
+            minorTickInterval: 'auto',
+            lineColor: '#000',
+            lineWidth: 1,
+            tickWidth: 1,
+            tickColor: '#000',
+            labels: {
+                style: {
+                    color: '#F00',
+                    font: '11px Trebuchet MS, Verdana, sans-serif'
+                }
+            },
+            title: {
+                style: {
+                    color: 'black',
+                    fontWeight: 'bold',
+                    fontSize: '12px',
+                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+                }            
+            }
+        },
+        });
+        return new Highcharts.chart('container', {
+            chart: {
+                zoomType: 'x',
+                polar: false
+            },
+            title: {
+                text:'GPX Not Loaded'
+            },
+            subtitle: {
+                text: '',
+                style: {
+                    display: 'none'
+                }
+            },
+            xAxis: {
                 type: 'datetime',
-                dateTimeLabelFormats: {
-                    minute: '%H:%M'
+                labels: {
+                    type: 'datetime',
+                    dateTimeLabelFormats: {
+                        minute: '%H:%M'
+                    },
+                    color: "black"
                 },
-                color: "black"
-            },
-            crosshair: true,
-            title: {
-                text: 'Time (hh:mm)'
-            }
-        },
-        yAxis: [{
-             // Primary yAxis
-            gridLineWidth: 0,
-            min: 0,
-            title: {
-                text: 'Speed (m/s)',
-                style: {
-                    color: speedColor
+                crosshair: true,
+                title: {
+                    text: 'Time (hh:mm)'
                 }
             },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: speedColor
-                }
-            },
-            opposite: true
-        }, { // Secondary yAxis
-            labels: {
-                format: "{value}",
-                style: {
-                    color: elevationColor
-                }
-            },
-            min: 0,
-            title: {
-                text: 'Elevation (meters ASL)',
-                style: {
-                    color: elevationColor
-                }
-            }
-        }, { // Tertiary yAxis
-            gridLineWidth: 0,
-            title: {
-                text: 'Gradient',
-                style: {
-                    color: gradientColor
-                }
-            },
-            labels: {
-                format: '{value}',
-                style: {
-                    color: gradientColor
-                }
-            },
-            opposite: true
-        }],
-        tooltip: {
-            shared: true,
-            formatter: function () {
-                return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
-                '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
-                '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
-                '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
-            }
-        },
-        plotOptions: {
-            series: {
-                marker: {
-                    radius: 2
-                },
-                lineWidth: 1,
-                turboThreshold: 0, //largest series tested is 8012
-                label: {
-                    connectorAllowed: false
-                },
-                states: {
-                    hover: {
-                        lineWidth: 1
+            yAxis: [{
+                 // Primary yAxis
+                gridLineWidth: 0,
+                min: 0,
+                title: {
+                    text: 'Speed (m/s)',
+                    style: {
+                        color: speedColor
                     }
                 },
-                fillColor: {
-                    linearGradient: [0, 0, 0, 300],
-                    stops: [
-                        [0, Highcharts.getOptions().colors[2]],
-                        [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
-                    ]
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: speedColor
+                    }
                 },
-                cursor: "pointer",
-                events: {
-                    click: function(event) {
-                        //do nothing
+                opposite: true
+            }, { // Secondary yAxis
+                labels: {
+                    format: "{value}",
+                    style: {
+                        color: elevationColor
+                    }
+                },
+                min: 0,
+                title: {
+                    text: 'Elevation (meters ASL)',
+                    style: {
+                        color: elevationColor
                     }
                 }
-            },
-        },
-        series: [
-        {
-            name: "Elevation",
-            color: elevationColor,
-            yAxis: 1,
-            data: [null, null],
-            type: "areaspline",
+            }, { // Tertiary yAxis
+                gridLineWidth: 0,
+                title: {
+                    text: 'Gradient',
+                    style: {
+                        color: gradientColor
+                    }
+                },
+                labels: {
+                    format: '{value}',
+                    style: {
+                        color: gradientColor
+                    }
+                },
+                opposite: true
+            }],
             tooltip: {
-                valueSuffix: "'"
-            }
-        }, {
-            name: "Speed",
-             color: speedColor,
-            data: [null, null],
-            type: "spline",
-            tooltip: {
-                valueSuffix: ' m/s'
-            }
-            // color: {
-            //     formatter: function(){
-            //         //debug
-            //     },
-            //     linearGradient: {
-            //     x1: 1,
-            //     y1: 0,
-            //     x2: 0,
-            //     y2: 0
-            // },
-            //     stops: [
-            //         [0, 'green'],
-            //         [0.5, 'yellow'],
-            //         [1, 'red']
-            //     ]
-            // }
-        },
-        {
-            name: "Gradient",
-            color: gradientColor,
-            yAxis: 2,
-            data: [null, null],
-            dashStyle: 'shortdot',
-            type: "spline",
-            tooltip: {
-                valuePrefix: "∇"
-            }
-        }
-        ],
-        credits: {
-            enabled: false
-        },
-        legend: {
-            layout: 'vertical',
-            align: 'left',
-            verticalAlign: 'top',
-            x: 70,
-            y: 40,
-            floating: true,
-            borderWidth: 1,
-            backgroundColor: '#FFFFFF',
-            shadow: true
-        },
-        responsive: {
-            rules: [{
-                condition: {
-                    maxWidth: 500
+                shared: true,
+                formatter: function () {
+                    return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
+                    '<b>Elevation: </b>'+ Math.round(this.y) + " meters"+'<br/>'+
+                    '<b>Gradient ∇: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
+                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
                 }
-            }]
-        }
-    });
-});
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    turboThreshold: 0, //largest series tested is 8012
+                    label: {
+                        connectorAllowed: false
+                    },
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    fillColor: {
+                        linearGradient: [0, 0, 0, 300],
+                        stops: [
+                            [0, Highcharts.getOptions().colors[2]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
+                        ]
+                    },
+                    cursor: "pointer",
+                    events: {
+                        click: function(event) {
+                            //do nothing
+                        }
+                    }
+                },
+            },
+            series: [
+            {
+                name: "Elevation",
+                color: elevationColor,
+                yAxis: 1,
+                data: [null, null],
+                type: "areaspline",
+                tooltip: {
+                    valueSuffix: "'"
+                }
+            }, {
+                name: "Speed",
+                 color: speedColor,
+                data: [null, null],
+                type: "spline",
+                tooltip: {
+                    valueSuffix: ' m/s'
+                }
+            },
+            {
+                name: "Gradient",
+                color: gradientColor,
+                yAxis: 2,
+                data: [null, null],
+                dashStyle: 'shortdot',
+                type: "spline",
+                tooltip: {
+                    valuePrefix: "∇"
+                }
+            }
+            ],
+            credits: {
+                enabled: false
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 70,
+                y: 40,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: '#FFFFFF',
+                shadow: true
+            },
+            responsive: {
+                rules: [{
+                    condition: {
+                        maxWidth: 500
+                    }
+                }]
+            }
+        });
+    })
+};
