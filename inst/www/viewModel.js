@@ -5,15 +5,13 @@ var vm = {
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
     highchart: ko.observable(),
-    gpxjs_vars: ko.observable({
-        get_pace: null,
-        get_duration: null,
-        get_distance_imp: null,//returns the total track distance in miles
-        get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
-        get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
-        get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
-        elevation_net: null
-    }),
+    get_pace: ko.observable(),
+    get_duration: ko.observable(),
+    get_distance_imp: ko.observable(),
+    get_moving_pace_imp: ko.observable(),
+    get_elevation_gain_imp: ko.observable(),
+    get_elevation_loss_imp: ko.observable(),
+    elevation_net: ko.observable(),
     downloadCSV : function() {
         var data = this.rDataOutput();
         var filename = this.gpx_file_name().slice(0, -4);

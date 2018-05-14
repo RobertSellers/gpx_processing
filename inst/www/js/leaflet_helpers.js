@@ -38,14 +38,12 @@ function updateLeaflet(){
     .on('loaded', function(e) {
         var gpx = e.target;
         vm.leafletMap().fitBounds(gpx.getBounds());
-        vm.gpxjs_vars({
-            get_duration: gpx.get_duration_string(gpx.get_moving_time()),
-            get_pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true),
-            get_distance_imp: gpx.get_distance_imp().toFixed(2),
-            get_elevation_gain: gpx.to_ft(gpx.get_elevation_gain()).toFixed(0),
-            get_elevation_loss: gpx.to_ft(gpx.get_elevation_loss()).toFixed(0),
-            elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0)
-        });
+        vm.get_duration(gpx.get_duration_string(gpx.get_moving_time()))
+        vm.get_pace(gpx.get_duration_string(gpx.get_moving_pace_imp(), true))
+        vm.get_distance_imp(gpx.get_distance_imp().toFixed(2))
+        vm.get_elevation_gain(gpx.to_ft(gpx.get_elevation_gain()).toFixed(0))
+        vm.get_elevation_loss(gpx.to_ft(gpx.get_elevation_loss()).toFixed(0))
+        vm.elevation_net(gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0))
         
         //update highchart
         vm.highchart().setTitle({text: vm.gpx_file_name()});

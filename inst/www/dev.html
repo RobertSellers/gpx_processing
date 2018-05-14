@@ -141,12 +141,12 @@ $(document).ready(function() {
             }
         });
         //Clear gpx.js variables
-        vm.gpxjs_vars().get_duration = null;
-        vm.gpxjs_vars().get_pace = null;
-        vm.gpxjs_vars().get_distance_imp = null;
-        vm.gpxjs_vars().get_elevation_gain = null;
-        vm.gpxjs_vars().get_elevation_loss = null;
-        vm.gpxjs_vars().elevation_net = null;
+        vm.get_duration(null);
+        vm.get_pace(null);
+        vm.get_distance_imp(null);
+        vm.get_elevation_gain(null);
+        vm.get_elevation_loss(null);
+        vm.elevation_net(null);
     }
 
     // Initialize charts
@@ -197,7 +197,7 @@ $(document).ready(function() {
             //Upload and validate the data
             //////////////////////////////
 
-        vm.gpx_file_name($("#gpxfile")[0].files[0].name)
+            vm.gpx_file_name($("#gpxfile")[0].files[0].name)
 
             var req = ocpu.call("gpx_validation", {
                 gpxfile : $("#gpxfile")[0].files[0]
@@ -313,12 +313,12 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance_imp"></span>&nbsp;mi</li>
-            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_duration"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().get_moving_pace_imp"></span>/mi</li>
-            &mdash; <li>Elevation:&nbsp;+<span data-bind="text: gpxjs_vars().get_elevation_gain_imp"></span>&nbsp;&nbsp;ft,
-              -<span data-bind="text: gpxjs_vars().get_elevation_loss_imp"></span>&nbsp;ft
-              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;ft)</li>
+            <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: get_moving_pace_imp()"></span>/mi</li>
+            &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
+              -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
+              (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
           </ul>
       </article>
     </main>
