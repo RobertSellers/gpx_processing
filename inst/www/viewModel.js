@@ -5,23 +5,13 @@ var vm = {
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
     highchart: ko.observable(),
-    //gpx.js output data
     gpxjs_vars: ko.observable({
         pace: null,
         get_distance_imp: null,//returns the total track distance in miles
-        get_start_time: null,//returns a Javascript Date object representing the starting time
-        get_time_zone: null,
-        get_start_date: null,
-        get_moving_time: null,//returns the moving time, in milliseconds
-        get_total_time: null,//returns the total track time, in milliseconds
         get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
-        get_moving_speed_imp: null,
-        get_total_speed_imp: null,//returns the average total speed in miles per hour
         get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
         get_elevation_loss_imp: null,//returns the cumulative elevation loss, in feet
-        elevation_net: null,
-        //full elevation, cadence  data
-        get_elevation_data_imp: null
+        elevation_net: null
     }),
     downloadCSV : function() {
         var data = this.rDataOutput();

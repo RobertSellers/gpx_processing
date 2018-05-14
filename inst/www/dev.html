@@ -124,20 +124,24 @@ $(document).ready(function() {
     }
 
     function clearData(){
+        //Toggle DOM elements
         $('#plotdiv').css("opacity", 0.2);
         $('#highcharts').css("opacity", 0.2);
         $(".download").prop('disabled', true);
         $(".download").css("opacity", 0.2);
-        vm.highchart().series[0].setData([null,null],false)
-        vm.highchart().series[1].setData([null,null],false)
-        vm.highchart().series[2].setData([null,null],false)
+        //Clear highcharts data
+        vm.highchart().series[0].setData([null,null], false)
+        vm.highchart().series[1].setData([null,null], false)
+        vm.highchart().series[2].setData([null,null], false)
         vm.highchart().redraw();
+        //Clear leaflet data
         vm.leafletMap().eachLayer(function (layer) {
             if (!layer.hasOwnProperty('_tiles')){
                 vm.leafletMap().removeLayer(layer);
             }
         });
-        map_lock('lock')
+        //Clear gpx.js variables
+        setNull(vm.gpxjs_vars())
     }
 
     // Initialize charts
@@ -153,10 +157,8 @@ $(document).ready(function() {
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
-        var timeRange = vm.rDataOutput().map(a => a.Seconds)
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
-        // var elevationArray = vm.rDataOutput().map(a => a.Elevation * 3.28084) // meters to feet
         var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var timeElevation = dateTimeRange.map(function(v,i) {
             return [v, elevationArray[i]];

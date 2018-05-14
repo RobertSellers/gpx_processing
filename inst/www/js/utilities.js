@@ -20,3 +20,13 @@ function dateTimeOutputString(x){
     var z = y % x;
     return Math.round(x/y) + ":" + z;
 }
+
+function setAll(obj, val) {
+    Object.keys(obj).forEach(function(k) {
+        obj[k] = val
+    });
+}
+
+function setNull(obj) {
+    setAll(obj, null);
+}
