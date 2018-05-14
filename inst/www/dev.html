@@ -141,7 +141,12 @@ $(document).ready(function() {
             }
         });
         //Clear gpx.js variables
-        setNull(vm.gpxjs_vars())
+        vm.gpxjs_vars().get_duration = null;
+        vm.gpxjs_vars().get_pace = null;
+        vm.gpxjs_vars().get_distance_imp = null;
+        vm.gpxjs_vars().get_elevation_gain = null;
+        vm.gpxjs_vars().get_elevation_loss = null;
+        vm.gpxjs_vars().elevation_net = null;
     }
 
     // Initialize charts
