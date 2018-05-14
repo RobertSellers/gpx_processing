@@ -44,7 +44,6 @@ $(document).ready(function() {
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
-    new Highcharts.chart(vm.highchartOptions())
     /* ----- Navigation ----- */
 
     $('.nav').find('a').attr('tabindex', -1);
@@ -278,7 +277,7 @@ $(document).ready(function() {
 
     // Initialize charts
     initLeaflet()//leaflet
-    vm.highchart()//highchart
+    new Highcharts.chart(vm.highchartOptions())
 
     $(".download").prop('disabled', true);
     $(".download").css("opacity", 0.2);
