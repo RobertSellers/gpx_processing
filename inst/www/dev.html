@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
-
+    new Highcharts.chart(vm.highchartOptions())
     /* ----- Navigation ----- */
 
     $('.nav').find('a').attr('tabindex', -1);

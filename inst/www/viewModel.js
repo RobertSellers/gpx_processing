@@ -28,7 +28,7 @@ var vm = {
         var exportData = new CSVExport(data, filename);
         return exportData
     },
-    highchart : ko.computed(function(){
+    highchartOptions : ko.computed(function(){
 
         var elevationColor = "#76a912"
         var speedColor = "red"
@@ -228,6 +228,7 @@ var vm = {
                 }]
             }
         };
-        return new Highcharts.chart(options)
+        // return new Highcharts.chart(options)
+        return highchartOptions;
     })
 }
