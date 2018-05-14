@@ -164,13 +164,12 @@ $(document).ready(function() {
         //Update Highchart
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
-        var elevationArray = vm.rDataOutput().map(a => a.Elevation* 3.28084)//convert to feet
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var timeElevation = dateTimeRange.map(function(v,i) {
-
             return [v, elevationArray[i]];
         });
         //SPEED
-        var speedArray = vm.rDataOutput().map(a => a.Speed *2.23694)//convert to mph
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
