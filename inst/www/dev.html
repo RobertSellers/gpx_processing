@@ -306,12 +306,12 @@ $(document).ready(function() {
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map"></div>
         <ul class="info">
-            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;km</li>
-            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_moving_time"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().pace"></span>/km</li>
-            &mdash; <li>Elevation:&nbsp;<span data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;m,
-              <span data-bind="text: gpxjs_vars().get_elevation_loss"></span>&nbsp;m
-              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;m)</li>
+            <li>Distance:&nbsp;<span data-bind="text: gpxjs_vars().get_distance"></span>&nbsp;mi</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: gpxjs_vars().get_duration"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: gpxjs_vars().get_pace"></span>/mi</li>
+            &mdash; <li>Elevation:&nbsp;+<span data-bind="text: gpxjs_vars().get_elevation_gain"></span>&nbsp;&nbsp;ft,
+              -<span data-bind="text: gpxjs_vars().get_elevation_loss"></span>&nbsp;ft
+              (net:&nbsp;<span data-bind="text: gpxjs_vars().elevation_net"></span>&nbsp;ft)</li>
           </ul>
       </article>
     </main>

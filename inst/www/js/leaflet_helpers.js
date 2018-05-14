@@ -41,19 +41,18 @@ function updateLeaflet(){
             var gpx = e.target;
             vm.leafletMap().fitBounds(gpx.getBounds());
             vm.gpxjs_vars({
-                pace: gpx.get_duration_string(gpx.get_moving_pace(), true),
-                get_distance: gpx.get_distance().toFixed(2),
-                get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
+                get_distance: gpx.get_distance_imp().toFixed(2),
+                //get_start_time: gpx.get_start_time().toDateString() + ', '+ gpx.get_start_time().toLocaleTimeString(),
                 get_duration: gpx.get_duration_string(gpx.get_moving_time()),
-                get_moving_time: msToTime(gpx.get_moving_time()),
-                get_total_time: msToTime(gpx.get_total_time()),
-                get_moving_pace: gpx.get_moving_pace(),
-                get_moving_speed: gpx.get_moving_speed().toFixed(2),
-                get_total_speed: gpx.get_total_speed().toFixed(2),
-                get_elevation_gain: "+" + gpx.get_elevation_gain().toFixed(2),
-                get_elevation_loss: "-" + gpx.get_elevation_loss().toFixed(2),
-                elevation_net: gpx.get_elevation_gain() - gpx.get_elevation_loss(),
-                get_elevation_data: gpx.get_elevation_data()
+                //get_moving_time: msToTime(gpx.get_moving_time()),
+                //get_total_time: msToTime(gpx.get_total_time()),
+                get_pace: gpx.get_duration_string(gpx.get_moving_pace_imp(), true),
+                // get_moving_speed: gpx.get_moving_speed().toFixed(2),
+                // get_total_speed: gpx.get_total_speed().toFixed(2),
+                get_elevation_gain: gpx.to_ft(gpx.get_elevation_gain()).toFixed(0),
+                get_elevation_loss: gpx.to_ft(gpx.get_elevation_loss()).toFixed(0),
+                elevation_net: gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0),
+                // get_elevation_data: gpx.get_elevation_data()
             });
             
             //update highchart
