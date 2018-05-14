@@ -4,7 +4,7 @@ var vm = {
     leafletMap: ko.observable(),
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
-    highchart: ko.observabl(),
+    highchart: ko.observable(),
     //gpx.js output data
     gpxjs_vars: ko.observable({
         pace: null,
