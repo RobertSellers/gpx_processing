@@ -277,8 +277,9 @@ $(document).ready(function() {
 
     // Initialize charts
     initLeaflet()//leaflet
-    new Highcharts.chart(vm.highchartOptions())
-
+    vm.highchart(vm.highchart(Highcharts.chart(vm.highchartOptions())))
+    new vm.highchart()
+    
     $(".download").prop('disabled', true);
     $(".download").css("opacity", 0.2);
     $("#session_url").prop('disabled', true);
