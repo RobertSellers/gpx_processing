@@ -34,69 +34,20 @@ var vm = {
         var speedColor = "red"
         var gradientColor = "purple"
     
-        Highcharts.setOptions({
-            chart: {
-                style: {
-                    fontFamily: 'monospace',
-                    color: "#f00"
-                }
-    
-            },
-            title: {
-            style: {
-                color: '#F00',
-                font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
-            }
-        },
-        xAxis: {
-            gridLineWidth: 1,
-            lineColor: '#000',
-            tickColor: '#000',
-            labels: {
-                style: {
-                    color: '#F00',
-                    font: '11px Trebuchet MS, Verdana, sans-serif'
-                }
-            },
-            title: {
-                style: {
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: '12px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-    
-                }            
-            }
-        },
-        yAxis: {
-            minorTickInterval: 'auto',
-            lineColor: '#000',
-            lineWidth: 1,
-            tickWidth: 1,
-            tickColor: '#000',
-            labels: {
-                style: {
-                    color: '#F00',
-                    font: '11px Trebuchet MS, Verdana, sans-serif'
-                }
-            },
-            title: {
-                style: {
-                    color: 'black',
-                    fontWeight: 'bold',
-                    fontSize: '12px',
-                    fontFamily: 'Trebuchet MS, Verdana, sans-serif'
-                }            
-            }
-        },
-        });
-        return new Highcharts.chart('container', {
+        var options = {
             chart: {
                 zoomType: 'x',
-                polar: false
+                polar: false,
+				fontFamily: 'monospace',
+				color: "#f00",
+				renderTo: 'container'
             },
             title: {
-                text:'GPX Not Loaded'
+                text:'GPX Not Loaded',
+				style: {
+					color: '#F00',
+					font: 'bold 16px "Trebuchet MS", Verdana, sans-serif'
+				}
             },
             subtitle: {
                 text: '',
@@ -111,27 +62,47 @@ var vm = {
                     dateTimeLabelFormats: {
                         minute: '%H:%M'
                     },
-                    color: "black"
+					style: {
+						color: '#F00',
+						font: '11px Trebuchet MS, Verdana, sans-serif'
+					}	
                 },
+				gridLineWidth: 1,
+				lineColor: '#000',
+				tickColor: '#000',
                 crosshair: true,
                 title: {
-                    text: 'Time (hh:mm)'
+                    text: 'Time (hh:mm)',
+					style: {
+						color: 'black',
+						fontWeight: 'bold',
+						fontSize: '12px',
+						fontFamily: 'Trebuchet MS, Verdana, sans-serif'
+					}        
                 }
             },
-            yAxis: [{
-                 // Primary yAxis
+            yAxis: [{ //primary yAxis
+				minorTickInterval: 'auto',
+				lineColor: '#000',
+				lineWidth: 1,
+				tickWidth: 1,
+				tickColor: '#000',
                 gridLineWidth: 0,
                 min: 0,
                 title: {
                     text: 'Speed (m/s)',
                     style: {
-                        color: speedColor
+                        color: speedColor,
+						fontWeight: 'bold',
+						fontSize: '12px',
+						fontFamily: 'Trebuchet MS, Verdana, sans-serif'
                     }
                 },
                 labels: {
                     format: '{value}',
                     style: {
-                        color: speedColor
+                        color: speedColor,
+						font: '11px Trebuchet MS, Verdana, sans-serif'
                     }
                 },
                 opposite: true
@@ -256,6 +227,7 @@ var vm = {
                     }
                 }]
             }
-        });
+        };
+        return new Highcharts.chart(options)
     })
-};
+}
