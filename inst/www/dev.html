@@ -315,7 +315,7 @@ $(document).ready(function() {
         <ul class="info">
             <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
             &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: get_moving_pace_imp()"></span>/mi</li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: vm.get_pace_imp()"></span>/mi</li>
             &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
               -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
               (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
