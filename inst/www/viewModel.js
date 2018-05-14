@@ -6,7 +6,8 @@ var vm = {
     rDataOutput: ko.observable(),
     highchart: ko.observable(),
     gpxjs_vars: ko.observable({
-        pace: null,
+        get_pace: null,
+        get_duration: null,
         get_distance_imp: null,//returns the total track distance in miles
         get_moving_pace_imp: null,//returns the average moving pace in milliseconds per hour
         get_elevation_gain_imp: null,// returns the cumulative eleva`tion gain, in feet
