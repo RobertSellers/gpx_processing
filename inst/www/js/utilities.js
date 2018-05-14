@@ -14,3 +14,9 @@ function msToTime(duration) {
 Object.prototype.hasOwnProperty = function(property) {
     return this[property] !== undefined;
 };
+
+function dateTimeOutputString(x){
+    var y = 60;
+    var z = y % x;
+    return Math.round(x/y) + ":" + z;
+}
