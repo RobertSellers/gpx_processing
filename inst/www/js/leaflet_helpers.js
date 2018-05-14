@@ -39,10 +39,10 @@ function updateLeaflet(){
         var gpx = e.target;
         vm.leafletMap().fitBounds(gpx.getBounds());
         vm.get_duration(gpx.get_duration_string(gpx.get_moving_time()))
-        vm.get_pace(gpx.get_duration_string(gpx.get_moving_pace_imp(), true))
+        vm.get_pace_imp(gpx.get_duration_string(gpx.get_moving_pace_imp(), true))
         vm.get_distance_imp(gpx.get_distance_imp().toFixed(2))
-        vm.get_elevation_gain(gpx.to_ft(gpx.get_elevation_gain()).toFixed(0))
-        vm.get_elevation_loss(gpx.to_ft(gpx.get_elevation_loss()).toFixed(0))
+        vm.get_elevation_gain_imp(gpx.to_ft(gpx.get_elevation_gain()).toFixed(0))
+        vm.get_elevation_loss_imp(gpx.to_ft(gpx.get_elevation_loss()).toFixed(0))
         vm.elevation_net(gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0))
         
         //update highchart
