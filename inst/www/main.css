@@ -422,3 +422,9 @@ a{
 #highcharts{
   height: 400px;
 }
+
+.map {
+  height:600px;
+  width: 100%;
+  border: 2px solid orange;
+}
