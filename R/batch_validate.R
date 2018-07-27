@@ -7,7 +7,7 @@ batch_validate <- function(gpx_files, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
-
+    cat(num_files)
     i <- 1
     for (gpx in gpx_files){
         if(substring(tolower(gpx), nchar(gpx)-3) != ".gpx"){
