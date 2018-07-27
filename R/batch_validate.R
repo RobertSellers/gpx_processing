@@ -33,4 +33,3 @@ batch_validate <- function(gpx_files, ...){
         i<-i+1
     }
   }
-}
