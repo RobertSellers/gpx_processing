@@ -7,8 +7,8 @@ batch_validate <- function(gpx_files, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
-    i <- 1
-    for (gpx in gpx_files){
+
+    for (i in 1:num_files){
         if(substring(tolower(gpx), nchar(gpx)-3) != ".gpx"){
             response$error[i] <- "Improper Data Format"
             response$validate_response[i] <- "Error"
@@ -30,7 +30,6 @@ batch_validate <- function(gpx_files, ...){
                 response$error[i] <- "none"
             })
         }
-        i<-i+1
     }
-    return (i)
+    return (length(gpx_files))
   }
