@@ -25,7 +25,7 @@ batch_validate <- function(header, ...){
         })
     }
     
-    return (list("response"=validate_response,"error"=error))
+    return (list("response"=validate_response,"error"=error_log))
   }
 
   message <- function (..., domain = NULL, appendLF = TRUE) 
