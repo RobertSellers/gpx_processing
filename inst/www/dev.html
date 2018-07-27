@@ -197,36 +197,35 @@ $(document).ready(function() {
             //Upload and validate the data
             //////////////////////////////
 
-            vm.gpx_file_name($("#gpxfile")[0].files[0].name)
+            for (var i = 0; i < $("#gpxfile")[0].files.length; i++){
+                    vm.gpx_file_name($("#gpxfile")[0].files[0].name)
+                    var req = ocpu.call("gpx_validation", {
+                    gpxfile : $("#gpxfile")[0].files[0]
+                }, function(session){
+                    vm.session_tmp(session.getLoc());
 
-            var req = ocpu.call("gpx_validation", {
-                gpxfile : $("#gpxfile")[0].files[0]
-            }, function(session){
-                vm.session_tmp(session.getLoc());
-
-                //retrieve javascript object as json
-                session.getObject(function(data)  {
-                    vm.rDataOutput(data)
-                    updateLeaflet()
-                    $("#session_url").prop('disabled', false);
-                    $(".download").css("opacity", 1);
-                    $(".download").prop('disabled', false);
-                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                    $('#plotdiv').css("opacity", 1);
-                    $('#highcharts').css("opacity", 1);
-                    successmsg("GPX file successfully loaded!");
-                });
-
-            }).fail(function(jqXHR){
-                clearData();
-                errormsg(jqXHR.responseText);
-            }).always(function(){
-                var session_url = document.getElementById("session_url");
-                session_url.style.cursor = "pointer";
-            });
+                    //retrieve javascript object as json
+                    session.getObject(function(data)  {
+                        vm.rDataOutput(data)
+                        updateLeaflet()
+                        $("#session_url").prop('disabled', false);
+                        $(".download").css("opacity", 1);
+                        $(".download").prop('disabled', false);
+                        $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+                        $('#plotdiv').css("opacity", 1);
+                        $('#highcharts').css("opacity", 1);
+                        successmsg("GPX file successfully loaded!");
+                    });
+                }).fail(function(jqXHR){
+                        clearData();
+                        errormsg(jqXHR.responseText);
+                }).always(function(){
+                        var session_url = document.getElementById("session_url");
+                        session_url.style.cursor = "pointer";
+                })
+            }
         }
     });
-
 });
 
 </script>
