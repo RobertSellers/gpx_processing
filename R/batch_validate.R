@@ -2,8 +2,8 @@ batch_validate <- function(header, ...){
     gpx_files <- list(...) 
     num_files <- length(gpx_files)
     response <- data.frame(
-        error=character(num_files),
-        validate_response=character(num_files),
+        error=character(),
+        validate_response=character(),
         stringsAsFactors = FALSE
     )
     test <- "NONE"
