@@ -6,7 +6,6 @@ batch_validate <- function(header, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
-    stop(cat(gpx_files[i][0]))
     test <- "NONE"
     for (i in 1:num_files){
         tryCatch({
@@ -27,5 +26,5 @@ batch_validate <- function(header, ...){
             response$error[i] <- e
         })
     }
-    return (gpx_files[1])
+    return (response)
   }
