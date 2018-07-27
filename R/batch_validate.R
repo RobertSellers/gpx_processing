@@ -6,15 +6,15 @@ batch_validate <- function(header, ...){
     df_list <- list()
     i <- 1
     for (item in gpx_files){
-# #
+       name <- paste('gpx:',i,sep='')
         tryCatch({
-            df_list[[i]] <- gpx_df_construct(gpxfile)
+            df_list[[name]] <- gpx_df_construct(gpxfile)
             validate_response[i] <- "Success"
             error_log[i] <- "none"
             }, error = function(e){
                 validate_response[i] <- "Error"
                 error_log[i] <- e
-                df_list[[i]] <- NULL
+                df_list[[name]] <- NULL
             }, finally = {
                 #nothing
 
