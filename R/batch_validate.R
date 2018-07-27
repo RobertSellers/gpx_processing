@@ -6,12 +6,13 @@ batch_validate <- function(header, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
+    stop(cat(gpx_files[i][0]))
     test <- "NONE"
     for (i in 1:num_files){
         tryCatch({
             test <- TRUE
             plotKML::readGPX(
-                gpx_files[i], 
+                gpx_files[i][0], 
                 metadata = TRUE, 
                 bounds = TRUE, 
                 waypoints = TRUE, 
