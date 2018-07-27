@@ -14,7 +14,7 @@ batch_validate <- function(header, ...){
             }, error = function(e){
                 validate_response[i] <- "Error"
                 error_log[i] <- e
-                df_list[[name]] <- NULL
+                df_list[[name]] <- 'na'
             }, finally = {
                 #nothing
 
