@@ -191,9 +191,6 @@ $(document).ready(function() {
         if($("#gpxfile")[0].files[0]){
             var myheader = "test"
             var files = $("#gpxfile")[0].files;
-            gpxParse.parseGpxFromFile(files[0], function(error, data) {
-                debugger
-            });
 
             clearData();
             $("#successdiv").empty().show();
