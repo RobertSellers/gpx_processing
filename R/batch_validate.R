@@ -1,8 +1,10 @@
 batch_validate <- function(gpx_files, ...){
   
+    num_files <- length(gpx_files)
+
     response <- data.frame(
-        error=character(),
-        validate_response=character(),
+        error=character(num_files),
+        validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
 
