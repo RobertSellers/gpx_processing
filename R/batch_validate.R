@@ -1,6 +1,6 @@
 batch_validate <- function(header, ...){
-    myfiles <- list(...) 
-    num_files <- length(myfiles)
+    gpx_files <- list(...) 
+    num_files <- length(gpx_files)
     response <- data.frame(
         error=character(num_files),
         validate_response=character(num_files),
