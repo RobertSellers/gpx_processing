@@ -196,36 +196,51 @@ $(document).ready(function() {
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
+            var req = ocpu.call("batch_validate", {
+                gpx_files : $("#gpxfile")[0].files
+            }, function(session){
+                vm.session_tmp(session.getLoc());
+                session.getObject(function(data){
+                    //debugger here
+                });
+            }).fail(function(jqXHR){
+                clearData();
+                errormsg(jqXHR.responseText);
+            }).always(function(){
+                //nada
+            });
+            // vm.gpx_file_name($("#gpxfile")[0].files[0].name) // THIS ONLY DOWNLOADS A SINGLE FILE
 
-            for (var i = 0; i < $("#gpxfile")[0].files.length; i++){
-                    vm.gpx_file_name($("#gpxfile")[0].files[i].name)
-                    var req = ocpu.call("gpx_validation", {
-                    gpxfile : $("#gpxfile")[0].files[i]
-                }, function(session){
-                    vm.session_tmp(session.getLoc());
+            // var req = ocpu.call("gpx_validation", {
+            //     //gpxfile : $("#gpxfile")[0].files[0]
+            //     gpx_files : $("#gpxfile")[0].files
+            // }, function(session){
+            //     vm.session_tmp(session.getLoc());
 
-                    //retrieve javascript object as json
-                    session.getObject(function(data)  {
-                        vm.rDataOutput(data)
-                        updateLeaflet()
-                        $("#session_url").prop('disabled', false);
-                        $(".download").css("opacity", 1);
-                        $(".download").prop('disabled', false);
-                        $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                        $('#plotdiv').css("opacity", 1);
-                        $('#highcharts').css("opacity", 1);
-                        successmsg("GPX file successfully loaded!");
-                    });
-                }).fail(function(jqXHR){
-                        clearData();
-                        errormsg(jqXHR.responseText);
-                }).always(function(){
-                        var session_url = document.getElementById("session_url");
-                        session_url.style.cursor = "pointer";
-                })
-            }
+            //     //retrieve javascript object as json
+            //     session.getObject(function(data)  {
+            //         vm.rDataOutput(data)
+            //         updateLeaflet()
+            //         $("#session_url").prop('disabled', false);
+            //         $(".download").css("opacity", 1);
+            //         $(".download").prop('disabled', false);
+            //         $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+            //         $('#plotdiv').css("opacity", 1);
+            //         $('#highcharts').css("opacity", 1);
+            //         successmsg("GPX file successfully loaded!");
+            //     });
+
+            // }).fail(function(jqXHR){
+            //     clearData();
+            //     errormsg(jqXHR.responseText);
+            // }).always(function(){
+            //     var session_url = document.getElementById("session_url");
+            //     session_url.style.cursor = "pointer";
+            // });
+
         }
     });
+
 });
 
 </script>
