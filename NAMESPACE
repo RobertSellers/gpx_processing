@@ -1,2 +1,2 @@
 export(gpx_validation)
-export(gpx_validate)
+export(batch_validate)
