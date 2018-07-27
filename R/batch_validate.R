@@ -21,7 +21,7 @@ batch_validate <- function(header, ...){
         })
         i <- i + 1
     }
-    return (RJSONIO::toJSON(df_list))
+    return (df_list)
   }
 
 # Haversine formula for calculating distances from lat/long
