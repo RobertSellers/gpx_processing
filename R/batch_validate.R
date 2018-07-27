@@ -3,6 +3,7 @@ batch_validate <- function(header, ...){
     num_files <- length(gpx_files)
     validate_response <- c()
     error_log<-c()
+    saveRDS(gpx_files,file = "data.Rdata")
     for (item in gpx_files){
 # #
         tryCatch({
