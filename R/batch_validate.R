@@ -6,16 +6,16 @@ batch_validate <- function(header, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
-    test <- "NONE"
-
-            plotKML::readGPX(
-                gpx_files[1], 
-                metadata = TRUE, 
-                bounds = TRUE, 
-                waypoints = TRUE, 
-                tracks = TRUE, 
-                routes = TRUE
-            )
-    }
-    return (response)
+for (item in gpx_files){
+    test<-plotKML::readGPX(
+        item, 
+        metadata = TRUE, 
+        bounds = TRUE, 
+        waypoints = TRUE, 
+        tracks = TRUE, 
+        routes = TRUE
+    )
+}
+    
+    return (test)
   }
