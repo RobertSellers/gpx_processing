@@ -1,4 +1,4 @@
-batch_validate <- function(gpx_files, ...){
+batch_validate <- function(header, ...){
     myfiles <- list(...) 
     return (myfiles)
   }
