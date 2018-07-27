@@ -20,12 +20,11 @@ batch_validate <- function(header, ...){
                     tracks = TRUE, 
                     routes = TRUE
                 )
+                response$validate_response[i] <- "Success"
+                response$error[i] <- "none"
             }, error = function(e){
                 response$validate_response[i] <- "Error"
                 response$error[i] <- e
-            }, finally = {
-                response$validate_response[i] <- "Success"
-                response$error[i] <- "none"
             })
         }
     }
