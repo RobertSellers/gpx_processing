@@ -204,6 +204,7 @@ $(document).ready(function() {
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
+                
             var req = ocpu.call("batch_validate", param, function(session){
                 vm.session_tmp(session.getLoc());
                 session.getObject(function(data){
