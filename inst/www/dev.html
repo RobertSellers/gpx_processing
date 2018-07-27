@@ -194,33 +194,12 @@ $(document).ready(function() {
             clearData();
             $("#successdiv").empty().show();
             $("#errordiv").empty().show();
+            //Batch process requires variable length parameter input
+            // OpenCPU limited to a single File per parameter
             var param = {"header":myheader}
             for (i=0; i < files.length; i++){
                 param["file"+i] = files[i]
             }
-            // {
-            //     "file_1" : files[0],
-            //     "file_2" : files[1],
-            //     "file_3" : files[2],
-            //     "file_4" : files[3],
-            //     "file_5" : files[4],
-            //     "file_6" : files[5],
-            //     "file_7" : files[6],
-            //     "file_8" : files[7],
-            //     "file_9" : files[8],
-            //     "file_10" : files[9],
-            //     "file_11" : files[10],
-            //     "file_12" : files[11],
-            //     "file_13" : files[12],
-            //     "file_14" : files[13],
-            //     "file_15" : files[14],
-            //     "file_16" : files[15],
-            //     "file_17" : files[16],
-            //     "file_18" : files[17],
-            //     "file_19" : files[18],
-            //     "file_20" : files[19],
-            //     "header" : myheader 
-            // }
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
