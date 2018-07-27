@@ -195,6 +195,9 @@ $(document).ready(function() {
             $("#successdiv").empty().show();
             $("#errordiv").empty().show();
             var param = {"header":myheader}
+            for (var i; i < files.length; i++){
+                param["file"+i] = files[i]
+            }
             // {
             //     "file_1" : files[0],
             //     "file_2" : files[1],
