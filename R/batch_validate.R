@@ -11,7 +11,7 @@ batch_validate <- function(header, ...){
         tryCatch({
             test <- TRUE
             plotKML::readGPX(
-                gpx_files[i][0], 
+                gpx_files[i], 
                 metadata = TRUE, 
                 bounds = TRUE, 
                 waypoints = TRUE, 
