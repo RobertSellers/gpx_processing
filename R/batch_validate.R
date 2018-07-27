@@ -4,6 +4,7 @@ batch_validate <- function(header, ...){
     validate_response <- c()
     error_log<-c()
     saveRDS(gpx_files,file = "data.Rdata")
+    i <- 1
     for (item in gpx_files){
 # #
         tryCatch({
@@ -24,8 +25,8 @@ batch_validate <- function(header, ...){
                 #nothing
 
         })
+        i <- i + 1
     }
-    
     return (list("response"=validate_response,"error"=error_log))
   }
 
