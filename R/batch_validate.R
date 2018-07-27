@@ -9,7 +9,7 @@ batch_validate <- function(gpx_files, ...){
     )
 
     for (i in 1:num_files){
-        if(substring(tolower(gpx_files[i]), nchar(gpx)-3) != ".gpx"){
+        if(substring(tolower(gpx_files[i]), nchar(gpx_files[i]) - 3) != ".gpx"){
             response$error[i] <- "Improper Data Format"
             response$validate_response[i] <- "Error"
         }else{
