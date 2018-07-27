@@ -7,17 +7,26 @@ batch_validate <- function(header, ...){
         stringsAsFactors = FALSE
     )
     for (item in gpx_files){
-        test<-plotKML::readGPX(
-            item, 
-            metadata = TRUE, 
-            bounds = TRUE, 
-            waypoints = TRUE, 
-            tracks = TRUE, 
-            routes = TRUE
-        )
+
+        tryCatch({
+            data_test<-plotKML::readGPX(
+                item, 
+                metadata = TRUE, 
+                bounds = TRUE, 
+                waypoints = TRUE, 
+                tracks = TRUE, 
+                routes = TRUE
+            )
+            }, error = function(e){
+                response$validate_response[i] <- "Error"
+                response$error[i] <- e
+            }, finally = {
+                response$validate_response[i] <- "Success"
+                response$error[i] <- "none"
+        })
     }
     
-    return (test)
+    return (response)
   }
 
   message <- function (..., domain = NULL, appendLF = TRUE) 
