@@ -31,5 +31,5 @@ batch_validate <- function(gpx_files, ...){
             })
         }
     }
-    return (gpx_files[0])
+    return (gpx_files)
   }

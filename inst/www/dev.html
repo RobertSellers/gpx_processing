@@ -197,7 +197,7 @@ $(document).ready(function() {
             //Upload and validate the data
             //////////////////////////////
             var req = ocpu.call("batch_validate", {
-                gpx_files : [$("#gpxfile")[0].files]
+                gpx_files : $("#gpxfile")[0].files
             }, function(session){
                 vm.session_tmp(session.getLoc());
                 session.getObject(function(data){
