@@ -1,7 +1,8 @@
 batch_validate <- function(header, ...){
     gpx_files <- list(...) 
     num_files <- length(gpx_files)
-
+    validate_response <- c()
+    error_log<-c()
     for (item in gpx_files){
 # #
         tryCatch({
@@ -13,12 +14,14 @@ batch_validate <- function(header, ...){
                 tracks = TRUE, 
                 routes = TRUE
             )
+                validate_response[i] <- "Success"
+                error_log[i] <- "none"
             }, error = function(e){
                 validate_response[i] <- "Error"
-                error[i] <- e
+                error_log[i] <- e
             }, finally = {
-                validate_response[i] <- "Success"
-                error[i] <- "none"
+                #nothing
+
         })
     }
     
