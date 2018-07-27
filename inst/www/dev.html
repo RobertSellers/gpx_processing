@@ -196,19 +196,22 @@ $(document).ready(function() {
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
-            var req = ocpu.call("batch_validate", {
-                gpx_files : $("#gpxfile")[0].files
-            }, function(session){
-                vm.session_tmp(session.getLoc());
-                session.getObject(function(data){
-                    //debugger here
+            for (var i; i < $("#gpxfile")[0].files.length;i++){
+                var req = ocpu.call("gpx_validate", {
+                    gpx_files : $("#gpxfile")[i].files
+                }, function(session){
+                    vm.session_tmp(session.getLoc());
+                    session.getObject(function(data){
+                        //debugger here
+                    });
+                }).fail(function(jqXHR){
+                    clearData();
+                    errormsg(jqXHR.responseText);
+                }).always(function(){
+                    //nada
                 });
-            }).fail(function(jqXHR){
-                clearData();
-                errormsg(jqXHR.responseText);
-            }).always(function(){
-                //nada
-            });
+            }
+
             // vm.gpx_file_name($("#gpxfile")[0].files[0].name) // THIS ONLY DOWNLOADS A SINGLE FILE
 
             // var req = ocpu.call("gpx_validation", {
