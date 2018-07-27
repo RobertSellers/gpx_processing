@@ -27,9 +27,9 @@ batch_validate <- function(gpx_files, ...){
             }, finally = {
                 response$validate_response[i] <- "Success"
                 response$error[i] <- "none"
-                return (response)
             })
         }
         i<-i+1
     }
+    return (response)
   }
