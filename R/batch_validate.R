@@ -7,26 +7,21 @@ batch_validate <- function(header, ...){
         stringsAsFactors = FALSE
     )
     for (i in 1:num_files){
-        if(substring(tolower(gpx_files[i]), nchar(gpx_files[i]) - 3) != ".gpx"){
-            response$error[i] <- "Improper Data Format"
+        tryCatch({
+            data <- plotKML::readGPX(
+                gpx_files[i], 
+                metadata = TRUE, 
+                bounds = TRUE, 
+                waypoints = TRUE, 
+                tracks = TRUE, 
+                routes = TRUE
+            )
+            response$validate_response[i] <- "Success"
+            response$error[i] <- "none"
+        }, error = function(e){
             response$validate_response[i] <- "Error"
-        }else{
-            tryCatch({
-                data <- plotKML::readGPX(
-                    gpx_files[i], 
-                    metadata = TRUE, 
-                    bounds = TRUE, 
-                    waypoints = TRUE, 
-                    tracks = TRUE, 
-                    routes = TRUE
-                )
-                response$validate_response[i] <- "Success"
-                response$error[i] <- "none"
-            }, error = function(e){
-                response$validate_response[i] <- "Error"
-                response$error[i] <- e
-            })
-        }
+            response$error[i] <- e
+        })
     }
     return (response)
   }
