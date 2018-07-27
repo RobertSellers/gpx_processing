@@ -1,13 +1,9 @@
 batch_validate <- function(header, ...){
     gpx_files <- list(...) 
     num_files <- length(gpx_files)
-    response <- data.frame(
-        error=character(num_files),
-        validate_response=character(num_files),
-        stringsAsFactors = FALSE
-    )
-    for (item in gpx_files){
 
+    for (item in gpx_files){
+# #
         tryCatch({
             data_test<-plotKML::readGPX(
                 item, 
@@ -18,15 +14,15 @@ batch_validate <- function(header, ...){
                 routes = TRUE
             )
             }, error = function(e){
-                response$validate_response[i] <- "Error"
-                response$error[i] <- e
+                validate_response[i] <- "Error"
+                error[i] <- e
             }, finally = {
-                response$validate_response[i] <- "Success"
-                response$error[i] <- "none"
+                validate_response[i] <- "Success"
+                error[i] <- "none"
         })
     }
     
-    return (response)
+    return (list("response"=validate_response,"error"=error))
   }
 
   message <- function (..., domain = NULL, appendLF = TRUE) 
