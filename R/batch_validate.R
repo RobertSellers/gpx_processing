@@ -21,5 +21,5 @@ batch_validate <- function(header, ...){
         })
         i <- i + 1
     }
-    return (df_list)
+    return (toJSON(df_list))
   }
