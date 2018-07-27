@@ -6,9 +6,11 @@ batch_validate <- function(header, ...){
         validate_response=character(num_files),
         stringsAsFactors = FALSE
     )
+    test <- "NONE"
     for (i in 1:num_files){
         tryCatch({
-            data <- plotKML::readGPX(
+            test <- TRUE
+            plotKML::readGPX(
                 gpx_files[i], 
                 metadata = TRUE, 
                 bounds = TRUE, 
@@ -19,9 +21,10 @@ batch_validate <- function(header, ...){
             response$validate_response[i] <- "Success"
             response$error[i] <- "none"
         }, error = function(e){
+            test <- FALSE
             response$validate_response[i] <- "Error"
             response$error[i] <- e
         })
     }
-    return (data)
+    return (test)
   }
