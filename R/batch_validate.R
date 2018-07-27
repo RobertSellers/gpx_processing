@@ -23,5 +23,5 @@ batch_validate <- function(header, ...){
             response$error[i] <- e
         })
     }
-    return (response)
+    return (data)
   }
