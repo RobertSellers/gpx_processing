@@ -26,5 +26,5 @@ batch_validate <- function(header, ...){
             response$error[i] <- e
         })
     }
-    return (test)
+    return (gpx_files[1])
   }
