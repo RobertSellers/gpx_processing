@@ -436,4 +436,6 @@ a{
   padding: .8em .9em;
   color: #fff;
   background: #233e75;
+  max-width: 200px;
+  font-size: 12px;
 }
