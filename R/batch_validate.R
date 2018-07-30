@@ -8,7 +8,8 @@ batch_validate <- function(header, ...){
     for (item in gpx_files){
        name <- paste('gpx:',i,sep='')
         tryCatch({
-            df_list[[name]] <- gpx_df_construct(gpxfile)
+            df <- gpx_df_construct(gpxfile)
+            df_list[[name]] <-df
             validate_response[i] <- "Success"
             error_log[i] <- "none"
             }, error = function(e){
@@ -21,7 +22,7 @@ batch_validate <- function(header, ...){
         })
         i <- i + 1
     }
-    return (df_list)
+    return (gpx_files)
   }
 
 # Haversine formula for calculating distances from lat/long
