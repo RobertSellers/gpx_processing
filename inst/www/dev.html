@@ -185,7 +185,7 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function asyncFunction (item, cb) {
+    function asyncFunction (file, cb) {
         setTimeout(() => {
             clearData();
             $("#successdiv").empty().show();
@@ -222,7 +222,7 @@ $(document).ready(function() {
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
-            console.log('done with', item);
+            console.log('done with', file);
             cb();
         }, 2000);
     }
