@@ -226,22 +226,30 @@ $(document).ready(function() {
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
-        }, 200);
+        }, 100);
     }
 
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
-    //  Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 asyncFunction(item, resolve);
                 console.log("async")
             }));
         }, Promise.resolve());
-            
-        // });
     });
 
+    //MODAL LOGIC
+    var callback_modal = function(result) {
+        alert(result);
+        }; // define your callback somewhere
+    $('#confirmAlert').on('click', '.btn, .close', function() {
+        $(this).addClass('modal-result'); // mark which button was clicked
+        }).on('hidden', function() {
+        var result = $(this).find('.modal-result').filter('.btn-danger').length > 0; // attempt to filter by what you consider the "YES" button; if it was clicked, result should be true.
+
+        callback_modal(result); // invoke the callback with result
+    });
 });
 
 </script>
@@ -316,8 +324,6 @@ $(document).ready(function() {
                     <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
                         <div id="container"></div>
                     </div>
-                    <div class="tab-panel" id="Readme" role="tabpanel" aria-hidden="true">Created By Robert Sellers / Azimuth1
-                    </div>
               </div>
             </div>
       
@@ -337,5 +343,19 @@ $(document).ready(function() {
           </ul>
       </article>
     </main>
+    <div class="modal fade hide" id="confirmAlert">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h3 id="confirmTitle">Are you sure?</h3>
+        </div>
+    
+        <div class="modal-body">
+            <p id="confirmMessage">Body</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <a href="#" class="btn btn-danger">Yes</a>
+        </div>
+    </div>
     </body>
 </html>
