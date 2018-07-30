@@ -188,6 +188,8 @@ $(document).ready(function() {
 
     vm.selectedIndex.subscribe(function(){
         console.log("index changed")
+        var selectedIndex = vm.gpxFileNameArray().indexOf(vm.gpxFileName());
+        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
     })
 
     function gpxLoadAsync(file, cb) {
