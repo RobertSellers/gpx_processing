@@ -305,7 +305,7 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                <div id="validationDiv" data-bind="html: warningHtmlClean()"></div>
+                <div id="validationDiv" data-bind="html: warningHtml().replace(/,/g , '')"></div>
             </fieldset>
           </td></table>
           </form>
