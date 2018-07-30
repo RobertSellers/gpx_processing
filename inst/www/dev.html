@@ -224,7 +224,7 @@ $(document).ready(function() {
             });
             console.log('done with', file);
             cb();
-        }, 2000);
+        }, 200);
     }
 
     //automatically upload GPX file on change.
@@ -232,7 +232,7 @@ $(document).ready(function() {
     //  Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
-            asyncFunction(item, resolve);
+                asyncFunction(item, resolve);
             }));
         }, Promise.resolve());
             
