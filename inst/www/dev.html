@@ -116,21 +116,13 @@ $(document).ready(function() {
     function successmsg(){
         var strMSG = vm.gpxFileName() + " file successfully loaded!";
         $("#validationDiv").empty()
-        vm.warningHtml.push('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
-        vm.warningHtml(vm.warningHtml().map(function(e) { 
-            e = e.replace(/,/g , '')
-            return e;
-        }));
+        vm.warningHtml('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
     }
 
     //R output to popup
     function errormsg(text){
         $("#validationDiv").empty()
-        vm.warningHtml.push('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
-        vm.warningHtml(vm.warningHtml().map(function(e) { 
-            e = e.replace(/,/g , '')
-            return e;
-        }));
+        vm.warningHtml('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
     }
 
     function clearData(){
@@ -305,7 +297,7 @@ $(document).ready(function() {
                     <option>Offtrail</option>
                     <option>Other</option>
                 </select> -->
-                Now Loading: <span data-bind="text: gpxFileName()"></span>
+                
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
@@ -313,6 +305,7 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
+                Now Loading: <span data-bind="text: gpxFileName()"></span>
                 <div id="validationDiv" data-bind="html: warningHtml()"></div>
             </fieldset>
           </td></table>
