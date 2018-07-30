@@ -248,8 +248,7 @@ $(document).ready(function() {
 
     $("#ddGpxList").change(function () {
         console.log(this.value);
-        vm.selectedIndex(document.getElementById('ddGpxList').index)
-        console.log(vm.selectedIndex())
+        vm.selectedIndex(this.value)
     });
 });
 
