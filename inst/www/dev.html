@@ -220,12 +220,11 @@ $(document).ready(function() {
                 clearData();
                 errormsg(jqXHR.responseText);
             }).always(function(){
-                console.log("always")
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
+                console.log('done with', file);
+                cb();
             });
-            console.log('done with', file);
-            cb();
         }, 200);
     }
 
