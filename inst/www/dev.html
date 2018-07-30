@@ -44,6 +44,9 @@
 
 $(document).ready(function() {
 
+    // dropdown selection 
+    $(".chosen-select").chosen({rtl: true}); 
+
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
     /* ----- Navigation ----- */
@@ -288,7 +291,7 @@ $(document).ready(function() {
               <div class="form-group">
                 <div class="loadFileContainer">
                 <input id="gpxfile" type="file" style="display: inline-block;" multiple/>
-                <select>
+                <select data-placeholder="Select a Class..." class="chosen-select">
                     <option value=""></option>
                     <option>Trail</option>
                     <option>Sweep</option>
@@ -327,6 +330,7 @@ $(document).ready(function() {
       
           </article>
       </article>
+
       <article class="panel gpx">
         <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
@@ -340,6 +344,7 @@ $(document).ready(function() {
               (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
           </ul>
       </article>
+
     </main>
     </body>
 </html>
