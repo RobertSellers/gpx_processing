@@ -189,62 +189,41 @@ $(document).ready(function() {
 
         //verify that a file is selected
         if($("#gpxfile")[0].files[0]){
-            var myheader = "test"
-            var files = $("#gpxfile")[0].files;
-
             clearData();
             $("#successdiv").empty().show();
             $("#errordiv").empty().show();
-            //Batch process requires variable length parameter input
-            // OpenCPU limited to a single File per parameter
-            var param = {"header":myheader}
-            for (i=0; i < files.length; i++){
-                param["file"+i] = files[i]
-            }
+
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
-                
-            var req = ocpu.call("batch_validate", param, function(session){
+
+            vm.gpx_file_name($("#gpxfile")[0].files[0].name)
+
+            var req = ocpu.call("gpx_validation", {
+                gpxfile : $("#gpxfile")[0].files[0]
+            }, function(session){
                 vm.session_tmp(session.getLoc());
-                session.getObject(function(data){
-                    //debugger here
+
+                //retrieve javascript object as json
+                session.getObject(function(data)  {
+                    vm.rDataOutput(data)
+                    updateLeaflet()
+                    $("#session_url").prop('disabled', false);
+                    $(".download").css("opacity", 1);
+                    $(".download").prop('disabled', false);
+                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+                    $('#plotdiv').css("opacity", 1);
+                    $('#highcharts').css("opacity", 1);
+                    successmsg("GPX file successfully loaded!");
                 });
+
             }).fail(function(jqXHR){
                 clearData();
                 errormsg(jqXHR.responseText);
             }).always(function(){
-                //nada
+                var session_url = document.getElementById("session_url");
+                session_url.style.cursor = "pointer";
             });
-            // vm.gpx_file_name($("#gpxfile")[0].files[0].name) // THIS ONLY DOWNLOADS A SINGLE FILE
-
-            // var req = ocpu.call("gpx_validation", {
-            //     //gpxfile : $("#gpxfile")[0].files[0]
-            //     gpx_files : $("#gpxfile")[0].files
-            // }, function(session){
-            //     vm.session_tmp(session.getLoc());
-
-            //     //retrieve javascript object as json
-            //     session.getObject(function(data)  {
-            //         vm.rDataOutput(data)
-            //         updateLeaflet()
-            //         $("#session_url").prop('disabled', false);
-            //         $(".download").css("opacity", 1);
-            //         $(".download").prop('disabled', false);
-            //         $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-            //         $('#plotdiv').css("opacity", 1);
-            //         $('#highcharts').css("opacity", 1);
-            //         successmsg("GPX file successfully loaded!");
-            //     });
-
-            // }).fail(function(jqXHR){
-            //     clearData();
-            //     errormsg(jqXHR.responseText);
-            // }).always(function(){
-            //     var session_url = document.getElementById("session_url");
-            //     session_url.style.cursor = "pointer";
-            // });
-
         }
     });
 
