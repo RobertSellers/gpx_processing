@@ -191,6 +191,7 @@ $(document).ready(function() {
 
     function waitForInput(){
         while($(".chosen-select").val()==""){
+            sleep(3000);
             waitForInput()
         }
     }
