@@ -189,31 +189,6 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    // function sleep(dur) {
-    //     var d = new Date().getTime() + dur;
-    //     while(new Date().getTime() <= d ) {
-    //         //Do nothing
-    //     }
-    // }
-
-    // function foo() {
-    //     var x;
-
-    //     x = doSomething();
-    //     fakeAlert("Alert! Alert!", function() {
-    //         doSomethingAfterTheAlertIsCleared(x);
-    //         doAnotherThingAfterward();
-    //     });
-    // }
-
-    // function waitForInput(){
-    //     while($(".chosen-select").val()==""){
-    //         sleep(3000);
-    //         console.log("waiting for user input")
-    //         waitForInput()
-    //     }
-    // }
-
     function async_loadgpx (file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
@@ -232,6 +207,7 @@ $(document).ready(function() {
                 $("#errordiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
+                    vm.callback(cb());
                     console.log("session loading")
                     vm.rDataOutput(data)
                     updateLeaflet()
@@ -244,8 +220,7 @@ $(document).ready(function() {
                     console.log("success")
                     successmsg();
                     $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
-                    alert(document.getElementsByClassName('gpx').innerHTML);
-                    cb();
+                    // alert(document.getElementsByClassName('gpx').innerHTML);
                 });
 
             }).fail(function(jqXHR){
@@ -260,6 +235,15 @@ $(document).ready(function() {
                 $(".chosen-select").chosen({rtl: true}).attr('disabled', true).trigger("chosen:updated");
             });
         }, 0);
+    }
+    function leaveChange(control) {
+        vm.callback()
+    }
+    function iteration(){
+        if ($(".chosen-select").val()==""){
+            setTimeout(iteration, 100)
+        }
+        
     }
 
     //automatically upload GPX file on change.
@@ -319,7 +303,7 @@ $(document).ready(function() {
               <div class="form-group">
                 <div class="loadFileContainer">
                 <input id="gpxfile" type="file" style="display: inline-block;" multiple/>
-                <select data-placeholder="Select a Class..." style="width:150px;" class="chosen-select">
+                <select data-placeholder="Select a Class..." onchange="leaveChange(this)" style="width:150px;" class="chosen-select">
                     <option value=""></option>
                     <option>Trail</option>
                     <option>Sweep</option>
