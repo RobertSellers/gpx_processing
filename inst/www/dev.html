@@ -9,7 +9,6 @@
 <!-- Primary Stylesheet -->
 <link href="main.css" rel="stylesheet">
 <link href="gpx.css" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
 
 <!-- Stand-alone Libraries -->
@@ -19,7 +18,6 @@
 <script src="components/knockout-min.js"></script>
 <script src="components/moment.min.js"></script>
 <script src="components/vfs_font.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.jquery.min.js"></script>
 
 <!-- Highcharts -->
 <script src="components/highcharts/highcharts.js"></script>
@@ -29,6 +27,7 @@
 
 <!-- Leaflet -->
 <script src="components/leaflet/leaflet.js"></script>
+<!-- <script src="components/leaflet/modules/leaflet.hotline.js"></script> -->
 <script src="components/leaflet/modules/gpx.js"></script>
 <script src="components/leaflet/modules/Control.MiniMap.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
@@ -43,9 +42,6 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-
-    // dropdown selection 
-    $(".chosen-select").chosen({rtl: true}).attr('disabled', true).trigger("chosen:updated");
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
@@ -189,7 +185,7 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function async_loadgpx (file, cb) {
+    function asyncFunction (file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
             //////////////////////////////
@@ -207,7 +203,6 @@ $(document).ready(function() {
                 $("#errordiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
-                    vm.callback(cb());
                     console.log("session loading")
                     vm.rDataOutput(data)
                     updateLeaflet()
@@ -219,8 +214,7 @@ $(document).ready(function() {
                     $('#highcharts').css("opacity", 1);
                     console.log("success")
                     successmsg();
-                    $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
-                    // alert(document.getElementsByClassName('gpx').innerHTML);
+                    cb();
                 });
 
             }).fail(function(jqXHR){
@@ -229,31 +223,32 @@ $(document).ready(function() {
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
-                // This will run prior to fail / success.
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
-                $(".chosen-select").chosen({rtl: true}).attr('disabled', true).trigger("chosen:updated");
             });
         }, 0);
-    }
-    function leaveChange(control) {
-        vm.callback()
-    }
-    function iteration(){
-        if ($(".chosen-select").val()==""){
-            setTimeout(iteration, 100)
-        }
-        
     }
 
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
-                async_loadgpx(item, resolve);
+                asyncFunction(item, resolve);
                 console.log("async")
             }));
         }, Promise.resolve());
+    });
+
+    //MODAL LOGIC
+    var callback_modal = function(result) {
+        alert(result);
+        }; // define your callback somewhere
+    $('#confirmAlert').on('click', '.btn, .close', function() {
+        $(this).addClass('modal-result'); // mark which button was clicked
+        }).on('hidden', function() {
+        var result = $(this).find('.modal-result').filter('.btn-danger').length > 0; // attempt to filter by what you consider the "YES" button; if it was clicked, result should be true.
+
+        callback_modal(result); // invoke the callback with result
     });
 });
 
@@ -342,7 +337,6 @@ $(document).ready(function() {
       
           </article>
       </article>
-
       <article class="panel gpx">
         <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
@@ -356,7 +350,20 @@ $(document).ready(function() {
               (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
           </ul>
       </article>
-
     </main>
+    <!-- <div class="modal fade hide" id="confirmAlert">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h3 id="confirmTitle">Are you sure?</h3>
+        </div>
+    
+        <div class="modal-body">
+            <p id="confirmMessage">Body</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <a href="#" class="btn btn-danger">Yes</a>
+        </div>
+    </div> -->
     </body>
 </html>
