@@ -305,7 +305,9 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                Now Loading: <span data-bind="text: gpxFileName()"></span>
+                <!-- ko if: gpxFileName() != undefined -->
+                    Now Loading: <span data-bind="text: gpxFileName()"></span>
+                <!-- /ko -->
                 <div id="validationDiv" data-bind="html: warningHtml()"></div>
             </fieldset>
           </td></table>
