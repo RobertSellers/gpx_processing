@@ -187,10 +187,7 @@ $(document).ready(function() {
 
     function asyncFunction (file, cb) {
         setTimeout(() => {
-            clearData();
-            $("#successdiv").empty().show();
-            $("#errordiv").empty().show();
-
+            console.log("inside setTimeout")
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
@@ -201,9 +198,12 @@ $(document).ready(function() {
                 gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
-
+                clearData();
+                $("#successdiv").empty().show();
+                $("#errordiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
+                    console.log("session loading")
                     vm.rDataOutput(data)
                     updateLeaflet()
                     $("#session_url").prop('disabled', false);
@@ -216,9 +216,11 @@ $(document).ready(function() {
                 });
 
             }).fail(function(jqXHR){
+                console.log("fail")
                 clearData();
                 errormsg(jqXHR.responseText);
             }).always(function(){
+                console.log("always")
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
@@ -233,6 +235,7 @@ $(document).ready(function() {
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 asyncFunction(item, resolve);
+                console.log("async")
             }));
         }, Promise.resolve());
             
