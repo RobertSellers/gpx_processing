@@ -186,8 +186,8 @@ $(document).ready(function() {
 
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
-
-        //verify that a file is selected
+        Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
+                    //verify that a file is selected
         if($("#gpxfile")[0].files[0]){
             clearData();
             $("#successdiv").empty().show();
@@ -225,6 +225,8 @@ $(document).ready(function() {
                 session_url.style.cursor = "pointer";
             });
         }
+            
+        });
     });
 
 });
