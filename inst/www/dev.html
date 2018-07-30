@@ -185,9 +185,8 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    //automatically upload GPX file on change.
-    $("#gpxfile").on("change", function(){
-        Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
+    function asyncFunction (item, cb) {
+        setTimeout(() => {
             clearData();
             $("#successdiv").empty().show();
             $("#errordiv").empty().show();
@@ -197,7 +196,7 @@ $(document).ready(function() {
             //////////////////////////////
 
             vm.gpx_file_name(file.name)
-
+            
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
@@ -223,8 +222,21 @@ $(document).ready(function() {
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
+            console.log('done with', item);
+            cb();
+        }, 2000);
+    }
+
+    //automatically upload GPX file on change.
+    $("#gpxfile").on("change", function(){
+    //  Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
+        let requests = $("#gpxfile")[0].files.reduce((promiseChain, item) => {
+            return promiseChain.then(() => new Promise((resolve) => {
+            asyncFunction(item, resolve);
+            }));
+        }, Promise.resolve());
             
-        });
+        // });
     });
 
 });
