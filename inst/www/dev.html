@@ -212,18 +212,19 @@ $(document).ready(function() {
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#plotdiv').css("opacity", 1);
                     $('#highcharts').css("opacity", 1);
+                    console.log("success")
                     successmsg();
+                    cb();
                 });
 
             }).fail(function(jqXHR){
                 console.log("fail")
                 clearData();
                 errormsg(jqXHR.responseText);
+                cb();
             }).always(function(){
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
-                console.log('done with', file);
-                cb();
             });
         }, 200);
     }
