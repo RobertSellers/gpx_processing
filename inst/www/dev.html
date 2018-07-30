@@ -197,12 +197,24 @@ $(document).ready(function() {
     }
 
     function waitForInput(){
-        while($(".chosen-select").val()==""){
+        // while($(".chosen-select").val()==""){
             sleep(3000);
             console.log("waiting for user input")
             waitForInput()
+        // }
+    }
+
+function loopArrayAsync(ar, callback) {
+    loop();
+    function loop() {
+        if ($(".chosen-select").val()=="") {
+            setTimeout(loop, 0);
+        }
+        else {
+            callback();
         }
     }
+}
 
     function async_loadgpx (file, cb) {
         setTimeout(() => {
@@ -235,7 +247,10 @@ $(document).ready(function() {
                     successmsg();
                     $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
                     waitForInput();
-                    cb();
+                    var a = ["one", "two", "three"];
+                    loopArrayAsync(a, function() {
+                        cb();
+                    });
                 });
 
             }).fail(function(jqXHR){
