@@ -115,12 +115,12 @@ $(document).ready(function() {
     //R output to popup
     function successmsg(){
         var strMSG = vm.gpx_file_name() + " file successfully loaded!";
-        $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
+        $("#validationDiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
     }
 
     //R output to popup
     function errormsg(text){
-        $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpx_file_name() + ": " +text + '</div>');
+        $("#validationDiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpx_file_name() + ": " +text + '</div>');
     }
 
     function clearData(){
@@ -184,7 +184,7 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function asyncFunction (file, cb) {
+    function gpxLoadAsync (file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
             //////////////////////////////
@@ -198,8 +198,7 @@ $(document).ready(function() {
             }, function(session){
                 vm.session_tmp(session.getLoc());
                 clearData();
-                $("#successdiv").empty().show();
-                $("#errordiv").empty().show();
+                $("#validationDiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
                     console.log("session loading")
@@ -234,7 +233,7 @@ $(document).ready(function() {
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             console.log("promise chain initialized 2")
             return promiseChain.then(() => new Promise((resolve) => {
-                asyncFunction(item, resolve);
+                gpxLoadAsync(item, resolve);
                 console.log("async")
             }));
         }, Promise.resolve());
@@ -314,8 +313,7 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                <div id="successdiv"></div>
-                <div id="errordiv"></div>
+                <div id="validationDiv"></div>
             </fieldset>
           </td></table>
           </form>
