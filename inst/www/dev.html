@@ -44,6 +44,9 @@ $(document).ready(function() {
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
+
+    document.getElementById("ddGpxList").disabled=true;
+
     /* ----- Navigation ----- */
 
     $('.nav').find('a').attr('tabindex', -1);
@@ -162,16 +165,16 @@ $(document).ready(function() {
     $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
 
-    vm.rDataOutputArray.subscribe(function(){
-        for (let index = 0; index < vm.rDataOutputArray().length; ++index) {
-            let value = vm.rDataOutputArray()[index];
-            if (value != true){
-                document.getElementById("ddGpxList").options[index].disabled = false;
-            }else{
-                document.getElementById("ddGpxList").options[index].disabled = true;
-            }
-        }
-    })
+    // vm.rDataOutputArray.subscribe(function(){
+    //     for (let index = 0; index < vm.rDataOutputArray().length; ++index) {
+    //         let value = vm.rDataOutputArray()[index];
+    //         if (value != true){
+    //             document.getElementById("ddGpxList").options[index].disabled = false;
+    //         }else{
+    //             document.getElementById("ddGpxList").options[index].disabled = true;
+    //         }
+    //     }
+    // })
 
     vm.rDataOutput.subscribe(function(){
         //Update Highchart
@@ -254,7 +257,6 @@ $(document).ready(function() {
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
-                console.log("async")
             }));
         }, Promise.resolve());
     });
@@ -342,7 +344,7 @@ $(document).ready(function() {
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
-                <li class="tab" role="presentation"><select selected disabled id="ddGpxList" optionsCaption= 'select...' data-bind="options: gpxFileNameArray"></select></li>
+                <li class="tab" role="presentation"><select id="ddGpxList" optionsCaption= 'select...' data-bind="options: gpxFileNameArray"></select></li>
               </ul>
       
               <div class="tab-panels">
