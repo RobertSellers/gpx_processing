@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>GPX - QA and Analysis</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+<!-- Primary Stylesheet -->
+<link href="main.css" rel="stylesheet">
+<link href="gpx.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
+<!-- <link href="components/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
+
+<!-- Stand-alone Libraries -->
+<script src="components/jquery-1.10.2.min.js"></script> <!--Must be First -->
+<!-- <script src="components/js/bootstrap.min.js"></script> -->
+<script src="components/opencpu-0.4.js"></script> <!--Second -->
+<script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script> <!--Third -->
+<script src="components/knockout-min.js"></script>
+<script src="components/moment.min.js"></script>
+<script src="components/vfs_font.js"></script>
+
+<!-- Highcharts -->
+<script src="components/highcharts/highcharts.js"></script>
+<script src="components/highcharts/modules/series-label.js"></script>
+<script src="components/highcharts/modules/exporting.js"></script>
+<script src="components/highcharts/modules/export-data.js"></script>
+
+<!-- Leaflet -->
+<script src="components/leaflet/leaflet.js"></script>
+<!-- <script src="components/leaflet/modules/leaflet.hotline.js"></script> -->
+<script src="components/leaflet/modules/gpx.js"></script>
+<script src="components/leaflet/modules/Control.MiniMap.js"></script>
+<link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
+<link href="components/leaflet/css/Control.MiniMap.css" rel="stylesheet"/>
+
+<!-- Custom Scripts -->
+<script type='text/javascript' src="js/utilities.js"></script>
+<script type='text/javascript' src="js/CSVExport.js"></script>
+<script type='text/javascript' src="js/leaflet_helpers.js"></script>
+<script type='text/javascript' src='viewModel.js'></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+    /* ----- Apply ViewModel ----- */
+    ko.applyBindings(vm);
+    /* ----- Navigation ----- */
+
+    $('.nav').find('a').attr('tabindex', -1);
+
+    $('.nav-btn').on('click', function () {
+        if ($('.nav-wrap').hasClass('is-open')) {
+        $('.nav-wrap').removeClass('is-open');
+        $('.nav').attr('aria-hidden', true);
+        $('.nav-btn').attr('aria-expanded', false);
+        $('.nav').find('a').attr('tabindex', -1);
+        } else {
+        $('.nav-wrap').addClass('is-open');
+        $('.nav-wrap').addClass('is-fixed');
+        $('.nav-btn').addClass('is-active');
+        $('.nav').attr('aria-hidden', false);
+        $('.nav-btn').attr('aria-expanded', true);
+        $('.nav').find('a').attr('tabindex', 0);
+        }
+    });
+
+    $('.nav-wrap').on('transitionend', function () {
+        if (!$('.nav-wrap').hasClass('is-open')) {
+        $('.nav-wrap').removeClass('is-fixed');
+        $('.nav-btn').removeClass('is-active');
+        }
+    });
+
+    $('.nav-wrap').on('keypress', function (e) {
+        switch (e.keyCode) {
+        case 27:
+            $('.nav-wrap').removeClass('is-open');
+            $('.nav').attr('aria-hidden', true);
+            $('.nav-btn').attr('aria-expanded', false);
+            $('.nav').find('a').attr('tabindex', -1);
+            $('.nav-btn').focus();
+            break;
+        }
+    });
+
+    /* ----- Tabs ----- */
+
+    var $tabs = $('.tabs');
+    var $panels = $('.tab-panel');
+
+    $tabs.on('click', 'a', function (e) {
+        e.preventDefault();
+
+        var id = $(this).attr('href');
+
+        $panels.filter('[aria-hidden="false"]').attr('aria-hidden', true);
+        $tabs.find('[aria-selected="true"]').attr('aria-selected', false);
+
+        $(this).attr('aria-selected', true);
+        $(id).attr('aria-hidden', false);
+    });
+
+    //////////////////////////////
+    //Ajax spinLoad Bar
+    //////////////////////////////
+
+    $(document).ajaxStart(function() {
+        $(".spinLoad").show();
+    });
+
+    $(document).ajaxStop(function() {
+        $(".spinLoad").hide();
+    });
+
+    //R output to popup
+    function successmsg(){
+        var strMSG = vm.gpx_file_name() + " file successfully loaded!";
+        $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
+    }
+
+    //R output to popup
+    function errormsg(text){
+        $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpx_file_name() + ": " +text + '</div>');
+    }
+
+    function clearData(){
+        //Toggle DOM elements
+        $('#plotdiv').css("opacity", 0.2);
+        $('#highcharts').css("opacity", 0.2);
+        $(".download").prop('disabled', true);
+        $(".download").css("opacity", 0.2);
+        //Clear highcharts data
+        vm.highchart().series[0].setData([null,null], false)
+        vm.highchart().series[1].setData([null,null], false)
+        vm.highchart().series[2].setData([null,null], false)
+        vm.highchart().redraw();
+        //Clear leaflet data
+        vm.leafletMap().eachLayer(function (layer) {
+            if (!layer.hasOwnProperty('_tiles')){
+                vm.leafletMap().removeLayer(layer);
+            }
+        });
+        //Clear gpx.js variables
+        vm.get_duration(null);
+        vm.get_pace_imp(null);
+        vm.get_distance_imp(null);
+        vm.get_elevation_gain_imp(null);
+        vm.get_elevation_loss_imp(null);
+        vm.elevation_net(null);
+    }
+
+    // Initialize charts
+    initLeaflet()//leaflet
+    vm.highchart(Highcharts.chart(vm.highchartOptions()))
+    
+    $(".download").prop('disabled', true);
+    $(".download").css("opacity", 0.2);
+    $("#session_url").prop('disabled', true);
+    $('#plotdiv').css("opacity", 0.2);
+    $('#highcharts').css("opacity", 0.2);
+    map_lock('lock');
+
+    vm.rDataOutput.subscribe(function(){
+        //Update Highchart
+        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
+        //ELEVATION
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var timeElevation = dateTimeRange.map(function(v,i) {
+            return [v, elevationArray[i]];
+        });
+        //SPEED
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var timeSpeed = dateTimeRange.map(function(v,i) {
+            return [v, speedArray[i]];
+        });
+        //Gradient
+        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
+        var timeGradient = dateTimeRange.map(function(v,i) {
+            return [v, gradientArray[i]];
+        });
+
+        vm.highchart().series[0].setData(timeElevation,false)
+        vm.highchart().series[1].setData(timeSpeed,false)
+        vm.highchart().series[2].setData(timeGradient,false)
+    })
+
+    function asyncFunction (file, cb) {
+        setTimeout(() => {
+            console.log("inside setTimeout")
+            //////////////////////////////
+            //Upload and validate the data
+            //////////////////////////////
+
+            vm.gpx_file_name(file.name)
+            
+            var req = ocpu.call("gpx_validation", {
+                gpxfile : file
+            }, function(session){
+                vm.session_tmp(session.getLoc());
+                clearData();
+                $("#successdiv").empty().show();
+                $("#errordiv").empty().show();
+                //retrieve javascript object as json
+                session.getObject(function(data)  {
+                    console.log("session loading")
+                    vm.rDataOutput(data)
+                    updateLeaflet()
+                    $("#session_url").prop('disabled', false);
+                    $(".download").css("opacity", 1);
+                    $(".download").prop('disabled', false);
+                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+                    $('#plotdiv').css("opacity", 1);
+                    $('#highcharts').css("opacity", 1);
+                    console.log("success")
+                    successmsg();
+                    cb();
+                });
+
+            }).fail(function(jqXHR){
+                console.log("fail")
+                clearData();
+                errormsg(jqXHR.responseText);
+                cb();
+            }).always(function(){
+                var session_url = document.getElementById("session_url");
+                session_url.style.cursor = "pointer";
+            });
+        }, 100);
+    }
+
+    //automatically upload GPX file on change.
+    $("#gpxfile").on("change", function(){
+        let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
+            return promiseChain.then(() => new Promise((resolve) => {
+                asyncFunction(item, resolve);
+                console.log("async")
+            }));
+        }, Promise.resolve());
+    });
+
+    //MODAL LOGIC
+    var callback_modal = function(result) {
+        alert(result);
+        }; // define your callback somewhere
+    $('#confirmAlert').on('click', '.btn, .close', function() {
+        $(this).addClass('modal-result'); // mark which button was clicked
+        }).on('hidden', function() {
+        var result = $(this).find('.modal-result').filter('.btn-danger').length > 0; // attempt to filter by what you consider the "YES" button; if it was clicked, result should be true.
+
+        callback_modal(result); // invoke the callback with result
+    });
+});
+
+</script>
+
+</head>
+
+  <body>
+    <header class="masthead" role="banner">
+      <strong class="logo">
+        <!-- Add logo to this -->
+        <img class="logo-img logo-img-small" src="img/logo-small.svg" alt="GPX File Analyzer">
+        <img class="logo-img logo-img-big" src="img/logo-small.svg" alt="GPX File Analyzer">
+      </strong>
+      <h1 class="title">Menu</h1>
+      <nav class="nav-wrap" role="navigation">
+
+        <button class="nav-btn" aria-controls="nav" aria-expanded="false"><i class="nav-icon">Toggle Navigation</i></button>
+        <ul class="nav" id="nav" aria-hidden="true">
+          <li><span class="nav-label"><span class="nav-label-back">GPS</span></span>
+            <ol><li><a href="http://robertsellers.ocpu.io/gpxanalysis/www/">GPX Analyzer</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">MIP</span></span>
+            <ol><li><a href="http://azimuth1.ocpu.io/mihptcheck/www/">MIHPT</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">pointCollect</span></span>
+            <ol><li><a href="https://github.com/Azimuth1/pointCollect">pointCollect</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">Session URL</span></span>
+            <ol><li><a id="session_url">View Session</a></li></ol>
+          </li>
+          <li><span class="nav-label"><span class="nav-label-back">Credits</span></span>
+              <ol><li>by <a href="http://www.azimuth1.com">Azimuth1</a></li></ol>
+            </li>
+        </ul>
+      </nav>
+    </header>
+  
+    <main role="main">
+
+      <article class="panel">
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">Input</span></h2>
+          <!-- Step 1: Load File -->
+            <form enctype="multipart/form-data" id="uploadform" name="uploadform" role="form">
+            <fieldset id="step_1">
+              <legend>Load GPX data</legend>
+              <div class="form-group">
+                <div class="loadFileContainer">
+                <input id="gpxfile" type="file" style="display: inline-block;" multiple/>
+                <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
+              </div>
+              </div>
+            </fieldset>
+            <!-- R Relayed Message and spinLoad Information -->
+            <fieldset id="warnings_panel">
+                <legend>Warnings/Messages</legend>
+                <div id="successdiv"></div>
+                <div id="errordiv"></div>
+            </fieldset>
+          </td></table>
+          </form>
+
+          <article class="panel" style="width:100%;">
+      
+            <div class="tab-group">
+              <ul class="tabs clearfix" role="tablist">
+                <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
+                <li class="tab" role="presentation"><a href="#Readme" role="tab" aria-controls="Readme">Readme</a></li>
+                <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
+              </ul>
+      
+              <div class="tab-panels">
+                    <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
+                        <div id="container"></div>
+                    </div>
+              </div>
+            </div>
+      
+          </article>
+      </article>
+      <article class="panel gpx">
+        <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
+        <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
+        <div id="plotdiv" class="map"></div>
+        <ul class="info">
+            <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
+            &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: vm.get_pace_imp()"></span>/mi</li>
+            &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
+              -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
+              (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
+          </ul>
+      </article>
+    </main>
+    <!-- <div class="modal fade hide" id="confirmAlert">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">x</button>
+            <h3 id="confirmTitle">Are you sure?</h3>
+        </div>
+    
+        <div class="modal-body">
+            <p id="confirmMessage">Body</p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
+            <a href="#" class="btn btn-danger">Yes</a>
+        </div>
+    </div> -->
+    </body>
+</html>
