@@ -189,6 +189,14 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
+    function waitForInput(){
+        setTimeout(function (){
+            if ($(".chosen-select").val()==""){
+                waitForInput()
+            }
+        },3000)
+    }
+
     function async_loadgpx (file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
@@ -219,6 +227,7 @@ $(document).ready(function() {
                     console.log("success")
                     successmsg();
                     $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
+                    waitForInput();
                     cb();
                 });
 
