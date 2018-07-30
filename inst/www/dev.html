@@ -186,6 +186,10 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
+    vm.selectedIndex.subscribe(function(){
+        console.log("index changed")
+    })
+
     function gpxLoadAsync(file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
