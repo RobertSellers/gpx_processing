@@ -117,12 +117,15 @@ $(document).ready(function() {
         var strMSG = vm.gpxFileName() + " file successfully loaded!";
         $("#validationDiv").empty()
         vm.warningHtml.push('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
+        
+        vm.warningHtml().replace(/,/g , '')
     }
 
     //R output to popup
     function errormsg(text){
         $("#validationDiv").empty()
         vm.warningHtml.push('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
+        vm.warningHtml().replace(/,/g , '')
     }
 
     function clearData(){
@@ -305,7 +308,7 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                <div id="validationDiv" data-bind="html: warningHtml().replace(/,/g , '')"></div>
+                <div id="validationDiv" data-bind="html: warningHtml()"></div>
             </fieldset>
           </td></table>
           </form>
