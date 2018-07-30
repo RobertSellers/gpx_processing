@@ -218,7 +218,7 @@ $(document).ready(function() {
                     $('#highcharts').css("opacity", 1);
                     console.log("success")
                     successmsg();
-                    $(".chosen-select").prop("disabled", false);
+                    $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
                     cb();
                 });
 
@@ -231,7 +231,7 @@ $(document).ready(function() {
                 // This will run prior to fail / success.
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
-                $(".chosen-select").prop("disabled", true);
+                $(".chosen-select").chosen({rtl: true}).attr('disabled', true).trigger("chosen:updated");
             });
         }, 0);
     }
