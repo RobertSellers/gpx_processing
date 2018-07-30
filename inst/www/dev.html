@@ -190,11 +190,9 @@ $(document).ready(function() {
     })
 
     function waitForInput(){
-        setTimeout(function (){
-            if ($(".chosen-select").val()==""){
-                waitForInput()
-            }
-        },3000)
+        while($(".chosen-select").val()==""){
+            waitForInput()
+        }
     }
 
     function async_loadgpx (file, cb) {
