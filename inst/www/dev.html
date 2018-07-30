@@ -9,17 +9,17 @@
 <!-- Primary Stylesheet -->
 <link href="main.css" rel="stylesheet">
 <link href="gpx.css" rel="stylesheet">
+<link href="chosen.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro" rel="stylesheet">
-<!-- <link href="components/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen"> -->
 
 <!-- Stand-alone Libraries -->
 <script src="components/jquery-1.10.2.min.js"></script> <!--Must be First -->
-<!-- <script src="components/js/bootstrap.min.js"></script> -->
 <script src="components/opencpu-0.4.js"></script> <!--Second -->
 <script src="components/jqueryui/jquery-ui-1.10.3.custom.js"></script> <!--Third -->
 <script src="components/knockout-min.js"></script>
 <script src="components/moment.min.js"></script>
 <script src="components/vfs_font.js"></script>
+<script src="components/chosen.jquery.js"></script>
 
 <!-- Highcharts -->
 <script src="components/highcharts/highcharts.js"></script>
@@ -29,7 +29,6 @@
 
 <!-- Leaflet -->
 <script src="components/leaflet/leaflet.js"></script>
-<!-- <script src="components/leaflet/modules/leaflet.hotline.js"></script> -->
 <script src="components/leaflet/modules/gpx.js"></script>
 <script src="components/leaflet/modules/Control.MiniMap.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
@@ -187,7 +186,7 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function asyncFunction (file, cb) {
+    function async_loadgpx (file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
             //////////////////////////////
@@ -225,6 +224,7 @@ $(document).ready(function() {
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
+                // This will run prior to fail / success.
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
@@ -235,22 +235,10 @@ $(document).ready(function() {
     $("#gpxfile").on("change", function(){
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
-                asyncFunction(item, resolve);
+                async_loadgpx(item, resolve);
                 console.log("async")
             }));
         }, Promise.resolve());
-    });
-
-    //MODAL LOGIC
-    var callback_modal = function(result) {
-        alert(result);
-        }; // define your callback somewhere
-    $('#confirmAlert').on('click', '.btn, .close', function() {
-        $(this).addClass('modal-result'); // mark which button was clicked
-        }).on('hidden', function() {
-        var result = $(this).find('.modal-result').filter('.btn-danger').length > 0; // attempt to filter by what you consider the "YES" button; if it was clicked, result should be true.
-
-        callback_modal(result); // invoke the callback with result
     });
 });
 
@@ -300,6 +288,14 @@ $(document).ready(function() {
               <div class="form-group">
                 <div class="loadFileContainer">
                 <input id="gpxfile" type="file" style="display: inline-block;" multiple/>
+                <select>
+                    <option value=""></option>
+                    <option>Trail</option>
+                    <option>Sweep</option>
+                    <option>Canine</option>
+                    <option>Offtrail</option>
+                    <option>Other</option>
+                </select>
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
@@ -345,19 +341,5 @@ $(document).ready(function() {
           </ul>
       </article>
     </main>
-    <!-- <div class="modal fade hide" id="confirmAlert">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">x</button>
-            <h3 id="confirmTitle">Are you sure?</h3>
-        </div>
-    
-        <div class="modal-body">
-            <p id="confirmMessage">Body</p>
-        </div>
-        <div class="modal-footer">
-            <a href="#" class="btn" data-dismiss="modal">Cancel</a>
-            <a href="#" class="btn btn-danger">Yes</a>
-        </div>
-    </div> -->
     </body>
 </html>
