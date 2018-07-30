@@ -1,6 +1,6 @@
 var vm = {
     session_tmp: ko.observable(),
-    gpx_file_name: ko.observable(),
+    gpxFileName: ko.observable(),
     leafletMap: ko.observable(),
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
@@ -15,7 +15,7 @@ var vm = {
     elevation_net: ko.observable(),
     downloadCSV : function() {
         var data = this.rDataOutput();
-        var filename = this.gpx_file_name().slice(0, -4);
+        var filename = this.gpxFileName().slice(0, -4);
         var exportData = new CSVExport(data, filename);
         return exportData
     },

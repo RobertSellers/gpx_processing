@@ -114,13 +114,13 @@ $(document).ready(function() {
 
     //R output to popup
     function successmsg(){
-        var strMSG = vm.gpx_file_name() + " file successfully loaded!";
+        var strMSG = vm.gpxFileName() + " file successfully loaded!";
         $("#validationDiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
     }
 
     //R output to popup
     function errormsg(text){
-        $("#validationDiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpx_file_name() + ": " +text + '</div>');
+        $("#validationDiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>');
     }
 
     function clearData(){
@@ -191,13 +191,14 @@ $(document).ready(function() {
             //Upload and validate the data
             //////////////////////////////
 
-            vm.gpx_file_name(file.name)
-            
+            vm.gpxFileName(file.name)
+            vm.gpxFileNameArray.push(file.name)
+
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
-                clearData();
+                // clearData();
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
@@ -205,20 +206,19 @@ $(document).ready(function() {
                     // vm.rDataOutput(data)
                     vm.rDataOutputArray.push(data)
                     // updateLeaflet()
-                    $("#session_url").prop('disabled', false);
-                    $(".download").css("opacity", 1);
-                    $(".download").prop('disabled', false);
-                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                    $('#plotdiv').css("opacity", 1);
-                    $('#highcharts').css("opacity", 1);
-                    console.log("success")
+                    // $("#session_url").prop('disabled', false);
+                    // $(".download").css("opacity", 1);
+                    // $(".download").prop('disabled', false);
+                    // $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+                    // $('#plotdiv').css("opacity", 1);
+                    // $('#highcharts').css("opacity", 1);
                     successmsg();
                     cb();
                 });
 
             }).fail(function(jqXHR){
                 console.log("fail")
-                clearData();
+                // clearData();
                 vm.rDataOutputArray.push(null)
                 errormsg(jqXHR.responseText);
                 cb();
@@ -233,7 +233,6 @@ $(document).ready(function() {
     $("#gpxfile").on("change", function(){
         console.log("promise chain initialized")
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
-            console.log("promise chain initialized 2")
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
                 console.log("async")
@@ -296,6 +295,7 @@ $(document).ready(function() {
                     <option>Offtrail</option>
                     <option>Other</option>
                 </select> -->
+                Now Loading: <span data-bind="text: gpxFileName()"></span>
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
