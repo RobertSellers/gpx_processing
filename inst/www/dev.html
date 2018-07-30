@@ -241,7 +241,13 @@ $(document).ready(function() {
             }));
         }, Promise.resolve());
     });
+
+    function range(start, end) {
+        return Array(end - start + 1).fill().map((_, idx) => start + idx)
+    }
+
 });
+
 
 </script>
 
@@ -318,8 +324,8 @@ $(document).ready(function() {
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
-                <!-- <li class="tab" role="presentation"><a href="#Readme" role="tab" aria-controls="Readme">Readme</a></li> -->
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
+                <li class="tab" role="presentation"><span data-bind="text: range(0,rDataOutputArray().length)"></span></li>
               </ul>
       
               <div class="tab-panels">
