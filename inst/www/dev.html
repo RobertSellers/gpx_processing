@@ -184,7 +184,7 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function gpxLoadAsync (file, cb) {
+    function gpxLoadAsync(file, cb) {
         setTimeout(() => {
             console.log("inside setTimeout")
             //////////////////////////////
@@ -202,8 +202,9 @@ $(document).ready(function() {
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
                     console.log("session loading")
-                    vm.rDataOutput(data)
-                    updateLeaflet()
+                    // vm.rDataOutput(data)
+                    vm.rDataOutputArray.push(data)
+                    // updateLeaflet()
                     $("#session_url").prop('disabled', false);
                     $(".download").css("opacity", 1);
                     $(".download").prop('disabled', false);
@@ -218,6 +219,7 @@ $(document).ready(function() {
             }).fail(function(jqXHR){
                 console.log("fail")
                 clearData();
+                vm.rDataOutputArray.push(null)
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
