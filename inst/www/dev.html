@@ -117,15 +117,20 @@ $(document).ready(function() {
         var strMSG = vm.gpxFileName() + " file successfully loaded!";
         $("#validationDiv").empty()
         vm.warningHtml.push('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
-        
-        vm.warningHtml().replace(/,/g , '')
+        vm.warningHtml(vm.warningHtml().map(function(e) { 
+            e = e.replace(/,/g , '')
+            return e;
+        }));
     }
 
     //R output to popup
     function errormsg(text){
         $("#validationDiv").empty()
         vm.warningHtml.push('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
-        vm.warningHtml().replace(/,/g , '')
+        vm.warningHtml(vm.warningHtml().map(function(e) { 
+            e = e.replace(/,/g , '')
+            return e;
+        }));
     }
 
     function clearData(){
