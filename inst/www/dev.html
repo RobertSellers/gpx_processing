@@ -189,30 +189,30 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    function sleep(dur) {
-        var d = new Date().getTime() + dur;
-        while(new Date().getTime() <= d ) {
-            //Do nothing
-        }
-    }
+    // function sleep(dur) {
+    //     var d = new Date().getTime() + dur;
+    //     while(new Date().getTime() <= d ) {
+    //         //Do nothing
+    //     }
+    // }
 
-    function foo() {
-        var x;
+    // function foo() {
+    //     var x;
 
-        x = doSomething();
-        fakeAlert("Alert! Alert!", function() {
-            doSomethingAfterTheAlertIsCleared(x);
-            doAnotherThingAfterward();
-        });
-    }
+    //     x = doSomething();
+    //     fakeAlert("Alert! Alert!", function() {
+    //         doSomethingAfterTheAlertIsCleared(x);
+    //         doAnotherThingAfterward();
+    //     });
+    // }
 
-    function waitForInput(){
-        while($(".chosen-select").val()==""){
-            sleep(3000);
-            console.log("waiting for user input")
-            waitForInput()
-        }
-    }
+    // function waitForInput(){
+    //     while($(".chosen-select").val()==""){
+    //         sleep(3000);
+    //         console.log("waiting for user input")
+    //         waitForInput()
+    //     }
+    // }
 
     function async_loadgpx (file, cb) {
         setTimeout(() => {
