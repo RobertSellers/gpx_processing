@@ -5,6 +5,7 @@ var vm = {
     leafletMap: ko.observable(),
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
+    warningHtml: ko.observableArray(),
     rDataOutputArray: ko.observableArray(),
     highchart: ko.observable(),
     get_pace_imp: ko.observable(),

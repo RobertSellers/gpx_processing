@@ -115,12 +115,14 @@ $(document).ready(function() {
     //R output to popup
     function successmsg(){
         var strMSG = vm.gpxFileName() + " file successfully loaded!";
-        $("#validationDiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
+        $("#validationDiv").empty()
+        vm.warningHtml.push('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
     }
 
     //R output to popup
     function errormsg(text){
-        $("#validationDiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>');
+        $("#validationDiv").empty()
+        vm.warningHtml.push('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
     }
 
     function clearData(){
@@ -303,7 +305,7 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                <div id="validationDiv"></div>
+                <div id="validationDiv" data-bind="html: warningHtml()"></div>
             </fieldset>
           </td></table>
           </form>
@@ -332,7 +334,7 @@ $(document).ready(function() {
         <ul class="info">
             <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
             &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: vm.get_pace_imp()"></span>/mi</li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: get_pace_imp()"></span>/mi</li>
             &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
               -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
               (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
