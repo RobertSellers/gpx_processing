@@ -230,7 +230,7 @@ $(document).ready(function() {
     //automatically upload GPX file on change.
     $("#gpxfile").on("change", function(){
     //  Array.prototype.forEach.call($("#gpxfile")[0].files, function(file) {
-        let requests = $("#gpxfile")[0].files.reduce((promiseChain, item) => {
+        let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
             asyncFunction(item, resolve);
             }));
