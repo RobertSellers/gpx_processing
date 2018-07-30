@@ -114,13 +114,14 @@ $(document).ready(function() {
     });
 
     //R output to popup
-    function successmsg(text){
-        $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
+    function successmsg(){
+        var strMSG = vm.gpx_file_name() + " file successfully loaded!";
+        $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>');
     }
 
     //R output to popup
     function errormsg(text){
-        $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+        $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + vm.gpx_file_name() + ": " +text + '</div>');
     }
 
     function clearData(){
@@ -212,7 +213,7 @@ $(document).ready(function() {
                     $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
                     $('#plotdiv').css("opacity", 1);
                     $('#highcharts').css("opacity", 1);
-                    successmsg("GPX file successfully loaded!");
+                    successmsg();
                 });
 
             }).fail(function(jqXHR){
