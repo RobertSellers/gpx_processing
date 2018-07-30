@@ -165,6 +165,11 @@ $(document).ready(function() {
     vm.rDataOutputArray.subscribe(function(){
         for (let index = 0; index < vm.rDataOutputArray().length; ++index) {
             let value = vm.rDataOutputArray()[index];
+            if (value != true){
+                document.getElementById("ddGpxList").options[index].disabled = false;
+            }else{
+                document.getElementById("ddGpxList").options[index].disabled = true;
+            }
         }
     })
 
@@ -337,7 +342,7 @@ $(document).ready(function() {
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
-                <li class="tab" role="presentation"><select id="ddGpxList" optionsCaption= 'select...' data-bind="options: gpxFileNameArray"></select></li>
+                <li class="tab" role="presentation"><select selected disabled id="ddGpxList" optionsCaption= 'select...' data-bind="options: gpxFileNameArray"></select></li>
               </ul>
       
               <div class="tab-panels">
