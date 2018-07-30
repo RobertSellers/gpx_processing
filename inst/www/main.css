@@ -401,6 +401,7 @@ a{
 #warnings_panel{
   max-height: 58.59px;
   height: 58.59px;
+  font-size: 12px;
   overflow-y: hidden;
 }
 
