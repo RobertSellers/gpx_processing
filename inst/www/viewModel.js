@@ -6,6 +6,9 @@ var vm = {
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),
     warningHtml: ko.observableArray(),
+    warningHtmlClean : ko.computed(function(){
+        return this.warningHtml.replace(/,/g , '')
+    }),
     rDataOutputArray: ko.observableArray(),
     highchart: ko.observable(),
     get_pace_imp: ko.observable(),
