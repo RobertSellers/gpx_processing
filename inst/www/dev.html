@@ -244,7 +244,8 @@ $(document).ready(function() {
                     console.log("success")
                     successmsg();
                     $(".chosen-select").chosen({rtl: true}).attr('disabled', false).trigger("chosen:updated");
-                    alert("Alert! Alert!", cb());
+                    alert(document.getElementsByClassName('gpx').innerHTML);
+                    cb();
                 });
 
             }).fail(function(jqXHR){
@@ -326,7 +327,6 @@ $(document).ready(function() {
                     <option>Offtrail</option>
                     <option>Other</option>
                 </select>
-                <div id="fakeAlert"></div>
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
