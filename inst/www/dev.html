@@ -315,11 +315,37 @@ function updateLeaflet(){
     });
     var gpx_test = 'http://mpetazzoni.github.io/leaflet-gpx/demo.gpx'
     var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
-    // var reader  = new FileReader();
-    // reader.onload = function(e){
-	//        debugger
-	// }
-    // reader.readAsDataURL(gpx_file);
+    // function handleFileSelect(evt) {
+    // var files = evt.target.files; // FileList object
+
+    // // Loop through the FileList and render image files as thumbnails.
+    // for (var i = 0, f; f = files[i]; i++) {
+
+      // Only process image files.
+    //   if (!f.type.match('image.*')) {
+    //     continue;
+    //   }
+
+      var reader = new FileReader();
+
+      // Closure to capture the file information.
+      reader.onload = (function(theFile) {
+        return function(e) {
+            debugger
+        //   // Render thumbnail.
+        //   var span = document.createElement('span');
+        //   span.innerHTML = ['<img class="thumb" src="', e.target.result,
+        //                     '" title="', escape(theFile.name), '"/>'].join('');
+        //   document.getElementById('list').insertBefore(span, null);
+        };
+      })(f);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(gpx_file);
+//     }
+//   }
+
+  document.getElementById('files').addEventListener('change', handleFileSelect, false);
     
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
