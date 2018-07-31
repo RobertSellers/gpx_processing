@@ -254,7 +254,7 @@ $(document).ready(function() {
                 gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
-                vm.gpxFileArray.push(vm.session_tmp() +'files/'+ vm.gpx_file_name())
+                vm.gpxFileArray.push(vm.session_tmp() +'files/'+ vm.gpxFileName())
                 // clearData();
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
@@ -313,8 +313,8 @@ function updateLeaflet(){
             vm.leafletMap().removeLayer(layer);
         }
     });
-
-    var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
+    // var gpx_file = vm.gpxFileArray
+    // var gpx_file = vm.session_tmp() +'files/'+ vm.gpx_file_name(); 
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
         var gpx = e.target;
