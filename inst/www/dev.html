@@ -268,6 +268,13 @@ $(document).ready(function() {
         }, 0);
     }       
 
+function newDataCleanup(){
+    var defaultFileNameArray = vm.gpxFileNameArray().splice(0,1);
+    vm.gpxFileNameArray(defaultFileNameArray)
+    vm.rDataOutputArray.removeAll();
+    vm.gpxFileArray.removeAll();
+}
+
 function initLeaflet(){
     //////////////////////////////////
     //Prime Leaflet Map
@@ -406,6 +413,7 @@ function map_lock(toggle){
     $("#gpxfile").on("change", function(){
         vm.gpxFileArray($("#gpxfile")[0].files)
         console.log("promise chain initialized")
+        newDataCleanup();
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
