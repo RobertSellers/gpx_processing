@@ -269,11 +269,15 @@ $(document).ready(function() {
     }       
 
 function newDataCleanup(){
-    // var defaultFileNameArray = vm.gpxFileNameArray()[0]
-    vm.gpxFileNameArray.removeAll();
-    // vm.gpxFileNameArray.push(defaultFileNameArray)
-    vm.rDataOutputArray.removeAll();
-    vm.gpxFileArray.removeAll();
+    if (vm.gpxFileNameArray().length>0){
+        vm.gpxFileNameArray.removeAll();
+    }
+    if (vm.rDataOutputArray().length>0){
+        vm.rDataOutputArray.removeAll();
+    }
+    if (vm.gpxFileArray().length>0){
+        vm.gpxFileArray.removeAll();
+    }
 }
 
 function initLeaflet(){
@@ -430,10 +434,12 @@ function map_lock(toggle){
     });
 
     $("#ddGpxList").change(function () {
-        console.log("Switching to " + this.value);
-        var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
-        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex-1])
-        vm.selectedIndex(this.value);
+        if(vm.gpxFileNameArray().length>0){
+            console.log("Switching to " + this.value);
+            var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
+            vm.rDataOutput(vm.rDataOutputArray()[selectedIndex-1])
+            vm.selectedIndex(this.value);
+        }
     });
 
     $("#classSelect").change(function () {
