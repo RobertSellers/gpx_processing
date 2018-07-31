@@ -207,7 +207,7 @@ $(document).ready(function() {
 
     vm.selectedIndex.subscribe(function(){
         console.log("index changed")
-        // updateLeaflet()
+        updateLeaflet()
         // $("#session_url").prop('disabled', false);
         $(".download").css("opacity", 1);
         $(".download").prop('disabled', false);

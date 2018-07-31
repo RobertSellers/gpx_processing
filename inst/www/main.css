@@ -437,5 +437,6 @@ a{
   color: #fff;
   background: #233e75;
   max-width: 200px;
+  min-width: 200px;
   font-size: 12px;
 }
