@@ -414,10 +414,10 @@ function map_lock(toggle){
     });
 
     $("#ddGpxList").change(function () {
-        console.log(this.value);
+        console.log("Switching to " + this.value);
+        var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
         vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
         vm.selectedIndex(this.value);
-        var selectedIndex = vm.gpxFileNameArray().indexOf(vm.gpxFileName());
     });
 });
 
