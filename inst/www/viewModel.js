@@ -17,7 +17,7 @@ var vm = {
     get_elevation_loss_imp: ko.observable(),
     selectedIndex:ko.observable(),
     elevation_net: ko.observable(),
-    counter = ko.observable(1),
+    counter : ko.observable(1),
     downloadAll : function() {
         var data = this.rDataOutput();
         var filename = this.gpxFileName().slice(0, -4);
