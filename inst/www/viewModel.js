@@ -16,6 +16,7 @@ var vm = {
     get_elevation_gain_imp: ko.observable(),
     get_elevation_loss_imp: ko.observable(),
     selectedIndex:ko.observable(),
+    classArray: ko.observableArray(),
     elevation_net: ko.observable(),
     counter : ko.observable(0),
     downloadAll : function() {
