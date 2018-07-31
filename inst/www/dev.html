@@ -177,11 +177,11 @@ $(document).ready(function() {
     // })
 
     vm.rDataOutput.subscribe(function(){
-        vm.rDataOutput(vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())])
+        var d = vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())]
         
-        if(vm.rDataOutput()==null) 
+        if(d==null) 
             return;
-            
+
         //Update Highchart
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
