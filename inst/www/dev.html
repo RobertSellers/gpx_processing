@@ -42,6 +42,7 @@
 
 $(document).ready(function() {
 
+
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
 
@@ -259,7 +260,6 @@ $(document).ready(function() {
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
-                    console.log("session loading")
                     vm.rDataOutputArray.push(data)
                     successmsg();
                     cb();
@@ -523,5 +523,6 @@ function map_lock(toggle){
           </ul>
       </article>
     </main>
+    <div id="editor"></div>
     </body>
 </html>
