@@ -46,6 +46,7 @@ $(document).ready(function() {
     ko.applyBindings(vm);
 
     document.getElementById("ddGpxList").disabled=true; //disable dropdown
+    document.getElementById("ddGpxList").disabled=true; //disable dropdown
     window.URL = window.URL || window.webkitURL;
     ko.observable.fn.increment = function (value) {
         this(this() + (value || 1));
@@ -485,16 +486,15 @@ function map_lock(toggle){
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
-                <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download&#13;&#10;Current" /></li>
+                <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download" /></li>
                 <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
                 <li class="tab" role="presentation">
-                    <select id="classSelect" data-placeholder="Select a Class..." onchange="updateClass(this)" style="width:150px;">
-                        <option value=""></option>
+                    <select id="classSelect" onchange="updateClass(this)" style="width:150px;">
+                        <option>None</option>
                         <option>Trail</option>
                         <option>Sweep</option>
                         <option>Canine</option>
                         <option>Offtrail</option>
-                        <option>Other</option>
                     </select>
                 </li>
             </ul>
