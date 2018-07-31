@@ -45,7 +45,7 @@ $(document).ready(function() {
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
 
-    document.getElementById("ddGpxList").disabled=true;
+    // document.getElementById("ddGpxList").disabled=true;
 
     /* ----- Navigation ----- */
 
@@ -247,7 +247,7 @@ $(document).ready(function() {
             }).always(function(){
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
-                document.getElementById("ddGpxList").disabled=true;
+                // document.getElementById("ddGpxList").disabled=true;
             });
         }, 0);
     }
