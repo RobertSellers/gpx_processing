@@ -277,7 +277,7 @@ $(document).ready(function() {
                 // document.getElementById("ddGpxList").disabled=true;
             });
         }, 0);
-    }
+    }       
 
 function initLeaflet(){
     //////////////////////////////////
@@ -314,6 +314,12 @@ function updateLeaflet(){
         }
     });
     var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
+    // var reader  = new FileReader();
+    // reader.onload = function(e){
+	//        debugger
+	// }
+    // reader.readAsDataURL(gpx_file);
+    
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
         var gpx = e.target;
