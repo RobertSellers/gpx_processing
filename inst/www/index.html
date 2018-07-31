@@ -268,6 +268,17 @@ $(document).ready(function() {
         }, 0);
     }       
 
+function newDataCleanup(){
+    clearData();
+    vm.counter(0);
+    if (vm.gpxFileNameArray().length>0){
+        vm.gpxFileNameArray.removeAll();
+    }
+    if (vm.rDataOutputArray().length>0){
+        vm.rDataOutputArray.removeAll();
+    }
+}
+
 function initLeaflet(){
     //////////////////////////////////
     //Prime Leaflet Map
@@ -302,7 +313,7 @@ function updateLeaflet(){
             vm.leafletMap().removeLayer(layer);
         }
     });
-    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
+    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())]
 
     var gpx_blob = window.URL.createObjectURL(gpx_file);
 
@@ -406,6 +417,7 @@ function map_lock(toggle){
     $("#gpxfile").on("change", function(){
         vm.gpxFileArray($("#gpxfile")[0].files)
         console.log("promise chain initialized")
+        newDataCleanup();
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
@@ -421,10 +433,12 @@ function map_lock(toggle){
     });
 
     $("#ddGpxList").change(function () {
-        console.log("Switching to " + this.value);
-        var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
-        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex-1])
-        vm.selectedIndex(this.value);
+        if(vm.gpxFileNameArray().length>0){
+            console.log("Switching to " + this.value);
+            var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
+            vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
+            vm.selectedIndex(this.value);
+        }
     });
 
     $("#classSelect").change(function () {
@@ -502,7 +516,7 @@ function map_lock(toggle){
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download" /></li>
-                <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
+                <li class="tab" role="presentation"><select id="ddGpxList" optionLabel = "Select File" data-bind="options: gpxFileNameArray"></select></li>
                 <li class="tab" role="presentation">
                     <select id="classSelect" style="width:150px;">
                         <option>None</option>
@@ -535,5 +549,6 @@ function map_lock(toggle){
           </ul>
       </article>
     </main>
+    <div id="editor"></div>
     </body>
 </html>
