@@ -410,6 +410,8 @@ function map_lock(toggle){
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
                 vm.counter.increment()
+                console.log(vm.counter())
+                console.log(vm.gpxFileArray().length)
                 if(vm.counter()==vm.gpxFileArray().length){
                     document.getElementById("ddGpxList").disabled=false;
                     document.getElementById("classSelect").disabled=false;
