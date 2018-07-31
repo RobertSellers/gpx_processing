@@ -165,22 +165,11 @@ $(document).ready(function() {
     $('#highcharts').css("opacity", 0.2);
     map_lock('lock');
 
-    // vm.rDataOutputArray.subscribe(function(){
-    //     for (let index = 0; index < vm.rDataOutputArray().length; ++index) {
-    //         let value = vm.rDataOutputArray()[index];
-    //         if (value != true){
-    //             document.getElementById("ddGpxList").options[index].disabled = false;
-    //         }else{
-    //             document.getElementById("ddGpxList").options[index].disabled = true;
-    //         }
-    //     }
-    // })
-
     vm.rDataOutput.subscribe(function(){
         // var d = vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())]
         
-        if(vm.rDataOutput()==null) 
-            return;
+        if(vm.rDataOutput()==null) {
+            clearData(); return;
 
         //Update Highchart
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
@@ -208,10 +197,8 @@ $(document).ready(function() {
     vm.selectedIndex.subscribe(function(){
         console.log("index changed")
         updateLeaflet()
-        // $("#session_url").prop('disabled', false);
         $(".download").css("opacity", 1);
         $(".download").prop('disabled', false);
-        // $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
         $('#plotdiv').css("opacity", 1);
         $('#highcharts').css("opacity", 1);
         
@@ -254,8 +241,6 @@ $(document).ready(function() {
                 gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
-                // vm.gpxFileArray.push(vm.session_tmp() +'files/'+ vm.gpxFileName())
-                // clearData();
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
@@ -265,15 +250,12 @@ $(document).ready(function() {
                 });
 
             }).fail(function(jqXHR){
-                // clearData();
                 vm.rDataOutputArray.push(null)
-                // vm.gpxFileArray.push(null)
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
-                // document.getElementById("ddGpxList").disabled=true;
             });
         }, 0);
     }       
@@ -500,7 +482,6 @@ function map_lock(toggle){
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download&#13;&#10;Current" /></li>
-                <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadAll" value="Download&#13;&#10;All" /></li>
                 <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
             </ul>
               <div class="tab-panels">
