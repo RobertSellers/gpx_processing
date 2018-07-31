@@ -236,8 +236,7 @@ $(document).ready(function() {
             //////////////////////////////
 
             vm.gpxFileName(file.name)
-            vm.gpxFileNameArray.push(file.name)
-
+    
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
@@ -246,12 +245,17 @@ $(document).ready(function() {
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
                     vm.rDataOutputArray.push(data)
+                    vm.gpxFileNameArray.push(vm.gpxFileName())
                     successmsg();
                     cb();
                 });
 
             }).fail(function(jqXHR){
                 vm.rDataOutputArray.push(null)
+                vm.gpxFileNameArray.push(vm.gpxFileName())
+                $("option[value='"+vm.gpxFileName()+"']")
+                    .attr("disabled", "disabled")
+                    .siblings().removeAttr("disabled");
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
