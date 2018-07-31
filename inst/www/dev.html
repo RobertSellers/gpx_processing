@@ -332,7 +332,20 @@ function updateLeaflet(){
       reader.onload = (function(theFile) {
         return function(e) {
             debugger
-            // document.getElementById('files').addEventListener('change', handleFileSelect, false);
+        //   // Render thumbnail.
+        //   var span = document.createElement('span');
+        //   span.innerHTML = ['<img class="thumb" src="', e.target.result,
+        //                     '" title="', escape(theFile.name), '"/>'].join('');
+        //   document.getElementById('list').insertBefore(span, null);
+        };
+      })(gpx_file);
+
+      // Read in the image file as a data URL.
+      reader.readAsDataURL(gpx_file);
+//     }
+//   }
+
+//   document.getElementById('files').addEventListener('change', handleFileSelect, false);
     
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
@@ -402,20 +415,6 @@ function updateLeaflet(){
     });
     gpx_layer.addTo(vm.leafletMap());
     map_lock('unlock');
-        //   // Render thumbnail.
-        //   var span = document.createElement('span');
-        //   span.innerHTML = ['<img class="thumb" src="', e.target.result,
-        //                     '" title="', escape(theFile.name), '"/>'].join('');
-        //   document.getElementById('list').insertBefore(span, null);
-        };
-      })(gpx_file);
-
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(gpx_file);
-//     }
-//   }
-
-  
 }
 
 function map_lock(toggle){
