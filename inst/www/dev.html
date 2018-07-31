@@ -270,6 +270,7 @@ $(document).ready(function() {
 
 function newDataCleanup(){
     clearData();
+    vm.counter(0);
     if (vm.gpxFileNameArray().length>0){
         vm.gpxFileNameArray.removeAll();
     }
