@@ -401,8 +401,8 @@ function map_lock(toggle){
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
-                counter.increment()
-                if(counter()==vm.gpxFileArray().length){
+                vm.counter.increment()
+                if(vm.counter()==vm.gpxFileArray().length){
                     document.getElementById("ddGpxList").disabled=false;
                 }
             }));
@@ -488,7 +488,7 @@ function map_lock(toggle){
                 <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download&#13;&#10;Current" /></li>
                 <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
                 <li class="tab" role="presentation">
-                    <select data-placeholder="Select a Class..." onchange="updateClass(this)" style="width:150px;">
+                    <select id="classSelect" data-placeholder="Select a Class..." onchange="updateClass(this)" style="width:150px;">
                         <option value=""></option>
                         <option>Trail</option>
                         <option>Sweep</option>

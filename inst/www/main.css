@@ -441,6 +441,12 @@ a{
   /* font-size: 12px; */
 }
 
-.vert_button{
+#classSelect{
   display: block;
+  padding: .8em .9em;
+  color: #fff;
+  background: #b88e06;
+  max-width: 100px;
+  min-width: 100px;
 }
+
