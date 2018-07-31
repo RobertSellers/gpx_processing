@@ -177,25 +177,25 @@ $(document).ready(function() {
     // })
 
     vm.rDataOutput.subscribe(function(){
-        var d = vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())]
+        // var d = vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())]
         
-        if(d==null) 
+        if(vm.rDataOutput()==null) 
             return;
 
         //Update Highchart
-        var dateTimeRange = d.map(a=> Date.parse(a.DateTime))
+        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
-        var elevationArray = d.map(a => a.Elevation)
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
         var timeElevation = dateTimeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
         //SPEED
-        var speedArray = d.map(a => a.Speed)
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
         //Gradient
-        var gradientArray = d.map(a => a.Gradient)
+        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
         var timeGradient = dateTimeRange.map(function(v,i) {
             return [v, gradientArray[i]];
         });
