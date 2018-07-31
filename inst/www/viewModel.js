@@ -25,7 +25,7 @@ var vm = {
         return exportData
     },
     updateClass: function(val) {
-        debugger
+        // debugger
     },
     downloadCSV : function() {
         var data = this.rDataOutput();
