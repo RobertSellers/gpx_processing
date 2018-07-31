@@ -313,8 +313,7 @@ function updateLeaflet(){
             vm.leafletMap().removeLayer(layer);
         }
     });
-    // var gpx_file = vm.gpxFileArray
-    // var gpx_file = vm.session_tmp() +'files/'+ vm.gpxFileName(); 
+    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
         var gpx = e.target;
