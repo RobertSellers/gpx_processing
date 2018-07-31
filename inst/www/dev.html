@@ -269,8 +269,9 @@ $(document).ready(function() {
     }       
 
 function newDataCleanup(){
-    var defaultFileNameArray = vm.gpxFileNameArray().splice(0,1);
-    vm.gpxFileNameArray(defaultFileNameArray)
+    var defaultFileNameArray = vm.gpxFileNameArray()[0]
+    vm.gpxFileNameArray.removeAll();
+    vm.gpxFileNameArray.push(defaultFileNameArray)
     vm.rDataOutputArray.removeAll();
     vm.gpxFileArray.removeAll();
 }
