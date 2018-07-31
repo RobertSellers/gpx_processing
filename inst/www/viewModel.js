@@ -2,6 +2,7 @@ var vm = {
     session_tmp: ko.observable(),
     gpxFileName: ko.observable(),
     gpxFileNameArray: ko.observableArray([undefined]),
+    gpxFileArray: ko.observableArray(),
     leafletMap: ko.observable(),
     leafletMinimap: ko.observable(),
     rDataOutput: ko.observable(),

@@ -243,7 +243,6 @@ $(document).ready(function() {
 
     function gpxLoadAsync(file, cb) {
         setTimeout(() => {
-            console.log("inside setTimeout")
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
@@ -255,6 +254,7 @@ $(document).ready(function() {
                 gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
+                vm.gpxFileArray.push(vm.session_tmp() +'files/'+ vm.gpx_file_name())
                 // clearData();
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
@@ -266,9 +266,9 @@ $(document).ready(function() {
                 });
 
             }).fail(function(jqXHR){
-                console.log("fail")
                 // clearData();
                 vm.rDataOutputArray.push(null)
+                vm.gpxFileArray.push(null)
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
