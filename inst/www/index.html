@@ -27,7 +27,6 @@
 
 <!-- Leaflet -->
 <script src="components/leaflet/leaflet.js"></script>
-<!-- <script src="components/leaflet/modules/leaflet.hotline.js"></script> -->
 <script src="components/leaflet/modules/gpx.js"></script>
 <script src="components/leaflet/modules/Control.MiniMap.js"></script>
 <link href="components/leaflet/css/leaflet.css" rel="stylesheet"/>
@@ -36,7 +35,7 @@
 <!-- Custom Scripts -->
 <script type='text/javascript' src="js/utilities.js"></script>
 <script type='text/javascript' src="js/CSVExport.js"></script>
-<script type='text/javascript' src="js/leaflet_helpers.js"></script>
+<!-- <script type='text/javascript' src="js/leaflet_helpers.js"></script> -->
 <script type='text/javascript' src='viewModel.js'></script>
 
 <script type="text/javascript">
@@ -45,8 +44,15 @@ $(document).ready(function() {
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
-    /* ----- Navigation ----- */
 
+    document.getElementById("ddGpxList").disabled=true; //disable dropdown
+    document.getElementById("classSelect").disabled=true; //disable dropdown
+    window.URL = window.URL || window.webkitURL;
+    ko.observable.fn.increment = function (value) {
+        this(this() + (value || 1));
+    };
+
+   /* ----- Navigation ----- */
     $('.nav').find('a').attr('tabindex', -1);
 
     $('.nav-btn').on('click', function () {
@@ -114,13 +120,16 @@ $(document).ready(function() {
     });
 
     //R output to popup
-    function successmsg(text){
-        $("#successdiv").empty().append('<div class="alert alert-success alert-dismissable">' + text + '</div>');
+    function successmsg(){
+        var strMSG = vm.gpxFileName() + " file successfully loaded!";
+        $("#validationDiv").empty()
+        vm.warningHtml('<div class="alert alert-success alert-dismissable">' + strMSG + '</div>')
     }
 
     //R output to popup
     function errormsg(text){
-        $("#errordiv").empty().append('<div class="alert alert-danger alert-dismissable">' + text + '</div>');
+        $("#validationDiv").empty()
+        vm.warningHtml('<div class="alert alert-danger alert-dismissable">' + vm.gpxFileName() + ": " +text + '</div>')
     }
 
     function clearData(){
@@ -161,6 +170,45 @@ $(document).ready(function() {
     map_lock('lock');
 
     vm.rDataOutput.subscribe(function(){
+        
+        if(vm.rDataOutput()==null) 
+            clearData(); return;
+            
+        //Update Highchart
+        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
+        //ELEVATION
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var timeElevation = dateTimeRange.map(function(v,i) {
+            return [v, elevationArray[i]];
+        });
+        //SPEED
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var timeSpeed = dateTimeRange.map(function(v,i) {
+            return [v, speedArray[i]];
+        });
+        //Gradient
+        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
+        var timeGradient = dateTimeRange.map(function(v,i) {
+            return [v, gradientArray[i]];
+        });
+
+        vm.highchart().series[0].setData(timeElevation,false)
+        vm.highchart().series[1].setData(timeSpeed,false)
+        vm.highchart().series[2].setData(timeGradient,false)
+    
+    })
+
+    vm.selectedIndex.subscribe(function(){
+        console.log("index changed")
+        updateLeaflet()
+        $(".download").css("opacity", 1);
+        $(".download").prop('disabled', false);
+        $('#plotdiv').css("opacity", 1);
+        $('#highcharts').css("opacity", 1);
+        
+        if(vm.rDataOutput()==null) 
+            return;
+
         //Update Highchart
         var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
         //ELEVATION
@@ -184,50 +232,207 @@ $(document).ready(function() {
         vm.highchart().series[2].setData(timeGradient,false)
     })
 
-    //automatically upload GPX file on change.
-    $("#gpxfile").on("change", function(){
-
-        //verify that a file is selected
-        if($("#gpxfile")[0].files[0]){
-            clearData();
-            $("#successdiv").empty().show();
-            $("#errordiv").empty().show();
-
+    function gpxLoadAsync(file, cb) {
+        setTimeout(() => {
             //////////////////////////////
             //Upload and validate the data
             //////////////////////////////
 
-            vm.gpx_file_name($("#gpxfile")[0].files[0].name)
-
+            vm.gpxFileName(file.name)
+    
             var req = ocpu.call("gpx_validation", {
-                gpxfile : $("#gpxfile")[0].files[0]
+                gpxfile : file
             }, function(session){
                 vm.session_tmp(session.getLoc());
-
+                $("#validationDiv").empty().show();
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
-                    vm.rDataOutput(data)
-                    updateLeaflet()
-                    $("#session_url").prop('disabled', false);
-                    $(".download").css("opacity", 1);
-                    $(".download").prop('disabled', false);
-                    $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                    $('#plotdiv').css("opacity", 1);
-                    $('#highcharts').css("opacity", 1);
-                    successmsg("GPX file successfully loaded!");
+                    vm.rDataOutputArray.push(data)
+                    vm.gpxFileNameArray.push(vm.gpxFileName())
+                    successmsg();
+                    cb();
                 });
 
             }).fail(function(jqXHR){
-                clearData();
+                vm.rDataOutputArray.push(null)
+                vm.gpxFileNameArray.push(vm.gpxFileName())
+                $("option[value='"+vm.gpxFileName()+"']")
+                    .attr("disabled", "disabled")
+                    // .siblings().removeAttr("disabled");
                 errormsg(jqXHR.responseText);
+                cb();
             }).always(function(){
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
+        }, 0);
+    }       
+
+function initLeaflet(){
+    //////////////////////////////////
+    //Prime Leaflet Map
+    var map = new L.map('plotdiv')
+    var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+    var osmAttrib='Map data &copy; OpenStreetMap contributors';        var mapLink = '<a href="http://www.esri.com/">Esri</a>';
+    var wholink =  'i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community';
+    
+    var esri = new L.TileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: '&copy; ' + mapLink + ', ' + wholink,
+        maxZoom: 19});
+
+    map.addLayer(esri);
+    map.setView(new L.LatLng(39.8283, -98.5795),3)
+    var osm2 = new L.TileLayer(osmUrl, {minZoom: 3, maxZoom: 19, attribution: osmAttrib });
+    var miniMap = new L.Control.MiniMap(
+        osm2, {
+         toggleDisplay: true,
+         minimized: true
+        });
+    vm.leafletMinimap(miniMap);
+    vm.leafletMinimap().addTo(map);
+    vm.leafletMap(map);
+    vm.leafletMinimap()._minimize()
+}
+
+function updateLeaflet(){
+    //////////////////////////////////
+    //Update Leaflet
+    vm.leafletMap().eachLayer(function (layer) {
+        if (layer.hasOwnProperty('_gpx') || layer.hasOwnProperty('_path') || layer.hasOwnProperty('_latlng')){
+            vm.leafletMap().removeLayer(layer);
         }
+    });
+    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
+
+    var gpx_blob = window.URL.createObjectURL(gpx_file);
+
+    var gpx_layer = new L.GPX(gpx_blob, {
+        async: true,
+        polyline_options: {
+            // color: 'green',
+            opacity: 0.75,
+            weight: 1.5,
+            lineCap: 'round'
+        }
+    })
+    .on('loaded', function(e) {
+        var gpx = e.target;
+        vm.leafletMap().fitBounds(gpx.getBounds());
+        vm.get_duration(gpx.get_duration_string(gpx.get_moving_time()))
+        vm.get_pace_imp(gpx.get_duration_string(gpx.get_moving_pace_imp(), true))
+        vm.get_distance_imp(gpx.get_distance_imp().toFixed(2))
+        vm.get_elevation_gain_imp(gpx.to_ft(gpx.get_elevation_gain()).toFixed(0))
+        vm.get_elevation_loss_imp(gpx.to_ft(gpx.get_elevation_loss()).toFixed(0))
+        vm.elevation_net(gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0))
+        
+        //update highchart
+        vm.highchart().setTitle({text: $('#ddGpxList').val()});
+        if( vm.highchart().resetZoomButton ) {
+            vm.highchart().zoomOut();
+        }
+        vm.highchart().xAxis[0].setExtremes(null,null)
+        vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
+        vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Speed;})) });
+        vm.highchart().redraw();
+
+        var circleMarkerStyle_start = {
+            radius: 6,
+            fillColor: "#00ff00",
+            color: "#000",
+            weight: 2, 
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        var circleMarkerStyle_end = {
+            radius: 6,
+            fillColor: "#ff0000",
+            color: "#000",
+            weight: 2, 
+            opacity: 1,
+            fillOpacity: 0.8
+        };
+
+        // start/end markers and popups
+        var base = gpx._layers[Object.keys(gpx._layers)[0]];
+        if (base.hasOwnProperty('_layers')){
+            var base = gpx._layers[Object.keys(gpx._layers)[0]]._layers;
+            for (var key in base) {
+                var lat_lngs = base[key]._latlngs;
+                var nL = lat_lngs.length-1
+                var start = [lat_lngs[0].lat, lat_lngs[0].lng]
+                var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
+                var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+                start_marker.addTo(vm.leafletMap());
+                var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+                end_marker.addTo(vm.leafletMap());
+            }
+        }else{
+            var lat_lngs = base._latlngs;
+            var nL = lat_lngs.length-1
+            var start = [lat_lngs[0].lat, lat_lngs[0].lng]
+            var end = [lat_lngs[nL].lat, lat_lngs[nL].lng]
+
+            //New Circle Makers
+            var start_marker = new L.circleMarker(start, circleMarkerStyle_start)
+            start_marker.addTo(vm.leafletMap());
+            var end_marker = new L.circleMarker(end, circleMarkerStyle_end)
+            end_marker.addTo(vm.leafletMap());
+        }
+    });
+    gpx_layer.addTo(vm.leafletMap());
+    map_lock('unlock');
+}
+
+function map_lock(toggle){
+    if (toggle=='unlock'){
+        vm.leafletMap()._handlers.forEach(function(handler) {
+            handler.enable();
+        });
+        vm.leafletMinimap()._restore()
+    if (vm.leafletMap().tap) vm.leafletMap().tap.enable();
+        document.getElementById('plotdiv').style.cursor='grab';
+    }if (toggle=='lock'){
+        vm.leafletMinimap()._minimize()
+        vm.leafletMap()._handlers.forEach(function(handler) {
+            handler.disable();
+        });
+    if (vm.leafletMap().tap) vm.leafletMap().tap.disable();
+        document.getElementById('plotdiv').style.cursor='default';
+    }
+}
+
+    //automatically upload GPX file on change.
+    $("#gpxfile").on("change", function(){
+        vm.gpxFileArray($("#gpxfile")[0].files)
+        console.log("promise chain initialized")
+        let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
+            return promiseChain.then(() => new Promise((resolve) => {
+                gpxLoadAsync(item, resolve);
+                vm.counter.increment()
+                console.log(vm.counter())
+                console.log(vm.gpxFileArray().length)
+                if(vm.counter()==vm.gpxFileArray().length){
+                    document.getElementById("ddGpxList").disabled=false;
+                    document.getElementById("classSelect").disabled=false;
+                }
+            }));
+        }, Promise.resolve());
+    });
+
+    $("#ddGpxList").change(function () {
+        console.log("Switching to " + this.value);
+        var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
+        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex-1])
+        vm.selectedIndex(this.value);
+    });
+
+    $("#classSelect").change(function () {
+        console.log("Class changed to " + this.value);
     });
 
 });
+
 
 </script>
 
@@ -274,7 +479,8 @@ $(document).ready(function() {
               <legend>Load GPX data</legend>
               <div class="form-group">
                 <div class="loadFileContainer">
-                <input id="gpxfile" type="file" style="display: inline-block;">
+                <input id="gpxfile" type="file" style="display: inline-block;" multiple/>
+
                 <img src="./img/h6viz.gif" alt="spinner" class="spinLoad" style="width:22px;height:22px;float:right; display: none; vertical-align: top;">
               </div>
               </div>
@@ -282,8 +488,10 @@ $(document).ready(function() {
             <!-- R Relayed Message and spinLoad Information -->
             <fieldset id="warnings_panel">
                 <legend>Warnings/Messages</legend>
-                <div id="successdiv"></div>
-                <div id="errordiv"></div>
+                <!-- ko if: gpxFileName() != undefined -->
+                    Now Loading: <span data-bind="text: gpxFileName()"></span>
+                <!-- /ko -->
+                <div id="validationDiv" data-bind="html: warningHtml()"></div>
             </fieldset>
           </td></table>
           </form>
@@ -293,15 +501,21 @@ $(document).ready(function() {
             <div class="tab-group">
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
-                <li class="tab" role="presentation"><a href="#Readme" role="tab" aria-controls="Readme">Readme</a></li>
-                <li class="tab" role="presentation"><input type="button" class="download" data-bind="click: downloadCSV" value="Download CSV" /></li>
-              </ul>
-      
+                <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download" /></li>
+                <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
+                <li class="tab" role="presentation">
+                    <select id="classSelect" style="width:150px;">
+                        <option>None</option>
+                        <option>Trail</option>
+                        <option>Sweep</option>
+                        <option>Canine</option>
+                        <option>Offtrail</option>
+                    </select>
+                </li>
+            </ul>
               <div class="tab-panels">
                     <div class="tab-panel" id="highcharts" role="tabpanel" aria-hidden="false">
                         <div id="container"></div>
-                    </div>
-                    <div class="tab-panel" id="Readme" role="tabpanel" aria-hidden="true">Created By Robert Sellers / Azimuth1
                     </div>
               </div>
             </div>
@@ -309,13 +523,12 @@ $(document).ready(function() {
           </article>
       </article>
       <article class="panel gpx">
-        <!-- <span class="start" data-bind="text: gpxjs_vars().get_start_time"></span> -->
         <h2 class="panel-head section-label" tabindex="0"><span class="section-label-back">GPX Track Map</span></h2>
         <div id="plotdiv" class="map"></div>
         <ul class="info">
             <li>Distance:&nbsp;<span data-bind="text: get_distance_imp()"></span>&nbsp;mi</li>
             &mdash; <li>Duration:&nbsp;<span data-bind="text: get_duration()"></span></li>
-            &mdash; <li>Pace:&nbsp;<span data-bind="text: vm.get_pace_imp()"></span>/mi</li>
+            &mdash; <li>Pace:&nbsp;<span data-bind="text: get_pace_imp()"></span>/mi</li>
             &mdash; <li>Elevation:&nbsp;+<span data-bind="text: get_elevation_gain_imp()"></span>&nbsp;&nbsp;ft,
               -<span data-bind="text: get_elevation_loss_imp()"></span>&nbsp;ft
               (net:&nbsp;<span data-bind="text: elevation_net()"></span>&nbsp;ft)</li>
