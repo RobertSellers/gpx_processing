@@ -311,7 +311,7 @@ function updateLeaflet(){
             vm.leafletMap().removeLayer(layer);
         }
     });
-    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
+    var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())]
 
     var gpx_blob = window.URL.createObjectURL(gpx_file);
 
