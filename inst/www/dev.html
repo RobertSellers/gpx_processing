@@ -416,7 +416,7 @@ function map_lock(toggle){
     $("#ddGpxList").change(function () {
         console.log("Switching to " + this.value);
         var selectedIndex = vm.gpxFileNameArray().indexOf($('#ddGpxList').val());
-        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
+        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex-1])
         vm.selectedIndex(this.value);
     });
 });
