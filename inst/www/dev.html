@@ -332,7 +332,7 @@ function updateLeaflet(){
       reader.onload = (function(theFile) {
         return function(e) {
             debugger
-            document.getElementById('files').addEventListener('change', handleFileSelect, false);
+            // document.getElementById('files').addEventListener('change', handleFileSelect, false);
     
     var gpx_layer = new L.GPX(gpx_file, {async: true})
     .on('loaded', function(e) {
