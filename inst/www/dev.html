@@ -207,8 +207,31 @@ $(document).ready(function() {
 
     vm.selectedIndex.subscribe(function(){
         console.log("index changed")
-        var selectedIndex = vm.gpxFileNameArray().indexOf(vm.gpxFileName());
-        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
+        
+        if(vm.rDataOutput()==null) 
+            return;
+
+        //Update Highchart
+        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
+        //ELEVATION
+        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var timeElevation = dateTimeRange.map(function(v,i) {
+            return [v, elevationArray[i]];
+        });
+        //SPEED
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var timeSpeed = dateTimeRange.map(function(v,i) {
+            return [v, speedArray[i]];
+        });
+        //Gradient
+        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
+        var timeGradient = dateTimeRange.map(function(v,i) {
+            return [v, gradientArray[i]];
+        });
+
+        vm.highchart().series[0].setData(timeElevation,false)
+        vm.highchart().series[1].setData(timeSpeed,false)
+        vm.highchart().series[2].setData(timeGradient,false)
     })
 
     function gpxLoadAsync(file, cb) {
@@ -270,6 +293,8 @@ $(document).ready(function() {
     $("#ddGpxList").change(function () {
         console.log(this.value);
         vm.selectedIndex(this.value);
+        var selectedIndex = vm.gpxFileNameArray().indexOf(vm.gpxFileName());
+        vm.rDataOutput(vm.rDataOutputArray()[selectedIndex])
     });
 });
 
