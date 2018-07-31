@@ -427,9 +427,9 @@ function map_lock(toggle){
         vm.selectedIndex(this.value);
     });
 
-    function updateClass(){
-        
-    }
+    $("#classSelect").change(function () {
+        console.log("Class changed to " + this.value);
+    });
 
 });
 
@@ -504,7 +504,7 @@ function map_lock(toggle){
                 <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download" /></li>
                 <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
                 <li class="tab" role="presentation">
-                    <select id="classSelect" onchange="updateClass(this)" style="width:150px;">
+                    <select id="classSelect" style="width:150px;">
                         <option>None</option>
                         <option>Trail</option>
                         <option>Sweep</option>
