@@ -269,9 +269,9 @@ $(document).ready(function() {
     }       
 
 function newDataCleanup(){
-    var defaultFileNameArray = vm.gpxFileNameArray()[0]
+    // var defaultFileNameArray = vm.gpxFileNameArray()[0]
     vm.gpxFileNameArray.removeAll();
-    vm.gpxFileNameArray.push(defaultFileNameArray)
+    // vm.gpxFileNameArray.push(defaultFileNameArray)
     vm.rDataOutputArray.removeAll();
     vm.gpxFileArray.removeAll();
 }
@@ -511,7 +511,7 @@ function map_lock(toggle){
               <ul class="tabs clearfix" role="tablist">
                 <li class="tab" role="presentation"><a href="#highcharts" role="tab" aria-selected="true" aria-controls="highcharts">Chart</a></li>
                 <li class="tab" role="presentation"><input type="button" class="download vert_button" data-bind="click: downloadCSV" value="Download" /></li>
-                <li class="tab" role="presentation"><select id="ddGpxList" data-bind="options: gpxFileNameArray"></select></li>
+                <li class="tab" role="presentation"><select id="ddGpxList" optionLabel = "Select File" data-bind="options: gpxFileNameArray"></select></li>
                 <li class="tab" role="presentation">
                     <select id="classSelect" style="width:150px;">
                         <option>None</option>
