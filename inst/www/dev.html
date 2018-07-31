@@ -207,6 +207,13 @@ $(document).ready(function() {
 
     vm.selectedIndex.subscribe(function(){
         console.log("index changed")
+        updateLeaflet()
+        // $("#session_url").prop('disabled', false);
+        $(".download").css("opacity", 1);
+        $(".download").prop('disabled', false);
+        // $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
+        $('#plotdiv').css("opacity", 1);
+        $('#highcharts').css("opacity", 1);
         
         if(vm.rDataOutput()==null) 
             return;
@@ -253,15 +260,7 @@ $(document).ready(function() {
                 //retrieve javascript object as json
                 session.getObject(function(data)  {
                     console.log("session loading")
-                    // vm.rDataOutput(data)
                     vm.rDataOutputArray.push(data)
-                    // updateLeaflet()
-                    // $("#session_url").prop('disabled', false);
-                    // $(".download").css("opacity", 1);
-                    // $(".download").prop('disabled', false);
-                    // $("#session_url").attr("href", session.getLoc()).attr("target","_blank");
-                    // $('#plotdiv').css("opacity", 1);
-                    // $('#highcharts').css("opacity", 1);
                     successmsg();
                     cb();
                 });
