@@ -328,7 +328,7 @@ function updateLeaflet(){
         vm.elevation_net(gpx.to_ft(gpx.get_elevation_gain() - gpx.get_elevation_loss()).toFixed(0))
         
         //update highchart
-        vm.highchart().setTitle({text: vm.gpxFileName()});
+        vm.highchart().setTitle({text: $('#ddGpxList').val()});
         if( vm.highchart().resetZoomButton ) {
             vm.highchart().zoomOut();
         }
