@@ -313,6 +313,7 @@ function updateLeaflet(){
             vm.leafletMap().removeLayer(layer);
         }
     });
+    var gpx_test = 'http://mpetazzoni.github.io/leaflet-gpx/demo.gpx'
     var gpx_file = vm.gpxFileArray()[vm.gpxFileNameArray().indexOf($('#ddGpxList').val())-1]
     // var reader  = new FileReader();
     // reader.onload = function(e){
