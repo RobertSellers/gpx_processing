@@ -48,8 +48,6 @@ $(document).ready(function() {
     document.getElementById("ddGpxList").disabled=true; //disable dropdown
     window.URL = window.URL || window.webkitURL;
    
-
-
    /* ----- Navigation ----- */
     $('.nav').find('a').attr('tabindex', -1);
 
@@ -399,9 +397,9 @@ function map_lock(toggle){
         let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
             return promiseChain.then(() => new Promise((resolve) => {
                 gpxLoadAsync(item, resolve);
+                console.log("loading complete")
             }));
         }, Promise.resolve());
-        console.log("loading complete")
     });
 
     $("#ddGpxList").change(function () {
