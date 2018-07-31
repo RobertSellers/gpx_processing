@@ -183,19 +183,19 @@ $(document).ready(function() {
             return;
 
         //Update Highchart
-        var dateTimeRange = vm.rDataOutput().map(a=> Date.parse(a.DateTime))
+        var dateTimeRange = d.map(a=> Date.parse(a.DateTime))
         //ELEVATION
-        var elevationArray = vm.rDataOutput().map(a => a.Elevation)
+        var elevationArray = d.map(a => a.Elevation)
         var timeElevation = dateTimeRange.map(function(v,i) {
             return [v, elevationArray[i]];
         });
         //SPEED
-        var speedArray = vm.rDataOutput().map(a => a.Speed)
+        var speedArray = d.map(a => a.Speed)
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
         //Gradient
-        var gradientArray = vm.rDataOutput().map(a => a.Gradient)
+        var gradientArray = d.map(a => a.Gradient)
         var timeGradient = dateTimeRange.map(function(v,i) {
             return [v, gradientArray[i]];
         });
