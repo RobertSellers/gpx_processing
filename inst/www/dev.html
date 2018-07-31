@@ -45,10 +45,12 @@ $(document).ready(function() {
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
 
-    // document.getElementById("ddGpxList").disabled=true;
+    document.getElementById("ddGpxList").disabled=true; //disable dropdown
     window.URL = window.URL || window.webkitURL;
-    /* ----- Navigation ----- */
+   
 
+
+   /* ----- Navigation ----- */
     $('.nav').find('a').attr('tabindex', -1);
 
     $('.nav-btn').on('click', function () {
@@ -166,7 +168,6 @@ $(document).ready(function() {
     map_lock('lock');
 
     vm.rDataOutput.subscribe(function(){
-        // var d = vm.rDataOutputArray()[vm.gpxFileNameArray().indexOf(vm.gpxFileName())]
         
         if(vm.rDataOutput()==null) 
             clearData(); return;
@@ -255,7 +256,7 @@ $(document).ready(function() {
                 vm.gpxFileNameArray.push(vm.gpxFileName())
                 $("option[value='"+vm.gpxFileName()+"']")
                     .attr("disabled", "disabled")
-                    .siblings().removeAttr("disabled");
+                    // .siblings().removeAttr("disabled");
                 errormsg(jqXHR.responseText);
                 cb();
             }).always(function(){
@@ -400,6 +401,7 @@ function map_lock(toggle){
                 gpxLoadAsync(item, resolve);
             }));
         }, Promise.resolve());
+        console.log("loading complete")
     });
 
     $("#ddGpxList").change(function () {
