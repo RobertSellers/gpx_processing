@@ -46,12 +46,11 @@ $(document).ready(function() {
     ko.applyBindings(vm);
 
     document.getElementById("ddGpxList").disabled=true; //disable dropdown
-    document.getElementById("ddGpxList").disabled=true; //disable dropdown
+    document.getElementById("classSelect").disabled=true; //disable dropdown
     window.URL = window.URL || window.webkitURL;
     ko.observable.fn.increment = function (value) {
         this(this() + (value || 1));
     };
-
 
    /* ----- Navigation ----- */
     $('.nav').find('a').attr('tabindex', -1);
@@ -413,6 +412,7 @@ function map_lock(toggle){
                 vm.counter.increment()
                 if(vm.counter()==vm.gpxFileArray().length){
                     document.getElementById("ddGpxList").disabled=false;
+                    document.getElementById("classSelect").disabled=false;
                 }
             }));
         }, Promise.resolve());
