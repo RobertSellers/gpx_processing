@@ -1,0 +1,306 @@
+---
+title: "GPX Classification and Analysis"
+author: "Robert Sellers"
+date: "August 8, 2018"
+output:
+  html_document:
+    fig_caption: yes
+    force_captions: yes
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: pygments
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+---
+
+### Load all valid GPX datasets
+
+
+```{r message=FALSE, results = 'hide', warning = FALSE}
+source('../gpx_validation.R') # openCPU 
+#source('util.R') # saved mlogit utility functions
+
+temp <- dat <- list()
+data_dir <- "C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/"
+valid_datasets <- c("14-05.gpx","2016-06-18 10.14.52 Stopwatch.gpx","Current.gpx",
+                    "Meg.gpx","Scout.gpx","TeamEchoCurrent.gpx","Track_ 018-02-24 145845.gpx",
+                    "Track_14-08 1.gpx","Track_2015-07-05 215817.gpx","Track_2015-07-09 151556.gpx","Track_2015-07-09 183806.gpx","Track_2015-07-10 132200.gpx","Track_2015-07-15 204324.gpx","Track_2015-07-24 164157.gpx","Track_2015-07-29 130706.gpx","Track_2016-04-30 115630.gpx","Track_2016-06-18 131319.gpx","Track_2018-02-10 104731 Task 1.gpx","Track_2018-02-10 110234 Task 2.gpx","Track_2018-02-10 113753 Task 14B.gpx","Track_2018-02-10 150828 Task 29B.gpx","Track_ALPHA05-14 125702.gpx","Track_K9MEG06-18 124555.gpx","Track_QUEBEC5-14 154550.gpx","Track_T18 800 001 TASK2.gpx","Track_T18 800 001.gpx")
+
+hardcode_response <- c("Trail",
+"Sweep",
+"Trail",
+"Canine",
+"Canine",
+"Sweep",
+"Sweep",
+"Sweep",
+"Trail",
+"Trail",
+"Offtrail",
+"Offtrail",
+"Trail",
+"Offtrail",
+"None",
+"Trail",
+"Offtrail",
+"Trail",
+"Trail",
+"Sweep",
+"Trail",
+"Offtrail",
+"Canine",
+"Offtrail",
+"Trail",
+"Sweep"
+)
+
+# build data
+# meg.gpx bugged
+for (i in 1:length(valid_datasets)){
+  name <- valid_datasets[i]
+  cat(name)
+  temp[[name]] <- invisible(gpx_validation(paste0(data_dir,valid_datasets[i])))
+  temp[[name]]$dt_ts <- strptime(temp[[name]]$DateTime, "%Y-%m-%dT%H:%M:%SZ")
+  temp[[name]]$name <- name
+  # Add 10 minute identifiers
+  temp_2 <- split(temp[[name]], cut(strptime(temp[[name]]$dt_ts,format="%F %R"),"10 mins"))
+  temp_3 <- do.call("rbind", temp_2)
+  temp_3$time_bucket <- gsub("\\..*","",rownames(temp_3))
+  dat[[name]] <- transform(temp_3,time_bucket_index=as.numeric(factor(time_bucket)))
+}
+
+rm(temp);rm(temp_2); rm(temp_3)
+```
+
+
+### Sorting to standard blocks/units
+
+```{r}
+
+`%+=%` = function(e1,e2) eval.parent(substitute(e1 <- e1 + e2))
+
+ascent <- function(arr){
+  
+  lastHeight <- arr[1]
+  total_ascent <- 0
+  total_descent <- 0
+  
+  for (i in seq(1:length(arr))){
+    if (arr[i] > lastHeight){
+      total_ascent %+=% (-1 * (lastHeight - arr[i]))
+    }else{
+      total_descent %+=% (lastHeight - arr[i])
+    }
+    lastHeight <- arr[i]
+  }
+  return (c(total_ascent,total_descent))
+}
+
+require(anytime)
+n <- length(dat)
+stats <- data.frame("name"=character(n),
+                    "min_time"=anytime(n),
+                    "max_time"=anytime(n),
+                    "response"=character(n),
+                    "num_logs"=integer(n),
+                    "distance"=double(n),
+                    "avg_speed"=double(n),
+                    "avg_gradient"=double(n),
+                    "avg_pace"=double(n),
+                    "total_ascent"=double(n),
+                    "total_descent"=double(n)
+                    )
+# Gather statistics
+j <- k <- j <- 1
+
+for(i in dat){
+  split_dat <- split(i,i$time_bucket_index)
+  for (f in split_dat){
+    #browser()
+    stats[k,]$name <- i$name[j]
+    stats[k,]$response <- hardcode_response[j]
+    stats[k,]$min_time <- min(f$dt_ts)
+    stats[k,]$max_time <- max(f$dt_ts)
+    stats[k,]$num_logs <- nrow(f)
+    # New regression stats
+    stats[k,]$distance <- max(f$Dist) - min(f$Dist)
+    stats[k,]$avg_speed <- mean(f$Speed)
+    stats[k,]$avg_gradient <- mean(f$Gradient)
+    stats[k,]$avg_pace <- mean(f$Pace)
+    stats[k,]$total_ascent <- ascent(f$Elevation)[1]
+    stats[k,]$total_descent <- ascent(f$Elevation)[2]
+    k<-k+1
+  }
+  j<-j+1
+}
+
+stats$minute_duration <- (stats$max_time-stats$min_time)/60
+stats$logs_per_minute <- stats$num_logs/as.numeric(stats$minute_duration)
+```
+
+
+
+
+### Remove outliers
+
+```{r}
+counts <- table(stats$name,stats$response)
+barplot(counts, main="Class Count by GPX", 
+  	xlab="Number of classes", col=palette(rainbow(n)))
+```
+```{r}
+stats_outlier_removed <- stats
+stats_outlier_removed<- stats_outlier_removed[is.finite(stats_outlier_removed$logs_per_minute), ]
+stats_outlier_removed<-stats_outlier_removed[stats_outlier_removed$minute_duration > 9, ]
+stats_outlier_removed<-stats_outlier_removed[stats_outlier_removed$response != "None", ]
+counts <- table(stats_outlier_removed$name,stats_outlier_removed$response)
+barplot(counts, main="Class Count by GPX", 
+  	xlab="Number of classes", col=palette(rainbow(n)))
+```
+
+# Regression Testing / Exploration
+
+```{r}
+trainingdata <- stats_outlier_removed
+```
+
+##Exploratory Visualization
+
+```{r echo= FALSE, message=FALSE}
+g1 <- ggplot(data = trainingdata, aes(x = log(distance)) )+ 
+  geom_density(alpha = .2, fill = "003333")+
+  ggtitle("distance")
+
+
+g2 <- ggplot(data = trainingdata, aes(x = log(avg_speed)) )+ 
+  geom_density(alpha = .2, fill = "#CC6666")+
+  ggtitle("avg_speed")
+
+
+g3 <- ggplot(data = trainingdata, aes(x =avg_gradient) )+ 
+  geom_density(alpha = .2, fill = "#66CC00")+
+  ggtitle("avg_gradient")
+
+
+g4 <- ggplot(data = trainingdata, aes(x = log(avg_pace)) )+ 
+  geom_density(alpha = .2, fill = "#9933CC")+
+  ggtitle("avg_pace")
+
+g5 <- ggplot(data = trainingdata, aes(x = log(total_ascent)) )+ 
+  geom_density(alpha = .2, fill = "#9933CC")+
+  ggtitle("total_ascent")
+
+g6 <- ggplot(data = trainingdata, aes(x = log(total_descent)) )+ 
+  geom_density(alpha = .2, fill = "#9933CC")+
+  ggtitle("total_descent")
+
+
+grid.arrange(g1,g2,g3,g4,g5,g6, ncol=2, top ="Density Plots GPX Tracks")
+
+```
+
+
+### Transformations
+
+```{r}
+
+data_format <- function(df){
+  df$log_distance <- log(df$distance)
+  df$log_avg_speed <- log(df$avg_speed)
+  df$log_total_ascent <- log(df$total_ascent)
+  df$log_total_descent <- log(df$total_descent)
+  df$log_avg_pace <- log(df$avg_pace)
+  df$min_time <- NULL
+  df$max_time <- NULL
+  df$response_alt <- as.integer(as.factor(df$response))
+  df$response_f <- as.factor(df$response)
+  df <- do.call(data.frame, lapply(df, function(x) {replace(x, is.infinite(x) | is.na(x), 0)}))
+  return (df)
+}
+
+trainingdata <- data_format(trainingdata)
+testingdata <- data_format(testingdata)
+### Add night/day?  
+```
+
+
+### Correlations in the Variables
+
+```{r}
+cor_mat <- as.matrix(cor(subset(trainingdata, select = -c(name,minute_duration,response,response_alt,response_f))))
+cor_mat_melt <- arrange(melt(cor_mat), -abs(value))
+cor_mat_melt <- cor_mat_melt %>% filter(value > .25, value != 1)
+toDelete <- seq(1, nrow(cor_mat_melt), 2)
+cor_mat_melt[toDelete, ]
+```
+
+
+### ANOVA Tests / Boxplots
+
+
+```{r}
+par(mfrow=c(1,2), oma = c(1,1,0,0) + 0.1,  mar = c(2,2,1,1) + 0.1)
+
+boxplot(trainingdata$distance ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Distance", cex=0.8, side=1, line=2)
+boxplot(trainingdata$log_distance ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Distance (log)", cex=0.8, side=1, line=2)
+
+boxplot(trainingdata$avg_speed ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Avg Speed", cex=0.8, side=1, line=2)
+boxplot(trainingdata$log_avg_speed ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Avg Speed (log)", cex=0.8, side=1, line=2)
+
+boxplot(trainingdata$avg_pace ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Avg Pace", cex=0.8, side=1, line=2)
+boxplot(trainingdata$log_avg_pace ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Avg Pace (log)", cex=0.8, side=1, line=2)
+
+boxplot(trainingdata$total_ascent ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Total Ascent", cex=0.8, side=1, line=2)
+boxplot(trainingdata$log_total_ascent ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Total Ascent (log)", cex=0.8, side=1, line=2)
+
+boxplot(trainingdata$total_descent ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Total Descent", cex=0.8, side=1, line=2)
+boxplot(trainingdata$log_total_descent ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Total Descent (log)", cex=0.8, side=1, line=2)
+
+boxplot(trainingdata$avg_gradient ~ trainingdata$response, col="lightgreen", pch=19)
+mtext("Avg Gradient", cex=0.8, side=1, line=2)
+```
+
+
+### Random Forest
+
+```{r}
+library(randomForest)
+
+training_subset <- trainingdata[ , -which(names(trainingdata) %in% c("name","response","num_logs","minute_duration","logs_per_minute"))]
+
+sample_train <- sample(2, nrow(training_subset), replace = TRUE, prob=c(0.8, 0.2))
+
+random_forest_model <- randomForest(response_f ~ distance + avg_gradient + total_ascent + log_distance + 
+    log_avg_speed + log_total_ascent + log_total_descent + log_avg_pace, training_subset[sample_train==1,], ntree=500, importance=TRUE, proximity=TRUE)
+
+plot(random_forest_model)
+```
+
+
+### Test model
+
+```{r}
+random_forest_predict <- predict(random_forest_model, training_subset[ind==2,])
+table(observed = training_subset[ind ==2, "response_f"], predicted = random_forest_predict)
+```
+
+### Save model
+
+```{r}
+save(random_forest_predict, file = "rf_class.rda")
+```
