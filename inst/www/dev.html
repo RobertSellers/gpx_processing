@@ -117,6 +117,8 @@ $(document).ready(function() {
 
     $(document).ajaxStop(function() {
         $(".spinLoad").hide();
+        document.getElementById("ddGpxList").disabled=false;
+        document.getElementById("classSelect").disabled=false;
     });
 
     //R output to popup
@@ -240,6 +242,8 @@ $(document).ready(function() {
 
             vm.gpxFileName(file.name)
     
+            // Send individual file to gpx_validation.R for validation
+            // Returns a data frame object or error reponse
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
@@ -250,7 +254,7 @@ $(document).ready(function() {
                     vm.rDataOutputArray.push(data)
                     vm.gpxFileNameArray.push(vm.gpxFileName())
                     successmsg();
-                    cb();
+                    cb(); // success callback -- next promise in chain
                 });
 
             }).fail(function(jqXHR){
@@ -258,10 +262,11 @@ $(document).ready(function() {
                 vm.gpxFileNameArray.push(vm.gpxFileName())
                 $("option[value='"+vm.gpxFileName()+"']")
                     .attr("disabled", "disabled")
-                    // .siblings().removeAttr("disabled");
                 errormsg(jqXHR.responseText);
-                cb();
+                cb(); // fail callback -- next promise in chain
             }).always(function(){
+                // session information currently irrelevant to batch operations
+                // consider changing
                 var session_url = document.getElementById("session_url");
                 session_url.style.cursor = "pointer";
             });
@@ -395,6 +400,7 @@ function updateLeaflet(){
     map_lock('unlock');
 }
 
+// Used to constrict user manipulation of leaflet without loaded data
 function map_lock(toggle){
     if (toggle=='unlock'){
         vm.leafletMap()._handlers.forEach(function(handler) {
@@ -418,16 +424,12 @@ function map_lock(toggle){
         vm.gpxFileArray($("#gpxfile")[0].files)
         console.log("promise chain initialized")
         newDataCleanup();
-        let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, item) => {
+        let requests = Array.from($("#gpxfile")[0].files).reduce((promiseChain, file) => {
             return promiseChain.then(() => new Promise((resolve) => {
-                gpxLoadAsync(item, resolve);
+                gpxLoadAsync(file, resolve);
                 vm.counter.increment()
-                console.log(vm.counter())
-                console.log(vm.gpxFileArray().length)
-                if(vm.counter()==vm.gpxFileArray().length){
-                    document.getElementById("ddGpxList").disabled=false;
-                    document.getElementById("classSelect").disabled=false;
-                }
+                // console.log(vm.counter())
+                // console.log(vm.gpxFileArray().length)
             }));
         }, Promise.resolve());
     });
@@ -441,12 +443,12 @@ function map_lock(toggle){
         }
     });
 
+    // Simple QA console.log output
     $("#classSelect").change(function () {
         console.log("Class changed to " + this.value);
     });
 
 });
-
 
 </script>
 
