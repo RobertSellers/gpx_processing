@@ -1,3 +1,6 @@
+# manual testing do 
+# test_df <- gpx_validation('C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/14-05.gpx')
+
 gpx_validation <- function(gpxfile, ...){
 
   if(substring(tolower(gpxfile), nchar(gpxfile)-3) != ".gpx"){
@@ -11,44 +14,11 @@ gpx_validation <- function(gpxfile, ...){
     }, error = function(e){
       stop(cat(paste("GPX load error.", e)))
     }, finally = {
-      # Parsing header info 
-      # whitelist <- c(
-      #     'GPSMAP 62stc', 
-      #     'GPSMAP 64s',
-      #     'GPSMAP 64st',
-      #     'eTrex 20', 
-      #     'Astro 320'
-      #   )
-      # if (creator %in% whitelist){
         df <- gpx_df_construct(gpxfile)
         return (df)
-      # }else{
-      #   stop(cat('GPS device not supported.'))
-      # }
     })
   }
 }
-
-#check_whitelist <- function(){
-  # whitelist <- c(
-  #     'GPSMAP 62stc', 
-  #     'GPSMAP 64s',
-  #     'GPSMAP 64st',
-  #     'eTrex 20', 
-  #     'Astro 320'
-  #   )
-
-  #   text_gpx <- threadr::read_lines(gpxfile, warn = FALSE)
-  #   attributes <- threadr::str_filter(head(text_gpx), "xmlns")
-  #   values <- stringr::str_extract_all(attributes, '"[^"]*"')[[1]]
-  #   values <- stringr::str_replace_all(values, "\"", "")
-  #   variables <- stringr::str_split(attributes, "=")[[1]]
-  #   variables <- variables[-length(variables)]
-  #   variables <- stringr::str_replace(variables, ".* ", "")
-  #   creator <- setNames(as.list(values), variables)$creator
-
-#}
-
 
 # Haversine formula for calculating distances from lat/long
 haversineDistance<-function(aLong, aLat, bLong, bLat){
