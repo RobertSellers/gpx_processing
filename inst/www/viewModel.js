@@ -199,7 +199,7 @@ var vm = {
                  color: speedColor,
                 data: [null, null],
                 type: "spline",
-                negativeColor: 'grey',
+                positiveColor: 'grey',
                 threshold: 4,
                 tooltip: {
                     valueSuffix: ' mph'
