@@ -209,7 +209,8 @@ var vm = {
                 yAxis: 2,
                 data: [null, null],
                 dashStyle: 'shortdot',
-                type: "spline",
+                // type: "spline",
+                step: 'right',
                 tooltip: {
                     valuePrefix: "∇"
                 }
