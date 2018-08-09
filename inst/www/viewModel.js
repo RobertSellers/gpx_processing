@@ -38,7 +38,7 @@ var vm = {
 
         var elevationColor = "#76a912"
         var speedColor = "red"
-        var gradientColor = "purple"
+        var gradientColor = "yellow"
     
         return {
             chart: {
@@ -149,7 +149,7 @@ var vm = {
                 shared: true,
                 formatter: function () {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
-                    '<b>Elevation: </b>'+ Math.round(this.y) + " feet"+'<br/>'+
+                    '<b>Elevation: </b>'+ Math.round(this.y * 100) / 100 + " feet"+'<br/>'+
                     '<b>Gradient: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
                     '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
                 }
