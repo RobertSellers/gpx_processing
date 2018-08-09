@@ -221,17 +221,17 @@ var vm = {
             credits: {
                 enabled: false
             },
-            // legend: {
-            //     layout: 'vertical',
-            //     align: 'left',
-            //     verticalAlign: 'top',
-            //     x: 70,
-            //     y: 40,
-            //     floating: true,
-            //     borderWidth: 1,
-            //     backgroundColor: '#FFFFFF',
-            //     shadow: true
-            // },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 70,
+                y: 40,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: '#FFFFFF',
+                shadow: true
+            },
             responsive: {
                 rules: [{
                     condition: {

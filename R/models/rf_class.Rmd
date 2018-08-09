@@ -1,5 +1,5 @@
 ---
-title: "GPX Classification and Analysis"
+title: "GPX Model Development"
 author: "Robert Sellers"
 date: "August 8, 2018"
 output:
@@ -18,12 +18,13 @@ output:
     toc: yes
 ---
 
-### Load all valid GPX datasets
+# Data Preprocessing
+
+## Load all valid GPX datasets and apply supervised GPX track classes
 
 
 ```{r message=FALSE, results = 'hide', warning = FALSE}
-source('../gpx_validation.R') # openCPU 
-#source('util.R') # saved mlogit utility functions
+source('../gpx_validation.R') # GPX dataset processing / shared OpenCPU functions
 
 temp <- dat <- list()
 data_dir <- "C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/"
@@ -31,36 +32,14 @@ valid_datasets <- c("14-05.gpx","2016-06-18 10.14.52 Stopwatch.gpx","Current.gpx
                     "Meg.gpx","Scout.gpx","TeamEchoCurrent.gpx","Track_ 018-02-24 145845.gpx",
                     "Track_14-08 1.gpx","Track_2015-07-05 215817.gpx","Track_2015-07-09 151556.gpx","Track_2015-07-09 183806.gpx","Track_2015-07-10 132200.gpx","Track_2015-07-15 204324.gpx","Track_2015-07-24 164157.gpx","Track_2015-07-29 130706.gpx","Track_2016-04-30 115630.gpx","Track_2016-06-18 131319.gpx","Track_2018-02-10 104731 Task 1.gpx","Track_2018-02-10 110234 Task 2.gpx","Track_2018-02-10 113753 Task 14B.gpx","Track_2018-02-10 150828 Task 29B.gpx","Track_ALPHA05-14 125702.gpx","Track_K9MEG06-18 124555.gpx","Track_QUEBEC5-14 154550.gpx","Track_T18 800 001 TASK2.gpx","Track_T18 800 001.gpx")
 
-hardcode_response <- c("Trail",
-"Sweep",
-"Trail",
-"Canine",
-"Canine",
-"Sweep",
-"Sweep",
-"Sweep",
-"Trail",
-"Trail",
-"Offtrail",
-"Offtrail",
-"Trail",
-"Offtrail",
-"None",
-"Trail",
-"Offtrail",
-"Trail",
-"Trail",
-"Sweep",
-"Trail",
-"Offtrail",
-"Canine",
-"Offtrail",
-"Trail",
-"Sweep"
-)
+hardcode_response <- c("Trail","Sweep","Trail","Canine","Canine","Sweep","Sweep","Sweep","Trail","Trail","Offtrail","Offtrail","Trail","Offtrail","None","Trail","Offtrail","Trail","Trail","Sweep","Trail","Offtrail","Canine","Offtrail","Trail","Sweep")
+```
 
-# build data
-# meg.gpx bugged
+## Run data frame generator and apply 10 minute block aggregate IDs
+
+```{r message=FALSE, results = 'hide', warning = FALSE}
+# build datasets
+# meg.gpx returning warnings
 for (i in 1:length(valid_datasets)){
   name <- valid_datasets[i]
   cat(name)
@@ -77,8 +56,7 @@ for (i in 1:length(valid_datasets)){
 rm(temp);rm(temp_2); rm(temp_3)
 ```
 
-
-### Sorting to standard blocks/units
+## Sorting to standard 10 minute blocks/units and creating associated predictors
 
 ```{r}
 
@@ -101,7 +79,8 @@ ascent <- function(arr){
   return (c(total_ascent,total_descent))
 }
 
-require(anytime)
+suppressWarnings(require(anytime))
+
 n <- length(dat)
 stats <- data.frame("name"=character(n),
                     "min_time"=anytime(n),
@@ -144,9 +123,7 @@ stats$logs_per_minute <- stats$num_logs/as.numeric(stats$minute_duration)
 ```
 
 
-
-
-### Remove outliers
+## Remove outliers and missing data
 
 ```{r}
 counts <- table(stats$name,stats$response)
@@ -163,15 +140,18 @@ barplot(counts, main="Class Count by GPX",
   	xlab="Number of classes", col=palette(rainbow(n)))
 ```
 
-# Regression Testing / Exploration
+# Model Testing / Exploration
 
 ```{r}
 trainingdata <- stats_outlier_removed
 ```
 
-##Exploratory Visualization
+## Predictor visualization and analysis
 
 ```{r echo= FALSE, message=FALSE}
+suppressWarnings(require(ggplot2))
+suppressWarnings(require(gridExtra))
+
 g1 <- ggplot(data = trainingdata, aes(x = log(distance)) )+ 
   geom_density(alpha = .2, fill = "003333")+
   ggtitle("distance")
@@ -205,7 +185,7 @@ grid.arrange(g1,g2,g3,g4,g5,g6, ncol=2, top ="Density Plots GPX Tracks")
 ```
 
 
-### Transformations
+## Apply transformations
 
 ```{r}
 
@@ -224,14 +204,16 @@ data_format <- function(df){
 }
 
 trainingdata <- data_format(trainingdata)
-testingdata <- data_format(testingdata)
 ### Add night/day?  
 ```
 
 
-### Correlations in the Variables
+## Correlation analysis
 
 ```{r}
+suppressWarnings(require(dplyr))
+suppressWarnings(library(reshape2))#melt function
+
 cor_mat <- as.matrix(cor(subset(trainingdata, select = -c(name,minute_duration,response,response_alt,response_f))))
 cor_mat_melt <- arrange(melt(cor_mat), -abs(value))
 cor_mat_melt <- cor_mat_melt %>% filter(value > .25, value != 1)
@@ -240,7 +222,7 @@ cor_mat_melt[toDelete, ]
 ```
 
 
-### ANOVA Tests / Boxplots
+## Boxplot visualization analysis
 
 
 ```{r}
@@ -276,13 +258,14 @@ mtext("Avg Gradient", cex=0.8, side=1, line=2)
 ```
 
 
-### Random Forest
+## Random Forest Model Application
 
 ```{r}
-library(randomForest)
+suppressWarnings(library(randomForest))
 
 training_subset <- trainingdata[ , -which(names(trainingdata) %in% c("name","response","num_logs","minute_duration","logs_per_minute"))]
 
+set.seed(100)
 sample_train <- sample(2, nrow(training_subset), replace = TRUE, prob=c(0.8, 0.2))
 
 random_forest_model <- randomForest(response_f ~ distance + avg_gradient + total_ascent + log_distance + 
@@ -292,14 +275,14 @@ plot(random_forest_model)
 ```
 
 
-### Test model
+## Testing model
 
 ```{r}
-random_forest_predict <- predict(random_forest_model, training_subset[ind==2,])
-table(observed = training_subset[ind ==2, "response_f"], predicted = random_forest_predict)
+random_forest_predict <- predict(random_forest_model, training_subset[sample_train==2,])
+table(observed = training_subset[sample_train ==2, "response_f"], predicted = random_forest_predict)
 ```
 
-### Save model
+## Save model
 
 ```{r}
 save(random_forest_predict, file = "rf_class.rda")

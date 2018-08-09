@@ -1,0 +1,145 @@
+---
+title: "GPX Analysis 1"
+author: "Robert Sellers"
+date: "August 9, 2018"
+output:
+  html_document:
+    fig_caption: yes
+    force_captions: yes
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+  pdf_document:
+    fig_caption: yes
+    highlight: pygments
+    latex_engine: xelatex
+    number_sections: yes
+    toc: yes
+---
+
+# Data Preprocessing
+
+## Load all valid GPX datasets and apply supervised GPX track classes
+
+
+```{r message=FALSE, results = 'hide', warning = FALSE}
+source('../gpx_validation.R') # GPX dataset processing / shared OpenCPU functions
+suppressMessages(library(plyr))
+suppressMessages(library(ggplot2))
+
+temp <- list()
+data_dir <- "C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/"
+valid_datasets <- c("14-05.gpx","2016-06-18 10.14.52 Stopwatch.gpx","Current.gpx",
+                    "Meg.gpx","Scout.gpx","TeamEchoCurrent.gpx","Track_ 018-02-24 145845.gpx",
+                    "Track_14-08 1.gpx","Track_2015-07-05 215817.gpx","Track_2015-07-09 151556.gpx","Track_2015-07-09 183806.gpx","Track_2015-07-10 132200.gpx","Track_2015-07-15 204324.gpx","Track_2015-07-24 164157.gpx","Track_2015-07-29 130706.gpx","Track_2016-04-30 115630.gpx","Track_2016-06-18 131319.gpx","Track_2018-02-10 104731 Task 1.gpx","Track_2018-02-10 110234 Task 2.gpx","Track_2018-02-10 113753 Task 14B.gpx","Track_2018-02-10 150828 Task 29B.gpx","Track_ALPHA05-14 125702.gpx","Track_K9MEG06-18 124555.gpx","Track_QUEBEC5-14 154550.gpx","Track_T18 800 001 TASK2.gpx","Track_T18 800 001.gpx")
+
+hardcode_response <- c("Trail","Sweep","Trail","Canine","Canine","Sweep","Sweep","Sweep","Trail","Trail","Offtrail","Offtrail","Trail","Offtrail","None","Trail","Offtrail","Trail","Trail","Sweep","Trail","Offtrail","Canine","Offtrail","Trail","Sweep")
+```
+
+## Run data frame generator and rbind all as df_all
+
+```{r message=FALSE, results = 'hide', warning = FALSE}
+# build datasets
+# meg.gpx / scout.gpx returning warnings
+for (i in 1:length(valid_datasets)){
+  name <- valid_datasets[i]
+  cat(name)
+  temp[[name]] <- invisible(gpx_validation(paste0(data_dir,valid_datasets[i])))
+  temp[[name]]$dt_ts <- strptime(temp[[name]]$DateTime, "%Y-%m-%dT%H:%M:%SZ")
+  temp[[name]]$name <- name
+  temp[[name]]$type <- hardcode_response[i]
+}
+df_all <- do.call("rbind", temp)
+rm(temp);
+```
+
+## Recalculate slopes
+
+```{r}
+
+for(i in seq(1:nrow(df_all))) {
+  if(i>1){
+  df_all$slope[i]<-diff(df_all$Elevation[i]-df_all$Elevation[i-1]) / diff(df_all$Dist[i]-df_all$Dist[i-1])
+  }else{
+    df_all$slope[i]<-0
+  }
+  
+}
+
+df_all$id <- rownames(df_all)
+library(data.table)
+#dat2 <- data.table(x=runif(100), y=runif(100), grp=rep(1:2,50))
+dat <- data.table(Elevation=df_all$Elevation, Dist=df_all$Dist, id=df_all$id)
+dat[,coef(lm(Elevation~Dist)),by=id]
+```
+
+## Cleanup data
+
+```{r}
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+df_all$Speed_mph <- df_all$Speed*2.23694
+
+df_all_clean<-df_all[ which(df_all$Speed_mph < 4), ]
+df_all_clean<-df_all_clean[df_all_clean$type != "None", ]
+#df_all_clean<-df_all_clean[df_all_clean$Gradient != 1, ]
+#df_all_clean<-df_all_clean[df_all_clean$Speed != -1, ]
+df_all_clean<- df_all_clean[is.finite(df_all_clean$Pace), ]
+df_all_clean<-completeFun(df_all_clean, "Gradient")
+```
+
+
+## Create bins
+
+```{r}
+df_all_clean$gradient_bin <- cut(df_all_clean$Gradient, breaks = seq(-1, 1, by = .2),labels= c("-1:-0.8","-0.8:-0.6","-0.6:-0.4","-0.4:-0.2","-0.2:0","0:0.2","0.2:0.4","0.4:0.6","0.6:0.8","0.8:1"))
+
+plot(df_all_clean$gradient_bin, main="Total Slope Bin Distribution", las=2)
+grid(NA, 6, lwd = 2) # grid only in y-direction
+```
+
+The number of GPX points collected per category:
+
+```{r}
+count(df_all_clean,'type')
+```
+
+## Speed Densities by category
+
+```{r}
+# Find the mean of each group
+cdat <- ddply(df_all_clean, "type", summarise, speed_mean=mean(Speed_mph))
+# Overlaid category by speed
+ggplot(df_all_clean, aes(x=Speed_mph, fill=type)) +
+    geom_density(alpha=.4)+
+    geom_vline(data=cdat, aes(xintercept=speed_mean,  colour=type),
+               linetype="dashed", size=1)
+```
+
+## Speed Densities by gradient bin
+
+```{r}
+# Overlaid category by speed
+cdat <- ddply(df_all_clean, "type", summarise, gradient_mean=mean(Gradient))
+ggplot(df_all_clean, aes(x=Gradient, fill=type)) +
+    geom_density(alpha=.4)#+
+    #geom_vline(data=cdat, aes(xintercept=gradient_mean,  colour=type),
+    #           linetype="dashed", size=1)
+cdat
+```
+
+## Compare slopes
+
+```{r}
+df_all_clean$gradient_bin <- factor(df_all_clean$gradient_bin , unique(df_all_clean[order(df_all_clean$gradient_bin, decreasing = T),"gradient_bin"]) )
+
+p <- ggplot(df_all_clean, aes(Gradient, Speed))
+#p <- p + labs(x = "X Axis", y = "Y Axis") + ggtitle("NA")  
+#p <- p + geom_area(aes(colour = gradient_bin, fill= gradient_bin), position = 'stack')   
+p
+
+```

@@ -184,7 +184,7 @@ $(document).ready(function() {
             return [v, elevationArray[i]];
         });
         //SPEED
-        var speedArray = vm.rDataOutput().map(a => a.Speed_mph)
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
@@ -219,7 +219,7 @@ $(document).ready(function() {
             return [v, elevationArray[i]];
         });
         //SPEED
-        var speedArray = vm.rDataOutput().map(a => a.Speed_mph)
+        var speedArray = vm.rDataOutput().map(a => a.Speed)
         var timeSpeed = dateTimeRange.map(function(v,i) {
             return [v, speedArray[i]];
         });
@@ -348,7 +348,7 @@ function updateLeaflet(){
         }
         vm.highchart().xAxis[0].setExtremes(null,null)
         vm.highchart().yAxis[1].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Elevation;})) });
-        vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Speed_mph;})) });
+        vm.highchart().yAxis[0].update({ max: Math.max.apply(Math,vm.rDataOutput().map(function(o){return o.Speed;})) });
         vm.highchart().redraw();
 
         var circleMarkerStyle_start = {

@@ -1,3 +1,5 @@
+# http://lwlss.net/GarminReports/GarminFunctions.R
+
 # manual testing do 
 # test_df <- gpx_validation('C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/14-05.gpx')
 
@@ -21,11 +23,13 @@ gpx_validation <- function(gpxfile, ...){
 }
 
 # Haversine formula for calculating distances from lat/long
+# https://www.r-bloggers.com/great-circle-distance-calculations-in-r/
 haversineDistance<-function(aLong, aLat, bLong, bLat){
+  R <- 6371000 #Earth mean radius in m
   dLat <- 2 * pi * (bLat - aLat) / 360.0
   dLon <- 2 * pi * (bLong - aLong) / 360.0
   a <- (sin(dLat / 2))^2 + cos(2 * pi * aLat/360) * cos(2 * pi * bLat/360) * (sin(dLon/2)^2)
-  b <- 6371000 * 2 * atan2(sqrt(a), sqrt(1 - a))
+  b <- R * 2 * atan2(sqrt(a), sqrt(1 - a))
   return(b)
 }
 
@@ -140,7 +144,6 @@ gpx_df_construct <- function(gpxfile){
   # Update dataframe with speed and pace
   df$Speed <- speed(df$Seconds)
   df$Pace <- pace(df$Seconds)
-
-  # convert to mph
+  df$Speed_mph <- df$Speed*2.23694
   return(df)
 }
