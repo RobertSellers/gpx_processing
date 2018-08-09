@@ -38,7 +38,7 @@ var vm = {
 
         var elevationColor = "#76a912"
         var speedColor = "red"
-        var gradientColor = "yellow"
+        var gradientColor = "orange"
     
         return {
             chart: {
