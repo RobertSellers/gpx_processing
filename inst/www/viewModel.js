@@ -207,6 +207,8 @@ var vm = {
                 name: "Gradient",
                 color: gradientColor,
                 yAxis: 2,
+                negativeColor: 'blue',
+                threshold: 0,
                 data: [null, null],
                 dashStyle: 'shortdot',
                 // type: "spline",
