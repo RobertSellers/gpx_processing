@@ -151,7 +151,7 @@ var vm = {
                     return '<b>Time: </b>'+ Highcharts.dateFormat('%H:%M:%S',new Date(this.points[0].x)) + '<br/>'+
                     '<b>Elevation: </b>'+ Math.round(this.y * 100) / 100 + " feet"+'<br/>'+
                     '<b>Gradient: </b>'+  this.points[2].y.toFixed(4) +'<br/>'+
-                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " m/s";
+                    '<b>Speed: </b>'+ this.points[1].y.toFixed(2) + " mph";
                 }
             },
             plotOptions: {
@@ -199,8 +199,10 @@ var vm = {
                  color: speedColor,
                 data: [null, null],
                 type: "spline",
+                negativeColor: 'grey',
+                threshold: 4,
                 tooltip: {
-                    valueSuffix: ' m/s'
+                    valueSuffix: ' mph'
                 }
             },
             {
