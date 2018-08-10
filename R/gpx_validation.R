@@ -76,7 +76,7 @@ construct_df <- function(file){
     
     return (df)
   },error=function(cond) {
-    stop('Unknown error. Someone should probably look into this.');
+    stop('Validation Error');
   },warning=function(cond){
 
   },finally={
