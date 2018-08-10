@@ -100,8 +100,8 @@ var vm = {
                 // gridLineWidth: 0,
 
 				lineColor: '#CCCCCC',
-				lineWidth: 1,
-                tickWidth: 1,
+				lineWidth: 0.5,
+                tickWidth: 0.5,
                 tickLength: 5,
 				tickColor: '#FFFFFF',
                 gridLineWidth: 1,
