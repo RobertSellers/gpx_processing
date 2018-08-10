@@ -226,6 +226,7 @@ var vm = {
                 color: elevationColor,
                 lineWidth: 1,
                 yAxis: 1,
+                showInLegend: false,
                 data: [null, null],
                 type: "areaspline",
                 tooltip: {
