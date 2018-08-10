@@ -126,14 +126,14 @@ var vm = {
                 gridLineWidth: 0.5,
                 gridLineColor: '#444444',
                 // alternateGridColor: 'rgba(0, 0, 0, .2)',
-                tickPosition: 'inside',
+                tickPosition: 'outside',
                 minorTickLength: 2,
                 minorTickWidth: 0.5,
                 minorTickColor: '#cccccc',
                 minorTickPosition: 'outside',
                 minorGridLineWidth: 0.5,
                 minorGridLineColor: '#333333',
-                minRange: 1,
+                // minRange: 1,
                 min: 0,
                 title: {
                     text: 'Speed (mph)',
@@ -179,6 +179,8 @@ var vm = {
                         color: gradientColor
                     }
                 },
+                minRange: -1,
+                maxRange: 1,
                 opposite: true
             }],
             tooltip: {
@@ -206,7 +208,7 @@ var vm = {
                         }
                     },
                     fillColor: {
-                        linearGradient: [0, 200, 60, 300],
+                        linearGradient: [0, 0, 0, 300],
                         stops: [
                             [0, Highcharts.getOptions().colors[2]],
                             [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
