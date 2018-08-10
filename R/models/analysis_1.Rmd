@@ -54,26 +54,6 @@ df_all <- do.call("rbind", temp)
 rm(temp);
 ```
 
-## Recalculate slopes
-
-```{r}
-
-for(i in seq(1:nrow(df_all))) {
-  if(i>1){
-  df_all$slope[i]<-diff(df_all$Elevation[i]-df_all$Elevation[i-1]) / diff(df_all$Dist[i]-df_all$Dist[i-1])
-  }else{
-    df_all$slope[i]<-0
-  }
-  
-}
-
-df_all$id <- rownames(df_all)
-library(data.table)
-#dat2 <- data.table(x=runif(100), y=runif(100), grp=rep(1:2,50))
-dat <- data.table(Elevation=df_all$Elevation, Dist=df_all$Dist, id=df_all$id)
-dat[,coef(lm(Elevation~Dist)),by=id]
-```
-
 ## Cleanup data
 
 ```{r}
@@ -84,7 +64,7 @@ completeFun <- function(data, desiredCols) {
 
 df_all$Speed_mph <- df_all$Speed*2.23694
 
-df_all_clean<-df_all[ which(df_all$Speed_mph < 4), ]
+df_all_clean<-df_all[ which(df_all$Speed_mph < 5.5), ]
 df_all_clean<-df_all_clean[df_all_clean$type != "None", ]
 #df_all_clean<-df_all_clean[df_all_clean$Gradient != 1, ]
 #df_all_clean<-df_all_clean[df_all_clean$Speed != -1, ]
@@ -120,7 +100,7 @@ ggplot(df_all_clean, aes(x=Speed_mph, fill=type)) +
                linetype="dashed", size=1)
 ```
 
-## Speed Densities by gradient bin
+## Gradient bin densities by type
 
 ```{r}
 # Overlaid category by speed
@@ -132,14 +112,32 @@ ggplot(df_all_clean, aes(x=Gradient, fill=type)) +
 cdat
 ```
 
-## Compare slopes
+## Speed per gradient bin
 
 ```{r}
-df_all_clean$gradient_bin <- factor(df_all_clean$gradient_bin , unique(df_all_clean[order(df_all_clean$gradient_bin, decreasing = T),"gradient_bin"]) )
+# Find the mean of each group
+cdat <- ddply(df_all_clean, "type", summarise, speed_mean=mean(Speed_mph))
+# Overlaid category by speed
+ggplot(df_all_clean, aes(x=Speed_mph, fill=gradient_bin)) +
+    geom_density(alpha = 0.8)+ facet_grid(~ gradient_bin)
+```
 
-p <- ggplot(df_all_clean, aes(Gradient, Speed))
-#p <- p + labs(x = "X Axis", y = "Y Axis") + ggtitle("NA")  
-#p <- p + geom_area(aes(colour = gradient_bin, fill= gradient_bin), position = 'stack')   
-p
+## Summary statistics
 
+```{r}
+suppressMessages(library(dplyr))
+suppressMessages(library(plyr))
+suppressMessages(detach(package:plyr))
+
+summary_table <- df_all_clean[,-which(names(df_all_clean) == "dt_ts")]  %>% 
+  group_by(gradient_bin, type) %>% 
+       summarise(mean_speed_mph =mean(Speed_mph),
+                 sd_speed_mph = sd(Speed_mph),
+                 mean_gradient =mean(Gradient),
+                 sd_gradient = sd(Gradient))
+
+```
+
+```{r, results='asis'}
+knitr::kable(summary_table)
 ```
