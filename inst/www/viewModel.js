@@ -82,6 +82,7 @@ var vm = {
 				tickColor: '#000',
                 crosshair: true,
                 title: {
+                    x:15,
                     text: 'Time (hh:mm)',
 					style: {
 						color: 'black',
@@ -245,8 +246,8 @@ var vm = {
                 layout: 'horizontal',
                 align: 'left',
                 verticalAlign: 'bottom',
-                x: 5,
-                y: 5,
+                x: 1,
+                y: 1,
                 floating: true,
                 borderWidth: 1,
                 backgroundColor: '#FFFFFF',
