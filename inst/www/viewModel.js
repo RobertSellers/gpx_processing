@@ -206,7 +206,7 @@ var vm = {
                         }
                     },
                     fillColor: {
-                        linearGradient: [0, 0, 0, 300],
+                        linearGradient: [0, 200, 60, 300],
                         stops: [
                             [0, Highcharts.getOptions().colors[2]],
                             [1, Highcharts.Color(Highcharts.getOptions().colors[2]).setOpacity(0.3).get('rgba')]
