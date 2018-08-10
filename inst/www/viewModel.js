@@ -247,7 +247,7 @@ var vm = {
                 align: 'left',
                 verticalAlign: 'bottom',
                 x: -5,
-                y: 20,
+                y: 16,
                 floating: true,
                 borderWidth: 1,
                 backgroundColor: '#FFFFFF',
