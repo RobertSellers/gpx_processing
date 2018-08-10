@@ -250,7 +250,7 @@ var vm = {
                 name: "Gradient",
                 color: gradientColor,
                 yAxis: 2,
-                negativeColor: 'blue',
+                negativeColor: 'purple',
                 threshold: 0,
                 lineWidth: 0.7,
                 data: [null, null],
