@@ -34,7 +34,14 @@ var vm = {
         var exportData = new CSVExport(data, filename);
         return exportData
     },
-    highcharts_override: function(){
+
+    highchartOptions : ko.computed(function(){
+
+        var elevationColor = "#76a912"
+        var speedColor = "black"
+        var gradientColor = "orange"
+        
+        //custom overrides
         // Override the legend symbol creator function
         Highcharts.wrap(Highcharts.Series.prototype, 'drawLegendSymbol', function (proceed, legend) {
             proceed.call(this, legend);
@@ -50,15 +57,6 @@ var vm = {
                 })
                 .add(this.legendGroup);
         });
-    },
-    highchartOptions : ko.computed(function(){
-
-        var elevationColor = "#76a912"
-        var speedColor = "black"
-        var gradientColor = "orange"
-        
-        //custom overrides
-        this.highcharts_override();
 
         return {
             chart: {
