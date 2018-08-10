@@ -36,7 +36,9 @@
 <script type='text/javascript' src="js/utilities.js"></script>
 <script type='text/javascript' src="js/CSVExport.js"></script>
 <!-- <script type='text/javascript' src="js/leaflet_helpers.js"></script> -->
-<script type='text/javascript' src='viewModel.js'></script>
+
+<!-- <script type='text/javascript' src='viewModel.js'></script> -->
+<script type='text/javascript' src='viewModel_dev.js'></script>
 
 <script type="text/javascript">
 
@@ -44,12 +46,6 @@ $(document).ready(function() {
 
     /* ----- Apply ViewModel ----- */
     ko.applyBindings(vm);
-
-    Highcharts.createElement('link', {
-        href: 'https://fonts.googleapis.com/css?family=Unica+One',
-        rel: 'stylesheet',
-        type: 'text/css'
-    }, null, document.getElementsByTagName('head')[0]);
 
     document.getElementById("ddGpxList").disabled=true; //disable dropdown
     document.getElementById("classSelect").disabled=true; //disable dropdown
@@ -253,6 +249,7 @@ $(document).ready(function() {
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
+                console.log("Loading " + vm.gpxFileName())
                 vm.session_tmp(session.getLoc());
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json

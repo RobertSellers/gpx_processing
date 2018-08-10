@@ -56,6 +56,8 @@ rm(temp);
 
 ## Cleanup data
 
+5.5 mph selected according to https://academic.oup.com/ageing/article-pdf/26/1/15/78378/26-1-15.pdf.
+
 ```{r}
 completeFun <- function(data, desiredCols) {
   completeVec <- complete.cases(data[, desiredCols])
@@ -88,6 +90,8 @@ The number of GPX points collected per category:
 count(df_all_clean,'type')
 ```
 
+# Statistical Analysis
+
 ## Speed Densities by category
 
 ```{r}
@@ -106,17 +110,13 @@ ggplot(df_all_clean, aes(x=Speed_mph, fill=type)) +
 # Overlaid category by speed
 cdat <- ddply(df_all_clean, "type", summarise, gradient_mean=mean(Gradient))
 ggplot(df_all_clean, aes(x=Gradient, fill=type)) +
-    geom_density(alpha=.4)#+
-    #geom_vline(data=cdat, aes(xintercept=gradient_mean,  colour=type),
-    #           linetype="dashed", size=1)
+    geom_density(alpha=.4)
 cdat
 ```
 
 ## Speed per gradient bin
 
 ```{r}
-# Find the mean of each group
-cdat <- ddply(df_all_clean, "type", summarise, speed_mean=mean(Speed_mph))
 # Overlaid category by speed
 ggplot(df_all_clean, aes(x=Speed_mph, fill=gradient_bin)) +
     geom_density(alpha = 0.8)+ facet_grid(~ gradient_bin)
@@ -134,7 +134,8 @@ summary_table <- df_all_clean[,-which(names(df_all_clean) == "dt_ts")]  %>%
        summarise(mean_speed_mph =mean(Speed_mph),
                  sd_speed_mph = sd(Speed_mph),
                  mean_gradient =mean(Gradient),
-                 sd_gradient = sd(Gradient))
+                 sd_gradient = sd(Gradient),
+                 n = n())
 
 ```
 
