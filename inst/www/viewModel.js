@@ -91,7 +91,7 @@ var vm = {
                         minute: '%H:%M'
                     },
 					style: {
-						color: '#F00',
+						// color: '#F00',
 						font: '11px Trebuchet MS, Verdana, sans-serif'
 					}	
                 },
@@ -253,7 +253,8 @@ var vm = {
                 threshold: 0,
                 lineWidth: 0.7,
                 data: [null, null],
-                dashStyle: 'shortdot',
+                // dashStyle: 'shortdot',
+                dashStyle: 'Solid',
                 // type: "spline",
                 step: 'left',
                 tooltip: {
