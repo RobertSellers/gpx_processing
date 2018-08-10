@@ -243,13 +243,12 @@ $(document).ready(function() {
             //////////////////////////////
 
             vm.gpxFileName(file.name)
-    
+            console.log("Loading " + vm.gpxFileName())
             // Send individual file to gpx_validation.R for validation
             // Returns a data frame object or error reponse
             var req = ocpu.call("gpx_validation", {
                 gpxfile : file
             }, function(session){
-                console.log("Loading " + vm.gpxFileName())
                 vm.session_tmp(session.getLoc());
                 $("#validationDiv").empty().show();
                 //retrieve javascript object as json
