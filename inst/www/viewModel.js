@@ -106,7 +106,7 @@ var vm = {
 				tickColor: '#FFFFFF',
                 gridLineWidth: 1,
                 gridLineColor: '#444444',
-                alternateGridColor: 'rgba(0, 0, 0, .2)',
+                // alternateGridColor: 'rgba(0, 0, 0, .2)',
                 tickPosition: 'inside',
                 minorTickLength: 2,
                 minorTickWidth: 0,
