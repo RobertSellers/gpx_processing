@@ -218,7 +218,7 @@ var vm = {
                 data: [null, null],
                 type: "spline",
                 negativeColor: '#8b0000',
-                dashStyle: 'LongDash',
+                dashStyle: 'Solid',
                 threshold: 5.5, 
                 //based on https://watermark.silverchair.com/26-1-15.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAAacwggGjBgkqhkiG9w0BBwagggGUMIIBkAIBADCCAYkGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMQJi5w9oAQsXJTMwVAgEQgIIBWqLrGlLTnKTanIvWyA6b3rt8WiRFq8ODZV7flx14OuUxrktqcdM5szRTOkc7nQOt2M-fbTwtg97ieq-JTUwnZO3VGwjwbtEpPeT9R6youn7fRTK2Jfnpbsk2k7Q7yAK7ceAJZEdg4VUyAQQ0y5c13p5-Ox1JJWdz8Y41Acga_wqJ8fczuEQIDlTQDY4xrkxJ4vDDDw16ggyCMB8KyJZt4DuhxDAztVlA_jtlrH-vcBrJHeDQY3X7fNfc-GRDCIACnVBsFvwHQIJM4NKc-AFW_lBS4TIZYDUdGrct6xdw074GqdqtFPpg2S1sU6nzbsdGXQC4ytjAPA4WWrbFswVgRuvBbqlp43KlSaZ9YRRF1q5kTgi_ZMwA7GZrf-SMfHH_hnACqHdf2mEIQJg3gv0P3sa4YAzhaJ0zIDwCzFEC_ykURtEkNJjLMJOOrHsVj0bzCIDBumNIFvz9emA
                 tooltip: {
