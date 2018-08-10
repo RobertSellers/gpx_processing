@@ -34,12 +34,32 @@ var vm = {
         var exportData = new CSVExport(data, filename);
         return exportData
     },
+    highcharts_override: function(){
+        // Override the legend symbol creator function
+        Highcharts.wrap(Highcharts.Series.prototype, 'drawLegendSymbol', function (proceed, legend) {
+            proceed.call(this, legend);
+
+            this.legendLine.attr({
+                d: ['M', 0, 10, 'L', 5, 5, 8, 10]
+            });
+            this.negativeLine = this.chart.renderer.path(
+                    ['M', 8, 10, 'L', 11, 15, 16, 10]
+                ).attr({
+                    stroke: this.options.negativeColor,
+                    'stroke-width': this.options.lineWidth
+                })
+                .add(this.legendGroup);
+        });
+    },
     highchartOptions : ko.computed(function(){
 
         var elevationColor = "#76a912"
         var speedColor = "black"
         var gradientColor = "orange"
-    
+        
+        //custom overrides
+        this.highcharts_override();
+
         return {
             chart: {
                 zoomType: 'x',
