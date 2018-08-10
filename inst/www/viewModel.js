@@ -177,7 +177,7 @@ var vm = {
                     marker: {
                         radius: 2
                     },
-                    lineWidth: 1,
+                    // lineWidth: 1,
                     turboThreshold: 0, //largest series tested is 8012
                     label: {
                         connectorAllowed: false
@@ -206,6 +206,7 @@ var vm = {
             {
                 name: "Elevation",
                 color: elevationColor,
+                lineWidth: 1,
                 yAxis: 1,
                 data: [null, null],
                 type: "areaspline",
@@ -216,6 +217,7 @@ var vm = {
                 name: "Speed",
                 color: speedColor,
                 data: [null, null],
+                lineWidth: 0.7,
                 type: "spline",
                 negativeColor: '#8b0000',
                 dashStyle: 'Solid',
@@ -231,6 +233,7 @@ var vm = {
                 yAxis: 2,
                 negativeColor: 'blue',
                 threshold: 0,
+                lineWidth: 0.7,
                 data: [null, null],
                 dashStyle: 'shortdot',
                 // type: "spline",
