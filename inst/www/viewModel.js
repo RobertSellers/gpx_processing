@@ -242,11 +242,11 @@ var vm = {
                 enabled: false
             },
             legend: {
-                layout: 'vertical',
+                layout: 'horizontal',
                 align: 'left',
-                verticalAlign: 'top',
-                x: 70,
-                y: 40,
+                verticalAlign: 'bottom',
+                x: 5,
+                y: 5,
                 floating: true,
                 borderWidth: 1,
                 backgroundColor: '#FFFFFF',
