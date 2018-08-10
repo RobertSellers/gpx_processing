@@ -92,12 +92,29 @@ var vm = {
                 }
             },
             yAxis: [{ //primary yAxis
-				minorTickInterval: 'auto',
-				lineColor: '#000',
+                minorTickInterval: 'auto',
+                // lineColor: '#000',
+				// lineWidth: 1,
+				// tickWidth: 1,
+				// tickColor: '#000',
+                // gridLineWidth: 0,
+
+				lineColor: '#CCCCCC',
 				lineWidth: 1,
-				tickWidth: 1,
-				tickColor: '#000',
-                gridLineWidth: 0,
+                tickWidth: 1,
+                tickLength: 5,
+				tickColor: '#FFFFFF',
+                gridLineWidth: 1,
+                gridLineColor: '#444444',
+                alternateGridColor: 'rgba(0, 0, 0, .2)',
+                tickPosition: 'inside',
+                minorTickLength: 2,
+                minorTickWidth: 0,
+                minorTickColor: '#cccccc',
+                minorTickPosition: 'outside',
+                minorGridLineWidth: 1,
+                minorGridLineColor: '#333333',
+                minRange: 1,
                 min: 0,
                 title: {
                     text: 'Speed (mph)',
@@ -196,7 +213,7 @@ var vm = {
                 }
             }, {
                 name: "Speed",
-                 color: speedColor,
+                color: speedColor,
                 data: [null, null],
                 type: "spline",
                 negativeColor: 'red',
