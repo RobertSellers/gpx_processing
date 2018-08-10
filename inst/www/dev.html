@@ -203,7 +203,7 @@ $(document).ready(function() {
     })
 
     vm.selectedIndex.subscribe(function(){
-        console.log("index changed")
+
         updateLeaflet()
         $(".download").css("opacity", 1);
         $(".download").prop('disabled', false);
