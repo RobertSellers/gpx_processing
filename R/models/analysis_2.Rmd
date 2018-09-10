@@ -1,0 +1,237 @@
+---
+title: "GPX Analysis 2"
+author: "Azimuth1"
+date: "August 30, 2018"
+output:
+  pdf_document:
+    fig_caption: yes
+    highlight: pygments
+    keep_tex: yes
+    latex_engine: xelatex
+    number_sections: no
+    toc: no
+  html_document:
+    fig_caption: yes
+    force_captions: yes
+    highlight: pygments
+    number_sections: yes
+    theme: united
+    toc: yes
+---
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+library(XML)
+
+# Haversine formula for calculating distances from lat/long
+# https://www.r-bloggers.com/great-circle-distance-calculations-in-r/
+haversineDistance <- function(aLong, aLat, bLong, bLat){
+  R <- 6371000 #Earth mean radius in m
+  dLat <- 2 * pi * (bLat - aLat) / 360.0
+  dLon <- 2 * pi * (bLong - aLong) / 360.0
+  a <- (sin(dLat / 2))^2 + cos(2 * pi * aLat/360) * cos(2 * pi * bLat/360) * (sin(dLon/2)^2)
+  b <- R * 2 * atan2(sqrt(a), sqrt(1 - a))
+  return(b)
+}
+
+```
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+source('../gpx_validation.R') # GPX dataset processing / shared OpenCPU functions
+suppressMessages(library(plyr))
+suppressMessages(library(ggplot2))
+
+  if(!file.exists("C:/Users/rober/Desktop/Repositories/gpx_processing/R/gpx_analytics.rds")){
+  
+
+temp <- list()
+data_dir <- "C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/"
+valid_datasets <- c("14-05.gpx","2016-06-18 10.14.52 Stopwatch.gpx","Current.gpx",
+                    "Meg.gpx","Scout.gpx","TeamEchoCurrent.gpx","Track_ 018-02-24 145845.gpx",
+                    "Track_14-08 1.gpx","Track_2015-07-05 215817.gpx","Track_2015-07-09 151556.gpx","Track_2015-07-09 183806.gpx","Track_2015-07-10 132200.gpx","Track_2015-07-15 204324.gpx","Track_2015-07-24 164157.gpx","Track_2015-07-29 130706.gpx","Track_2016-04-30 115630.gpx","Track_2016-06-18 131319.gpx","Track_2018-02-10 104731 Task 1.gpx","Track_2018-02-10 110234 Task 2.gpx","Track_2018-02-10 113753 Task 14B.gpx","Track_2018-02-10 150828 Task 29B.gpx","Track_ALPHA05-14 125702.gpx","Track_K9MEG06-18 124555.gpx","Track_QUEBEC5-14 154550.gpx","Track_T18 800 001 TASK2.gpx","Track_T18 800 001.gpx")
+
+hardcode_response <- c("Trail","Sweep","Trail","Canine","Canine","Sweep","Sweep","Sweep","Trail","Trail","Offtrail","Offtrail","Trail","Offtrail","None","Trail","Offtrail","Trail","Trail","Sweep","Trail","Offtrail","Canine","Offtrail","Trail","Sweep")
+
+# build datasets
+# meg.gpx / scout.gpx returning warnings
+for (i in 1:length(valid_datasets)){
+  name <- valid_datasets[i]
+  cat(name)
+  temp[[name]] <- invisible(gpx_validation(paste0(data_dir,valid_datasets[i])))
+  temp[[name]]$dt_ts <- strptime(temp[[name]]$DateTime, "%Y-%m-%dT%H:%M:%SZ")
+  temp[[name]]$name <- name
+  temp[[name]]$type <- hardcode_response[i]
+}
+df_all <- do.call("rbind", temp)
+rm(temp);
+
+completeFun <- function(data, desiredCols) {
+  completeVec <- complete.cases(data[, desiredCols])
+  return(data[completeVec, ])
+}
+
+df_all$Speed_mph <- df_all$Speed*2.23694
+
+df_all_clean<-df_all[ which(df_all$Speed_mph < 5.5), ]
+df_all_clean<-df_all_clean[df_all_clean$type != "None", ]
+#df_all_clean<-df_all_clean[df_all_clean$Gradient != 1, ]
+#df_all_clean<-df_all_clean[df_all_clean$Speed != -1, ]
+df_all_clean<- df_all_clean[is.finite(df_all_clean$Pace), ]
+df_all_clean<-completeFun(df_all_clean, "Gradient")
+
+df_all_clean$gradient_bin <- cut(df_all_clean$Gradient, breaks = seq(-1, 1, by = .2),labels= c("-1:-0.8","-0.8:-0.6","-0.6:-0.4","-0.4:-0.2","-0.2:0","0:0.2","0.2:0.4","0.4:0.6","0.6:0.8","0.8:1"))
+
+# Fix for dplyr
+df_all_clean_mod <- df_all_clean
+df_all_clean_mod$dt_ts <- as.POSIXct(df_all_clean_mod$dt_ts)
+  }else{
+  df_all_clean_mod<-readRDS("C:/Users/rober/Desktop/Repositories/gpx_processing/R/gpx_analytics.rds")
+  
+  filename_lookup <- data.frame("filename"=unique(df_all_clean_mod$name), "lookup"=1:length(unique(df_all_clean_mod$name)))
+  df_all_clean_mod$file_lu <- filename_lookup$lookup[match(df_all_clean_mod$name, filename_lookup$filename)]
+}
+```
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+suppressMessages(require(dplyr))
+remove_outliers <- function(x) {
+  qnt <- quantile(x, probs=c(.25, .75), na.rm = TRUE)
+  H <- 1.5 * IQR(x, na.rm = TRUE)
+  y <- x
+  y[x < (qnt[1] - H)] <- NA
+  y[x > (qnt[2] + H)] <- NA
+  y
+}
+
+remove_by_quantile <- function(x){
+  p95 <- quantile(x, 0.95, na.rm = TRUE)
+  p05 <- quantile(x, 0.05, na.rm = TRUE)
+  return(x[which(x <= p95 & x >= p05)])
+}
+
+Mode <- function(x, na.rm = FALSE) {
+  if(na.rm){
+    x = x[!is.na(x)]
+  }
+
+  ux <- unique(x)
+  return(ux[which.max(tabulate(match(x, ux)))])
+}
+
+df_all_clean_mod<-df_all_clean_mod %>%
+  group_by(name) %>% 
+  mutate(
+    end_time = c(dt_ts[-1]-0.1, NA)
+  )
+
+df_all_clean_mod$collection_gap<-as.numeric(abs(difftime(df_all_clean_mod$dt_ts, df_all_clean_mod$end_time, units="secs")))
+
+df_all_clean_mod$capture_common <- ifelse(df_all_clean_mod$collection_gap == Mode(df_all_clean_mod$collection_gap), TRUE,FALSE)
+```
+
+### a. What did you use as your interval for the count analysis?  Was it simply the interval they had set, or was it something like every 5 minutes?  If it was what they simply had set, what was the most common interval seen?
+
+- No modifications were made to the GPS capture interval. Virtually all data was captured sporadically. No devices were recognized to have any consistent pattern. The mean collection interval for all data is `r mean(df_all_clean_mod$collection_gap, na.rm=TRUE)`  seconds. The SD is `r sd(df_all_clean_mod$collection_gap, na.rm=TRUE)`. The following shows an arbitrary >25%, <75% interquartile range to demonstrate the collection ranges. The most common interval is `r Mode(df_all_clean_mod$collection_gap)`.
+
+```{r, warning = FALSE, echo=FALSE, fig.height=6, fig.align='center'}
+
+par(mfrow=c(2,2))
+with(df_all_clean_mod,boxplot(collection_gap~type, main="Collection Intervals By Type",las=3, ylab="Seconds",cex.main=0.8))
+
+with(df_all_clean_mod,boxplot(collection_gap~file_lu, main="Collection Intervals By GPX File",las=2, cex.axis=0.5,cex.main=0.8))
+axis(1, labels = FALSE)
+
+with(df_all_clean_mod,boxplot(remove_outliers(collection_gap)~type, main="Collection Intervals By Type (Outliers Removed)",las=3, ylab="Seconds",cex.main=0.8))
+
+with(df_all_clean_mod,boxplot(remove_outliers(collection_gap)~file_lu, main="Collection Intervals By GPX File (Outliers Removed)",las=2, xlab="", cex.axis=0.5,cex.main=0.8))
+#labels<- unique(df_all_clean_mod$name)
+#a#xis(1, labels = FALSE)
+#text(x =  seq_along(labels), y = par("usr")[3] - 1, srt = 45, adj = 1,labels = labels, xpd = TRUE)
+```
+
+\newpage
+```{r, results='asis',  warning = FALSE, echo=FALSE}
+knitr::kable(filename_lookup[2:1], caption="GPX File Index Lookup")
+```
+
+
+```{r, warning = FALSE, echo=FALSE, fig.height=4}
+#ggplot(df_all_clean_mod, aes(remove_outliers(collection_gap), color=type)) +
+#  geom_histogram(position="identity", binwidth=3, aes(y=..density.., fill=type),  alpha=0.5) +
+#  geom_density()
+
+ggplot(df_all_clean_mod, aes(collection_gap, color=name),) +
+  #geom_histogram(position="identity", binwidth=3, aes(y=..density.., fill=name),  alpha=0.5) +
+  geom_density()+ theme(legend.position="none") +
+       xlim(c(0,100))     +   labs(title="GPS Collection Density per GPX file") +
+       labs (y="Density") +
+       labs(x="Seconds") 
+```
+
+
+b. I of course see the count, that came from how many actual tasks?
+
+- The number of GPX points collected per category:
+
+```{r, results='asis',  warning = FALSE, echo=FALSE}
+knitr::kable(df_all_clean_mod[,-which(names(df_all_clean_mod) == "dt_ts")] %>% 
+  group_by(type) %>%
+  summarise(number = n()))
+```
+
+- The number of GPX points collected per file:
+
+```{r, results='asis',  warning = FALSE, echo=FALSE}
+knitr::kable(df_all_clean_mod[,-which(names(df_all_clean_mod) == "dt_ts")] %>% 
+  group_by(type,name) %>%
+  summarise(number = n()))
+```
+
+- The number of files per type:
+
+```{r, results='asis',  warning = FALSE, echo=FALSE}
+knitr::kable(df_all_clean_mod[,-which(names(df_all_clean_mod) == "dt_ts")] %>% 
+  group_by(type,name) %>%
+  summarise(number = n())  %>%   
+  group_by(type) %>%
+  summarise(number = n()))
+```
+
+- The most common increments:
+
+```{r, results='asis',  warning = FALSE, echo=FALSE}
+sort(table(df_all_clean_mod$collection_gap), decreasing=TRUE)[1:10]
+```
+
+c. For Idaho, did you download some actual search tasks from other searches, during the SAREX I didn't think anyone actually went out into the field.
+
+*Jason*
+
+d. Area sweep,  Did you do any NLCD analysis, to see what the speeds looked like in open terrain vs canopy?  Looking at the chart of previous results, I remain dubious of the open terrain results.
+
+*Jason*
+
+e. Looking at the slope bins,  I see 0.2:0.4 etc.  I take it that 1 equals a 90 degree slope and 0.5 would be a 45% degree slope? Later on I see you call it a gradient.
+
+These represent % gradient, a -/+ 100% value 
+
+```{r}
+
+```
+
+f. Cleary the team move much faster on flat terrain.  For the sweep task, it seems to pick up at a gradient of 0.6.   For the calculation of PSR, I'm open to your suggestions on the best way to integrate this data.  Also if for the sweep task we also look at no canopy vs canopy.
+
+```{r}
+
+```
+
+g. For the off trail it was interesting to see speeds of 2 mph.  On previous sweep width experiments the speeds have been 1.75km/hr or about 1.0 mph.  This would suggest searchers are nearly twice as fast on actual searches.  I might need to conduct an experiment to test different search speeds for a possible correction factor.
+
+```{r}
+
+```
+
+h. We have some pretty big standard deviations, did you run any statistical analysis to see if the on trail and off trail where statically significant differences?
+
+```{r}
+
+```

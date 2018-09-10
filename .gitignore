@@ -10,3 +10,12 @@ read_gpx_baseline.R
 read_gpx_test.R
 settings.json
 /R/models/rsconnect
+/R/models/analysis_2_files
+/R/models/analysis_2_backup_files
+/R/models/analysis_2_backup.Rmd
+/R/models/analysis_2_backup.tex
+/R/models/analysis_2_backup.pdf
+/R/models/analysis_2.tex
+/R/models/analysis_2.pdf
+/R/models/analysis_2.html
+/R/gpx_analytics.Rds
