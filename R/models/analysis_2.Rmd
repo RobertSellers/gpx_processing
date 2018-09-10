@@ -20,28 +20,18 @@ output:
 ---
 
 ```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
-library(XML)
+suppressMessages(library(XML))
+suppressMessages(library(plyr))
+suppressMessages(library(ggplot2))
+#suppressMessages(library(geosphere))
 
-# Haversine formula for calculating distances from lat/long
-# https://www.r-bloggers.com/great-circle-distance-calculations-in-r/
-haversineDistance <- function(aLong, aLat, bLong, bLat){
-  R <- 6371000 #Earth mean radius in m
-  dLat <- 2 * pi * (bLat - aLat) / 360.0
-  dLon <- 2 * pi * (bLong - aLong) / 360.0
-  a <- (sin(dLat / 2))^2 + cos(2 * pi * aLat/360) * cos(2 * pi * bLat/360) * (sin(dLon/2)^2)
-  b <- R * 2 * atan2(sqrt(a), sqrt(1 - a))
-  return(b)
-}
-
+# elevation testing https://stackoverflow.com/questions/21593868/extracting-elevation-from-website-for-lat-lon-points-in-australia-using-r
+# FOr google maps API
+elevation_key <- 'AIzaSyA_6ejIjLCjU6LHuj4xig1brIHOC5rDzlY'
+require(RJSONIO)
 ```
 
 ```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
-source('../gpx_validation.R') # GPX dataset processing / shared OpenCPU functions
-suppressMessages(library(plyr))
-suppressMessages(library(ggplot2))
-
-  if(!file.exists("C:/Users/rober/Desktop/Repositories/gpx_processing/R/gpx_analytics.rds")){
-  
 
 temp <- list()
 data_dir <- "C:/Users/rober/Desktop/Repositories/gpx_processing/data_backup/"
@@ -50,49 +40,29 @@ valid_datasets <- c("14-05.gpx","2016-06-18 10.14.52 Stopwatch.gpx","Current.gpx
                     "Track_14-08 1.gpx","Track_2015-07-05 215817.gpx","Track_2015-07-09 151556.gpx","Track_2015-07-09 183806.gpx","Track_2015-07-10 132200.gpx","Track_2015-07-15 204324.gpx","Track_2015-07-24 164157.gpx","Track_2015-07-29 130706.gpx","Track_2016-04-30 115630.gpx","Track_2016-06-18 131319.gpx","Track_2018-02-10 104731 Task 1.gpx","Track_2018-02-10 110234 Task 2.gpx","Track_2018-02-10 113753 Task 14B.gpx","Track_2018-02-10 150828 Task 29B.gpx","Track_ALPHA05-14 125702.gpx","Track_K9MEG06-18 124555.gpx","Track_QUEBEC5-14 154550.gpx","Track_T18 800 001 TASK2.gpx","Track_T18 800 001.gpx")
 
 hardcode_response <- c("Trail","Sweep","Trail","Canine","Canine","Sweep","Sweep","Sweep","Trail","Trail","Offtrail","Offtrail","Trail","Offtrail","None","Trail","Offtrail","Trail","Trail","Sweep","Trail","Offtrail","Canine","Offtrail","Trail","Sweep")
+```
 
-# build datasets
-# meg.gpx / scout.gpx returning warnings
-for (i in 1:length(valid_datasets)){
-  name <- valid_datasets[i]
-  cat(name)
-  temp[[name]] <- invisible(gpx_validation(paste0(data_dir,valid_datasets[i])))
-  temp[[name]]$dt_ts <- strptime(temp[[name]]$DateTime, "%Y-%m-%dT%H:%M:%SZ")
-  temp[[name]]$name <- name
-  temp[[name]]$type <- hardcode_response[i]
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+#### COPIED FUNCTIONS
+
+# Construct dataframe from gpx file
+# http://lwlss.net/GarminReports/GarminFunctions.R
+
+# Haversine formula for calculating distances from lat/long
+# https://www.r-bloggers.com/great-circle-distance-calculations-in-r/
+# Haversine formula is appropriate for calculating distances from lat/long
+EarthRad=6371000
+haverDist<-function(aLong,aLat,bLong,bLat){
+	dLat=2*pi*(bLat-aLat)/360.0; dLon=2*pi*(bLong-aLong)/360.0
+	a=(sin(dLat/2))^2+cos(2*pi*aLat/360)*cos(2*pi*bLat/360)*(sin(dLon/2)^2)
+	return(EarthRad*2*atan2(sqrt(a),sqrt(1-a)))
 }
-df_all <- do.call("rbind", temp)
-rm(temp);
 
 completeFun <- function(data, desiredCols) {
   completeVec <- complete.cases(data[, desiredCols])
   return(data[completeVec, ])
 }
 
-df_all$Speed_mph <- df_all$Speed*2.23694
-
-df_all_clean<-df_all[ which(df_all$Speed_mph < 5.5), ]
-df_all_clean<-df_all_clean[df_all_clean$type != "None", ]
-#df_all_clean<-df_all_clean[df_all_clean$Gradient != 1, ]
-#df_all_clean<-df_all_clean[df_all_clean$Speed != -1, ]
-df_all_clean<- df_all_clean[is.finite(df_all_clean$Pace), ]
-df_all_clean<-completeFun(df_all_clean, "Gradient")
-
-df_all_clean$gradient_bin <- cut(df_all_clean$Gradient, breaks = seq(-1, 1, by = .2),labels= c("-1:-0.8","-0.8:-0.6","-0.6:-0.4","-0.4:-0.2","-0.2:0","0:0.2","0.2:0.4","0.4:0.6","0.6:0.8","0.8:1"))
-
-# Fix for dplyr
-df_all_clean_mod <- df_all_clean
-df_all_clean_mod$dt_ts <- as.POSIXct(df_all_clean_mod$dt_ts)
-  }else{
-  df_all_clean_mod<-readRDS("C:/Users/rober/Desktop/Repositories/gpx_processing/R/gpx_analytics.rds")
-  
-  filename_lookup <- data.frame("filename"=unique(df_all_clean_mod$name), "lookup"=1:length(unique(df_all_clean_mod$name)))
-  df_all_clean_mod$file_lu <- filename_lookup$lookup[match(df_all_clean_mod$name, filename_lookup$filename)]
-}
-```
-
-```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
-suppressMessages(require(dplyr))
 remove_outliers <- function(x) {
   qnt <- quantile(x, probs=c(.25, .75), na.rm = TRUE)
   H <- 1.5 * IQR(x, na.rm = TRUE)
@@ -116,6 +86,162 @@ Mode <- function(x, na.rm = FALSE) {
   ux <- unique(x)
   return(ux[which.max(tabulate(match(x, ux)))])
 }
+```
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+# build datasets
+
+qa = NULL
+
+for (i in 1:length(valid_datasets)){
+  
+  ############
+  #XML PARSING
+  ############
+  name <- valid_datasets[i]
+  gpxfile <- paste0(data_dir,valid_datasets[i])
+  doc <- xmlParse(gpxfile,useInternalNodes=TRUE)
+  top <- xmlRoot(doc)
+  
+  ############
+  #DATA FRAME CONVERSION FOR R
+  ############
+  
+  # GET ELEVATION AND TIME
+  trkpts <- top[[2]][[3]]
+  data <- toString.XMLNode(trkpts)
+
+  df <- as.data.frame(xmlToDataFrame(data))
+
+  if("extensions" %in% colnames(df)){
+    df$extensions <- NULL
+  }  
+  
+  
+  # Targeted data extraction
+  if(toString.XMLNode(top[[2]][[3]])=="NULL") {
+    if(toString.XMLNode(top[[2]][[2]])=="NULL") {
+      attribs=xmlSApply(top[[2]][[1]],xmlAttrs)
+    }else{
+      attribs=xmlSApply(top[[2]][[2]],xmlAttrs)
+    }
+  }else{
+    attribs=xmlSApply(top[[2]][[3]],xmlAttrs)
+  }
+  
+  df$lon=as.numeric(attribs[2,])
+  df$lat=as.numeric(attribs[1,])
+  
+  # Tidy data frame  
+  colnames(df)=c("Elevation","DateTime","Longitude","Latitude")
+  df$Elevation=as.numeric(df$Elevation)
+  df$DateTime=as.character(df$DateTime)
+  
+  # Convert timestamp to number of seconds since start of run
+  # Calculate Seconds
+  T0 <- strptime(df$DateTime[1],"%Y-%m-%dT%H:%M:%S")
+  df$Seconds <- as.numeric(strptime(df$DateTime,"%Y-%m-%dT%H:%M:%S") - T0)
+
+  # Initialise columns
+  df$dNorth=0; df$dEast=0; df$dUp=0;
+  df$North=0; df$East=0; df$dDist=0; 
+  df$dDist2D=0; df$Dist2D=0
+
+  # Calculate northings and eastings
+  df$East <- haverDist(df[1,"Longitude"],df[1,"Latitude"],df$Longitude,df[1,"Latitude"])*sign(df$Longitude-df[1,"Longitude"])
+  df$North <- haverDist(df[1,"Longitude"],df[1,"Latitude"],df[1,"Longitude"],df$Latitude)*sign(df$Latitude-df[1,"Latitude"])
+
+  
+  # Calculate changes in position for each dt
+  for (x in 2:(length(df$DateTime)-1)) {
+  	sEast=sign(df[x,"Longitude"]-df[1,"Longitude"])
+  	sNorth=sign(df[x,"Latitude"]-df[1,"Latitude"])
+  	df$dEast[x]=sEast*haverDist(df[x-1,"Longitude"],df[1,"Latitude"],df[x,"Longitude"],df[1,"Latitude"])
+  	df$dNorth[x]=sNorth*haverDist(df[1,"Longitude"],df[x-1,"Latitude"],df[1,"Longitude"],df[x,"Latitude"])
+  	df$dUp[x]=df$Elevation[x]-df$Elevation[x-1]
+  	# 2D distance (ignoring hills)
+  	df$dDist2D[x]=haverDist(df[x-1,"Longitude"],df[x-1,"Latitude"],df[x,"Longitude"],df[x,"Latitude"])
+  }
+
+  
+  df$dDist=sqrt(df$dNorth^2+df$dEast^2+df$dUp^2)
+  df$Dist=cumsum(df$dDist)
+  df$Dist2D=cumsum(df$dDist2D)
+
+  # Fit a spline function to the GPS coordinates & elevation
+  east=splinefun(df$Seconds,df$East)
+  north=splinefun(df$Seconds,df$North)
+  up=splinefun(df$Seconds,df$Elevation)
+  dist=splinefun(df$Seconds,df$Dist)
+  
+  df$Speed=rep(0,length(df$Seconds))
+  df$Gradient=rep(0,length(df$Seconds))
+  df$Slope <- ifelse(df$dDist2D != 0, df$dUp/df$dDist2D, 0)
+  
+  # Do finite centred differencing to give smoothest rate/gradient estimates
+  for(x in 2:(length(df$Seconds)-1)){
+  	Dt=df[x+1,"Seconds"]-df[x-1,"Seconds"]
+  	Dd=df[x+1,"Dist"]-df[x-1,"Dist"]
+  	df[x,"Speed"]=Dd/Dt # m/s
+  	df[x,"Gradient"]=(df[x+1,"Elevation"]-df[x-1,"Elevation"])/Dd # m/m
+  }
+  
+  df[1,"Speed"]=df[2,"Speed"]
+  df[length(df$Seconds),"Speed"]=df[length(df$Seconds)-1,"Speed"]
+  df[1,"Gradient"]=df[2,"Gradient"]
+  df[length(df$Seconds),"Gradient"]=df[length(df$Seconds)-1,"Gradient"]
+  
+  # Smooth speed as it is unrealistically noisy
+  df$Speed=smooth(df$Speed)
+  
+  # Fit a spline function to rate
+  speed=splinefun(df$Seconds,df$Speed)
+  pace<-function(t) sapply(1/speed(t),max,0)
+  ppace<-function(t) 1000*pace(t)/60
+  
+  # Update dataframe with speed and pace
+  df$Speed=speed(df$Seconds)
+  df$Pace=pace(df$Seconds)
+  
+  df$dt_ts <- strptime(df$DateTime, "%Y-%m-%dT%H:%M:%SZ")
+  df$name <- name
+  df$type <- hardcode_response[i]
+  
+  # Code mod -- QA dataframe and a slope function
+  qa = rbind(qa, data.frame(i, name))
+  
+  temp[[name]] <- df
+}
+
+df_all <- do.call("rbind", temp)
+df_all$ID <- seq.int(nrow(df_all))
+```
+
+
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+df_all$Speed_mph <- df_all$Speed*2.23694
+
+df_all_clean<-df_all[ which(df_all$Speed_mph < 5.5), ]
+df_all_clean<-df_all_clean[df_all_clean$type != "None", ]
+#df_all_clean<-df_all_clean[df_all_clean$Gradient != 1, ]
+#df_all_clean<-df_all_clean[df_all_clean$Speed != -1, ]
+df_all_clean<- df_all_clean[is.finite(df_all_clean$Pace), ]
+df_all_clean<-completeFun(df_all_clean, "Gradient")
+
+df_all_clean$gradient_bin <- cut(df_all_clean$Gradient, breaks = seq(-1, 1, by = .2),labels= c("-1:-0.8","-0.8:-0.6","-0.6:-0.4","-0.4:-0.2","-0.2:0","0:0.2","0.2:0.4","0.4:0.6","0.6:0.8","0.8:1"))
+
+# Fix for dplyr
+df_all_clean_mod <- df_all_clean
+df_all_clean_mod$dt_ts <- as.POSIXct(df_all_clean_mod$dt_ts)
+
+  filename_lookup <- data.frame("filename"=unique(df_all_clean_mod$name), "lookup"=1:length(unique(df_all_clean_mod$name)))
+  df_all_clean_mod$file_lu <- filename_lookup$lookup[match(df_all_clean_mod$name, filename_lookup$filename)]
+
+```
+
+```{r message=FALSE, results = 'hide', warning = FALSE, echo=FALSE}
+suppressMessages(require(dplyr))
 
 df_all_clean_mod<-df_all_clean_mod %>%
   group_by(name) %>% 
@@ -212,10 +338,20 @@ d. Area sweep,  Did you do any NLCD analysis, to see what the speeds looked like
 
 e. Looking at the slope bins,  I see 0.2:0.4 etc.  I take it that 1 equals a 90 degree slope and 0.5 would be a 45% degree slope? Later on I see you call it a gradient.
 
-These represent % gradient, a -/+ 100% value 
+The gradient represents a smoothed +/- 1 representation of slope. It is not a 1:1 relationship as shown on the following graph. A large degree of points collected are well outside of normal hiking steepness. Each gradient exists as a calculation inside of each particular GPX file, and not as a normalization of data as a whole. This is due to the idiosyncratic behavior of each user and device. A few examples
 
-```{r}
+```{r, warning = FALSE, echo=FALSE}
+par(mfrow=c(2,2))
+#gradient_subset <- subset(df_all, Gradient > -1 & Gradient < 1 & name == '14-05.gpx')
 
+ggplot(subset(df_all, name == '14-05.gpx'), aes(Gradient,Slope, col=Gradient)) + 
+  geom_point() + 
+  stat_smooth() 
+
+ggplot(subset(df_all, name == 'Track_2018-02-10 113753 Task 14B.gpx'), aes(Gradient,Slope, col=Gradient)) + 
+  geom_point() + 
+  stat_smooth() 
+ 
 ```
 
 f. Cleary the team move much faster on flat terrain.  For the sweep task, it seems to pick up at a gradient of 0.6.   For the calculation of PSR, I'm open to your suggestions on the best way to integrate this data.  Also if for the sweep task we also look at no canopy vs canopy.
